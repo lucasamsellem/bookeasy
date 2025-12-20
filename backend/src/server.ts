@@ -1,7 +1,12 @@
+// Rôle : point d’entrée qui démarre le serveur.
+
 import { app } from './app';
+import { connectDB } from './config/db';
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-  console.log(`API running on http://localhost:${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
 });
