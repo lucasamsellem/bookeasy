@@ -16,8 +16,9 @@ export default function Header() {
 
         {loggedUser.name && <p>Welcome, {loggedUser.name}</p>}
 
-        <div>
+        <div className='flex gap-x-5'>
           <Link href='/login'>Login</Link>
+          <Link href='/register'>Register</Link>
         </div>
       </nav>
     </header>

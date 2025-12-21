@@ -6,12 +6,14 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ['admin', 'user'], default: 'user' },
+    role: { type: String, enum: ['professional', 'customer'], default: 'customer' },
+    address: { type: String, required: false, trim: true },
+    profession: { type: String, required: false, trim: true },
   },
   { timestamps: true }
 );
 
-//pre("save") signifie : exécute cette fonction juste avant User.create() ou user.save()
+// exécute cette fonction juste avant User.create() ou user.save()
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
 
