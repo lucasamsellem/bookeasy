@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/layout/Header';
+import ReactQueryProvider from './providers/ReactQueryProvider';
 
 export const metadata: Metadata = {
   title: 'BookEasy',
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <Header />
-        <main>{children}</main>
+        <ReactQueryProvider>
+          <Header />
+          <main>{children}</main>
+        </ReactQueryProvider>
       </body>
     </html>
   );
