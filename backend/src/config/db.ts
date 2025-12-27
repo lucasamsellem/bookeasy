@@ -1,16 +1,22 @@
-import mongoose from 'mongoose';
-import dotenv from 'dotenv';
+import mysql from 'mysql2/promise';
 
-dotenv.config();
+export const db = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'bookeasy',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
 
-const MONGO_URI = process.env.MONGO_URI || '';
-
-export const connectDB = async () => {
+export async function connectDB() {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log('MongoDB connected');
+    const connection = await db.getConnection();
+    console.log('MySQL connected');
+    connection.release();
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error('MySQL connection failed:', error);
     process.exit(1);
   }
-};
+}

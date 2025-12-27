@@ -1,12 +1,15 @@
-// Rôle : point d’entrée qui démarre le serveur.
-
 import { app } from './app';
 import { connectDB } from './config/db';
+import dotenv from 'dotenv';
+
+dotenv.config(); // charge les variables du fichier .env
 
 const PORT = process.env.PORT || 4000;
 
-connectDB().then(() => {
+(async () => {
+  await connectDB();
+
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
-});
+})();
