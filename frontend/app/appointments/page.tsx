@@ -14,8 +14,6 @@ const mockAppointments: Appointment[] = [
 export default function AppointmentsPage() {
   return (
     <section>
-      <h1>Appointments</h1>
-
       <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
         {mockAppointments.map((appointment) => (
           <AppointmentCard key={appointment.id} appointment={appointment} />

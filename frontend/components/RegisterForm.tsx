@@ -29,7 +29,7 @@ export default function RegisterForm() {
 
   const isProfessional = form.role === 'professional';
 
-  const { mutate: register } = useMutation({
+  const { mutate: register, isSuccess } = useMutation({
     mutationFn: async (data: RegisterBody) => {
       const res = await apiFetch('/users', {
         method: 'POST',
@@ -140,6 +140,10 @@ export default function RegisterForm() {
       >
         Confirm
       </button>
+
+      {isSuccess && (
+        <p className='text-green-500 text-center font-semibold'>User registered successfully!</p>
+      )}
     </form>
   );
 }
@@ -155,7 +159,7 @@ function RoleButton({ label, isActive, onClick }: RoleButtonProps) {
     <button
       type='button'
       onClick={onClick}
-      className={`cursor-pointer transition ${
+      className={`transition ${
         isActive ? 'font-semibold opacity-100' : 'opacity-70 hover:opacity-100'
       }`}
     >

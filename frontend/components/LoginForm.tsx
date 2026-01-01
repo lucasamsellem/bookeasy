@@ -49,6 +49,7 @@ export default function LoginForm() {
         onSuccess: (data) => {
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
+          window.location.href = '/';
         },
       }
     );
@@ -91,7 +92,7 @@ export default function LoginForm() {
 
       <button
         type='submit'
-        className='w-full cursor-pointer rounded-md bg-blue-600 py-2 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+        className='w-full rounded-md bg-blue-600 py-2 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
       >
         {isPending ? 'Loading...' : 'Submit'}
       </button>

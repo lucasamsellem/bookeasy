@@ -21,8 +21,6 @@ const mockAvailabilities: Availability[] = [
 export default function AvailabilitiesPage() {
   return (
     <section>
-      <h1>Availabilities</h1>
-
       <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
         {mockAvailabilities.map((availability) => (
           <AvailabilityCard key={availability.id} availability={availability} />
