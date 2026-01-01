@@ -23,7 +23,11 @@ export default function Header() {
           <NavLink href='/appointments'>Appointments</NavLink>
         </div>
 
-        {loggedUser.name && <p>Welcome, {loggedUser.name}</p>}
+        {loggedUser.name && (
+          <p>
+            Welcome, {loggedUser.name} ({loggedUser.role})
+          </p>
+        )}
 
         {!isLoggedIn && (
           <div className='flex gap-x-5'>
