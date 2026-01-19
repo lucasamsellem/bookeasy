@@ -43,18 +43,7 @@ export default function RegisterForm() {
 
   const { mutate: register, isSuccess } = useMutation({
     mutationFn: async (data: RegisterBody) => {
-      const res = await apiFetch('/users', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message ?? 'Register failed');
-      }
-
-      return res.json();
+      return apiFetch('/users', { method: 'POST', body: JSON.stringify(data) });
     },
   });
 

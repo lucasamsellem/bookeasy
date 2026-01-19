@@ -1,16 +1,16 @@
 'use client';
 
-import { Professional } from '@/app/appointments/page';
 import { apiFetch } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/Spinner';
 import ActionButton from '@/components/ActionButton';
+import { User } from '@backend/controllers/user.controller';
 
 export default function ProfessionalPage() {
   const { id } = useParams();
 
-  const { data: professional, isLoading } = useQuery<Professional>({
+  const { data: professional, isLoading } = useQuery<User>({
     queryKey: ['professional', id],
     queryFn: () => apiFetch(`/users/${id}`),
   });

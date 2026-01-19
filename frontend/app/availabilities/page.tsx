@@ -2,8 +2,8 @@
 
 import ProfessionalsList from '@/components/ProfessionalsList';
 import { useQuery } from '@tanstack/react-query';
-import { Professional } from '../appointments/page';
 import { apiFetch } from '@/services/api';
+import { User } from '@backend/controllers/user.controller';
 
 // const mockAvailabilities: Availability[] = [
 //   {
@@ -23,7 +23,7 @@ import { apiFetch } from '@/services/api';
 // ];
 
 export default function AvailabilitiesPage() {
-  const { data: professionals } = useQuery<Professional[]>({
+  const { data: professionals } = useQuery<User[]>({
     queryKey: ['professionals'],
     queryFn: () => apiFetch('/customers/professionals'),
   });

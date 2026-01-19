@@ -3,40 +3,31 @@
 import { useState } from 'react';
 import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
+import { type User } from '@backend/controllers/user.controller';
 
 interface LoginBody {
   email: string;
   password: string;
 }
 
-// interface LoginResponse {
-//   token: string;
-//   user: {
-//     id: string;
-//     name: string;
-//     email: string;
-//     role: string;
-//   };
-// }
+interface LoginResponse {
+  token: string;
+  user: User;
+}
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { mutate: loginMutation, isPending } = useMutation({
+  const {
+    mutate: loginMutation,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+  } = useMutation({
     mutationFn: async (data: LoginBody) => {
-      const res = await apiFetch('/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Login failed');
-      }
-
-      return res.json();
+      return apiFetch<LoginResponse>('/auth/login', { method: 'POST', body: JSON.stringify(data) });
     },
   });
 
@@ -96,6 +87,9 @@ export default function LoginForm() {
       >
         {isPending ? 'Loading...' : 'Submit'}
       </button>
+
+      {isSuccess && <p className='text-green-500'>Login successful!</p>}
+      {isError && <p className='text-red-500'>Login failed ({error?.message})</p>}
     </form>
   );
 }

@@ -4,6 +4,26 @@ import bcrypt from 'bcryptjs';
 import { USER_COLUMNS } from '../utils/columns';
 import { RowDataPacket } from 'mysql2';
 
+export interface User {
+  id: number;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: 'professional' | 'customer';
+  profession?: string;
+  address?: {
+    street: string;
+    streetNumber: string;
+    city: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+  street?: string;
+  streetNumber?: string;
+  city?: string;
+}
+
 // GET /users
 export const getUsers = async (_req: Request, res: Response) => {
   try {
@@ -53,14 +73,14 @@ export const createUser = async (req: Request, res: Response) => {
 
     const [result] = await db.execute(
       `INSERT INTO users (
-        first_name,
-        last_name,
+        firstName,
+        lastName,
         email,
         password,
         role,
         profession,
         street,
-        street_number,
+        streetNumber,
         city
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [

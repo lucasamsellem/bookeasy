@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { isUserLoggedIn } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
+import { User } from '@backend/controllers/user.controller';
 
 const logout = () => {
   localStorage.removeItem('token');
@@ -11,7 +12,7 @@ const logout = () => {
 };
 
 export default function Header() {
-  const loggedUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const loggedUser = JSON.parse(localStorage.getItem('user') || '{}') as User;
   const isLoggedIn = isUserLoggedIn();
 
   return (
@@ -23,9 +24,9 @@ export default function Header() {
           <NavLink href='/appointments'>Appointments</NavLink>
         </div>
 
-        {loggedUser.name && (
+        {isLoggedIn && (
           <p>
-            Welcome, {loggedUser.name} ({loggedUser.role})
+            Welcome, {loggedUser.firstName} {loggedUser.lastName} ({loggedUser.role})
           </p>
         )}
 

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { db } from '../config/db'; // pool MySQL
 import { generateToken } from '../utils/jwt';
+import { User } from './user.controller';
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -15,7 +16,7 @@ export const login = async (req: Request, res: Response) => {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    const user = users[0];
+    const user = users[0] as User;
 
     // Vérifier le mot de passe
     const isValid = await bcrypt.compare(password, user.password);
@@ -31,7 +32,8 @@ export const login = async (req: Request, res: Response) => {
       token,
       user: {
         id: user.id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         role: user.role,
       },

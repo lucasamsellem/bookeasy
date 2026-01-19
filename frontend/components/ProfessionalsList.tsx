@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { Professional } from '@/app/appointments/page';
 import ActionButton from './ActionButton';
+import { User } from '@backend/controllers/user.controller';
 
 type ProfessionalsListProps = {
-  professionals?: Professional[];
+  professionals?: User[];
 };
 
 export default function ProfessionalsList({ professionals }: ProfessionalsListProps) {
