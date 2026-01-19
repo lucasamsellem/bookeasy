@@ -1,4 +1,3 @@
-// columns.ts
 export const USER_COLUMNS = [
   'id',
   'firstName',
@@ -11,4 +10,15 @@ export const USER_COLUMNS = [
   'city',
   'createdAt',
   'updatedAt',
+].join(', ');
+
+export const BOOKING_COLUMNS = [
+  'id',
+  'customerId',
+  'professionalId',
+  'startTime',
+  'endTime',
+  'status',
+  'createdAt',
+  'description',
 ].join(', ');

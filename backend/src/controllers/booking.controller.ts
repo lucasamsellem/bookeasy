@@ -1,7 +1,9 @@
 import { db } from '../config/db';
 import { Request, Response } from 'express';
+import { BOOKING_COLUMNS } from '../utils/columns';
 
 export interface Booking {
+  id: number;
   customerId: number;
   professionalId: number;
   startTime: string;
@@ -10,6 +12,17 @@ export interface Booking {
   createdAt: string;
   description: string;
 }
+
+// GET /bookings
+export const getBookings = async (req: Request, res: Response) => {
+  try {
+    const [rows] = await db.execute(`SELECT ${BOOKING_COLUMNS} FROM bookings`);
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 // POST /bookings
 export const makeBooking = async (req: Request, res: Response) => {
