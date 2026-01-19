@@ -1,31 +1,36 @@
-import AvailabilityCard from '@/components/AvailabilityCard';
-import { Availability } from '@/types/availability';
+'use client';
 
-const mockAvailabilities: Availability[] = [
-  {
-    id: 1,
-    date: '2025-01-10',
-    startTime: '09:00',
-    endTime: '10:00',
-    isAvailable: true,
-  },
-  {
-    id: 2,
-    date: '2025-01-10',
-    startTime: '10:00',
-    endTime: '11:00',
-    isAvailable: false,
-  },
-];
+import ProfessionalsList from '@/components/ProfessionalsList';
+import { useQuery } from '@tanstack/react-query';
+import { Professional } from '../appointments/page';
+import { apiFetch } from '@/services/api';
+
+// const mockAvailabilities: Availability[] = [
+//   {
+//     id: 1,
+//     date: '2025-01-10',
+//     startTime: '09:00',
+//     endTime: '10:00',
+//     isAvailable: true,
+//   },
+//   {
+//     id: 2,
+//     date: '2025-01-10',
+//     startTime: '10:00',
+//     endTime: '11:00',
+//     isAvailable: false,
+//   },
+// ];
 
 export default function AvailabilitiesPage() {
+  const { data: professionals } = useQuery<Professional[]>({
+    queryKey: ['professionals'],
+    queryFn: () => apiFetch('/customers/professionals'),
+  });
+
   return (
     <section>
-      <div style={{ display: 'grid', gap: '1rem', marginTop: '1rem' }}>
-        {mockAvailabilities.map((availability) => (
-          <AvailabilityCard key={availability.id} availability={availability} />
-        ))}
-      </div>
+      <ProfessionalsList professionals={professionals} />
     </section>
   );
 }

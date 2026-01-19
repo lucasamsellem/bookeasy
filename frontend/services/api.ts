@@ -4,6 +4,29 @@ if (!API_URL) {
   throw new Error('NEXT_PUBLIC_API_URL is not defined');
 }
 
-export const apiFetch = (path: string, options?: RequestInit) => {
-  return fetch(`${API_URL}/api${path}`, options);
+type ApiFetchOptions = Omit<RequestInit, 'headers'> & {
+  headers?: Record<string, string>;
 };
+
+export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
+  const url = `${API_URL}/api${path}`;
+  const defaultHeaders = { 'Content-Type': 'application/json' };
+
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers,
+    },
+  });
+
+  const contentType = res.headers.get('Content-Type') || '';
+  const data = contentType.includes('application/json') ? await res.json() : await res.text();
+
+  if (!res.ok) {
+    const message = typeof data === 'object' && data?.message ? data.message : res.statusText;
+    throw new Error(message || 'Request failed');
+  }
+
+  return data as T;
+}

@@ -32,26 +32,10 @@ const mockAppointments: Appointment[] = [
 ];
 
 export default function AppointmentsPage() {
-  const {
-    data: professionals,
-    // isLoading,
-    refetch: refetchProfessionals,
-  } = useQuery<Professional[]>({
+  const { data: professionals, refetch: refetchProfessionals } = useQuery<Professional[]>({
     queryKey: ['professionals'],
     enabled: false, // ← empêche l’exécution automatique
-    queryFn: async () => {
-      const res = await apiFetch('/customers/professionals', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Request failed');
-      }
-
-      return res.json();
-    },
+    queryFn: () => apiFetch('/customers/professionals'),
   });
 
   const handleNewAppointment = async () => {
