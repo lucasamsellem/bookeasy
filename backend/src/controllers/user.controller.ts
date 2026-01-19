@@ -2,12 +2,34 @@ import { Request, Response } from 'express';
 import { db } from '../config/db';
 import bcrypt from 'bcryptjs';
 import { USER_COLUMNS } from '../utils/columns';
+import { RowDataPacket } from 'mysql2';
 
 // GET /users
 export const getUsers = async (_req: Request, res: Response) => {
   try {
     const [rows] = await db.execute(`SELECT ${USER_COLUMNS} FROM users`);
     res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// GET /users/:id
+export const getUserById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const [rows] = await db.execute<RowDataPacket[]>(
+      `SELECT ${USER_COLUMNS} FROM users WHERE id = ? LIMIT 1`,
+      [id],
+    );
+
+    // rows est maintenant typé comme RowDataPacket[]
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    res.json(rows[0]);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

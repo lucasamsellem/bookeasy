@@ -17,8 +17,8 @@ export interface Professional {
   street: string | null;
   streetNumber: string | null;
   city: string | null;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const mockAppointments: Appointment[] = [
