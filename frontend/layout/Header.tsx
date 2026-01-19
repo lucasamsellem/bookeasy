@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { isUserLoggedIn } from '@/utils/utils';
+import { getLoggedUser } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
-import { User } from '@backend/controllers/user.controller';
 
 const logout = () => {
   localStorage.removeItem('token');
@@ -12,8 +11,7 @@ const logout = () => {
 };
 
 export default function Header() {
-  const loggedUser = JSON.parse(localStorage.getItem('user') || '{}') as User;
-  const isLoggedIn = isUserLoggedIn();
+  const loggedUser = getLoggedUser();
 
   return (
     <header style={{ padding: '1rem', borderBottom: '1px solid #ddd' }}>
@@ -24,20 +22,20 @@ export default function Header() {
           <NavLink href='/appointments'>Appointments</NavLink>
         </div>
 
-        {isLoggedIn && (
+        {loggedUser && (
           <p>
             Welcome, {loggedUser.firstName} {loggedUser.lastName} ({loggedUser.role})
           </p>
         )}
 
-        {!isLoggedIn && (
+        {!loggedUser && (
           <div className='flex gap-x-5'>
             <NavLink href='/login'>Login</NavLink>
             <NavLink href='/register'>Register</NavLink>
           </div>
         )}
 
-        {isLoggedIn && <button onClick={logout}>Logout</button>}
+        {loggedUser && <button onClick={logout}>Logout</button>}
       </nav>
     </header>
   );

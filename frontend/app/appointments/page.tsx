@@ -1,5 +1,7 @@
 'use client';
 
+import { getLoggedUser } from '@/utils/utils';
+
 // const mockAppointments: Appointment[] = [
 //   {
 //     id: 1,
@@ -11,5 +13,11 @@
 // ];
 
 export default function AppointmentsPage() {
-  return <section></section>;
+  const loggedUser = getLoggedUser();
+
+  return (
+    <h2>
+      Appointments booked by {loggedUser?.firstName} {loggedUser?.lastName}
+    </h2>
+  );
 }
