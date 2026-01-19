@@ -9,12 +9,16 @@ import ProfessionalsList from '@/components/ProfessionalsList';
 
 export interface Professional {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: 'professional';
   profession: string;
-  address: string;
+  street: string | null;
+  streetNumber: string | null;
+  city: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 const mockAppointments: Appointment[] = [

@@ -51,7 +51,7 @@ export default function LoginForm() {
           localStorage.setItem('user', JSON.stringify(data.user));
           window.location.href = '/';
         },
-      }
+      },
     );
   };
 

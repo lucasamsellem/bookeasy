@@ -9,7 +9,8 @@ export default function ProfessionalsList({ professionals }: ProfessionalsListPr
     <ul>
       {professionals?.map((professional) => (
         <li key={professional.id}>
-          {professional.name} - {professional.profession}
+          {professional.firstName} {professional.lastName} - {professional.profession} (
+          {professional.city})
         </li>
       ))}
     </ul>

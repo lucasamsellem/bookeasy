@@ -6,21 +6,33 @@ import { useMutation } from '@tanstack/react-query';
 
 type UserRole = 'customer' | 'professional';
 
+interface Address {
+  street: string;
+  streetNumber: string;
+  city: string;
+}
+
 interface RegisterBody {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   profession: string;
-  address: string;
+  address: Address;
   role: UserRole;
 }
 
 const initialForm: RegisterBody = {
-  name: '',
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
   profession: '',
-  address: '',
+  address: {
+    street: '',
+    streetNumber: '',
+    city: '',
+  },
   role: 'customer',
 };
 
@@ -53,12 +65,23 @@ export default function RegisterForm() {
     }));
   };
 
+  const handleAddressChange =
+    (field: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [field]: e.target.value,
+        },
+      }));
+    };
+
   const handleRoleChange = (role: UserRole) => {
     setForm((prev) => ({
       ...prev,
       role,
       profession: role === 'professional' ? prev.profession : '',
-      address: role === 'professional' ? prev.address : '',
+      address: role === 'professional' ? prev.address : { street: '', streetNumber: '', city: '' },
     }));
   };
 
@@ -74,64 +97,86 @@ export default function RegisterForm() {
     >
       <h1 className='text-center text-2xl font-semibold text-gray-800'>Register</h1>
 
-      <h3>
-        You are:{' '}
-        <RoleButton
-          label='Customer'
-          isActive={form.role === 'customer'}
-          onClick={() => handleRoleChange('customer')}
-        />{' '}
-        <RoleButton
-          label='Professional'
-          isActive={form.role === 'professional'}
-          onClick={() => handleRoleChange('professional')}
+      <FormSection title='Role'>
+        <h3 className='text-sm'>
+          You are:{' '}
+          <RoleButton
+            label='Customer'
+            isActive={form.role === 'customer'}
+            onClick={() => handleRoleChange('customer')}
+          />{' '}
+          <RoleButton
+            label='Professional'
+            isActive={form.role === 'professional'}
+            onClick={() => handleRoleChange('professional')}
+          />
+        </h3>
+      </FormSection>
+
+      <FormSection title='Identity'>
+        <Input
+          label='First name'
+          id='firstName'
+          value={form.firstName}
+          onChange={handleChange('firstName')}
         />
-      </h3>
 
-      <Input
-        label='Name'
-        id='name'
-        value={form.name}
-        onChange={handleChange('name')}
-        placeholder='John Doe'
-      />
+        <Input
+          label='Last name'
+          id='lastName'
+          value={form.lastName}
+          onChange={handleChange('lastName')}
+        />
+      </FormSection>
 
-      <Input
-        label='Email'
-        id='email'
-        type='email'
-        value={form.email}
-        onChange={handleChange('email')}
-        placeholder='you@example.com'
-      />
+      <FormSection title='Login information'>
+        <Input
+          label='Email'
+          id='email'
+          type='email'
+          value={form.email}
+          onChange={handleChange('email')}
+        />
 
-      <Input
-        label='Password'
-        id='password'
-        type='password'
-        value={form.password}
-        onChange={handleChange('password')}
-        placeholder='••••••••'
-      />
+        <Input
+          label='Password'
+          id='password'
+          type='password'
+          value={form.password}
+          onChange={handleChange('password')}
+        />
+      </FormSection>
 
       {isProfessional && (
-        <>
+        <FormSection title='Professional details'>
           <Input
             label='Profession'
             id='profession'
             value={form.profession}
             onChange={handleChange('profession')}
-            placeholder='Photographer'
           />
 
           <Input
-            label='Address'
-            id='address'
-            value={form.address}
-            onChange={handleChange('address')}
-            placeholder='Central Park, New York City, USA'
+            label='Street'
+            id='street'
+            value={form.address.street}
+            onChange={handleAddressChange('street')}
           />
-        </>
+
+          <Input
+            label='Street number'
+            id='streetNumber'
+            value={form.address.streetNumber}
+            onChange={handleAddressChange('streetNumber')}
+          />
+
+          <Input
+            label='City'
+            id='city'
+            value={form.address.city}
+            onChange={handleAddressChange('city')}
+          />
+        </FormSection>
       )}
 
       <button
@@ -142,7 +187,7 @@ export default function RegisterForm() {
       </button>
 
       {isSuccess && (
-        <p className='text-green-500 text-center font-semibold'>User registered successfully!</p>
+        <p className='text-center font-semibold text-green-500'>User registered successfully!</p>
       )}
     </form>
   );
@@ -185,5 +230,20 @@ function Input({ label, id, ...props }: InputProps) {
         {...props}
       />
     </div>
+  );
+}
+
+interface FormSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+function FormSection({ title, children }: FormSectionProps) {
+  return (
+    <section className='space-y-3'>
+      <h2 className='text-sm font-semibold uppercase tracking-wide text-gray-500'>{title}</h2>
+
+      <div className='space-y-4 border-l-2 border-gray-100 pl-4'>{children}</div>
+    </section>
   );
 }

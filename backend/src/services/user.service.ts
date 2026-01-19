@@ -1,18 +1,14 @@
 import { db } from '../config/db';
 import bcrypt from 'bcryptjs';
+import { USER_COLUMNS } from '../utils/columns';
 
 export const getAllUsers = async () => {
-  const [rows] = await db.execute(
-    'SELECT id, name, email, role, address, profession, created_at, updated_at FROM users'
-  );
+  const [rows] = await db.execute(`SELECT ${USER_COLUMNS} FROM users`);
   return rows;
 };
 
 export const getUserById = async (id: number) => {
-  const [rows] = await db.execute(
-    'SELECT id, name, email, role, address, profession, created_at, updated_at FROM users WHERE id = ?',
-    [id]
-  );
+  const [rows] = await db.execute(`SELECT ${USER_COLUMNS} FROM users WHERE id = ?`, [id]);
   const users = rows as any[];
   return users.length > 0 ? users[0] : null;
 };
@@ -37,7 +33,7 @@ export const createUser = async (data: {
       data.role ?? 'customer',
       data.address ?? null,
       data.profession ?? null,
-    ]
+    ],
   );
 
   const insertId = (result as any).insertId;

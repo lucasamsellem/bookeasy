@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
 import { db } from '../config/db';
 import bcrypt from 'bcryptjs';
+import { USER_COLUMNS } from '../utils/columns';
 
 // GET /users
 export const getUsers = async (_req: Request, res: Response) => {
   try {
-    const [rows] = await db.execute(
-      'SELECT id, name, email, role, address, profession, created_at, updated_at FROM users'
-    );
+    const [rows] = await db.execute(`SELECT ${USER_COLUMNS} FROM users`);
     res.json(rows);
   } catch (error) {
     console.error(error);
@@ -17,35 +16,69 @@ export const getUsers = async (_req: Request, res: Response) => {
 
 // POST /users
 export const createUser = async (req: Request, res: Response) => {
-  const { name, email, password, role, address, profession } = req.body;
+  const { firstName, lastName, email, password, role = 'customer', profession, address } = req.body;
 
   try {
-    // Hash du mot de passe
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insertion dans MySQL
+    const street = role === 'professional' ? (address?.street ?? null) : null;
+    const streetNumber = role === 'professional' ? (address?.streetNumber ?? null) : null;
+    const city = role === 'professional' ? (address?.city ?? null) : null;
+
     const [result] = await db.execute(
-      `INSERT INTO users (name, email, password, role, address, profession)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [name, email, hashedPassword, role ?? 'customer', address ?? null, profession ?? null]
+      `INSERT INTO users (
+        first_name,
+        last_name,
+        email,
+        password,
+        role,
+        profession,
+        street,
+        street_number,
+        city
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        firstName,
+        lastName,
+        email,
+        hashedPassword,
+        role,
+        role === 'professional' ? (profession ?? null) : null,
+        street,
+        streetNumber,
+        city,
+      ],
     );
 
-    // Récupérer l'id généré
     const insertId = (result as any).insertId;
 
     res.status(201).json({
       id: insertId,
-      name,
+      firstName,
+      lastName,
       email,
-      role: role ?? 'customer',
-      address: address ?? null,
-      profession: profession ?? null,
+      role,
+      profession: role === 'professional' ? (profession ?? null) : null,
+      address:
+        role === 'professional'
+          ? {
+              street,
+              streetNumber,
+              city,
+            }
+          : null,
     });
   } catch (error: any) {
     console.error(error);
+
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ message: 'Email already exists' });
     }
+
     res.status(500).json({ message: 'Server error' });
   }
 };
