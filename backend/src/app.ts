@@ -5,6 +5,7 @@ import cors from 'cors';
 import { authRouter } from './routes/authRoutes';
 import { userRouter } from './routes/userRoutes';
 import { customerRouter } from './routes/customerRoutes';
+import { bookingRouter } from './routes/bookingRoutes';
 
 export const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/customers', customerRouter);
+app.use('/api/bookings', bookingRouter);
 
 app.get('/health', (_, res) => {
   res.status(200).json({ status: "let's get healthy!!" });

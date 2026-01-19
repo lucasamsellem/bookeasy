@@ -6,16 +6,19 @@ import { useParams } from 'next/navigation';
 import Spinner from '@/components/Spinner';
 import ActionButton from '@/components/ActionButton';
 import { User } from '@backend/controllers/user.controller';
+import Modal from '@/components/Modal';
+import useModal from '@/hooks/useModal';
+import NewBookingForm from '@/components/NewBookingForm';
 
 export default function ProfessionalPage() {
   const { id } = useParams();
+
+  const { isOpen, openModal, closeModal } = useModal();
 
   const { data: professional, isLoading } = useQuery<User>({
     queryKey: ['professional', id],
     queryFn: () => apiFetch(`/users/${id}`),
   });
-
-  const handleNewAppointment = () => {};
 
   if (!professional) {
     return <p>Professionnel introuvable.</p>;
@@ -56,8 +59,16 @@ export default function ProfessionalPage() {
       </p>
 
       <footer>
-        <ActionButton text='New Appointment' icon='+' onClick={handleNewAppointment} />
+        <ActionButton text='New Appointment' icon='+' onClick={openModal} />
       </footer>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title={`Create Booking - ${professional.firstName} ${professional.lastName}`}
+      >
+        <NewBookingForm professionalId={professional.id} />
+      </Modal>
     </div>
   );
 }
