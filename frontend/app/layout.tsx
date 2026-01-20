@@ -18,7 +18,7 @@ export default function RootLayout({
       <body>
         <ReactQueryProvider>
           <Header />
-          <main className='px-5'>{children}</main>
+          <main className='px-5 bg-blue-100'>{children}</main>
         </ReactQueryProvider>
       </body>
     </html>
