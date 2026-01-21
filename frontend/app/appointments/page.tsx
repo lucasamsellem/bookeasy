@@ -1,18 +1,13 @@
 'use client';
 
 import BookingCard from '@/components/BookingCard';
-import { apiFetch } from '@/services/api';
+import useFetchBookings from '@/hooks/useFetchBookings';
 import { getLoggedUser } from '@/utils/utils';
-import { Booking } from '@backend/controllers/booking.controller';
-import { useQuery } from '@tanstack/react-query';
 
 export default function AppointmentsPage() {
   const loggedUser = getLoggedUser();
 
-  const { data: bookings } = useQuery({
-    queryKey: ['bookings'],
-    queryFn: () => apiFetch<Booking[]>('/bookings'),
-  });
+  const { bookings } = useFetchBookings();
 
   return (
     <div>

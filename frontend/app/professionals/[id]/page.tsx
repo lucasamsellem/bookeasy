@@ -1,30 +1,24 @@
 'use client';
 
-import { apiFetch } from '@/services/api';
-import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/Spinner';
 import ActionButton from '@/components/ActionButton';
-import { User } from '@backend/controllers/user.controller';
 import Modal from '@/components/Modal';
 import useModal from '@/hooks/useModal';
 import NewBookingForm from '@/components/NewBookingForm';
+import useFetchUserById from '@/hooks/useFetchUserById';
 
 export default function ProfessionalPage() {
-  const { id } = useParams();
-
   const { isOpen, openModal, closeModal } = useModal();
 
-  const { data: professional, isLoading } = useQuery<User>({
-    queryKey: ['professional', id],
-    queryFn: () => apiFetch(`/users/${id}`),
-  });
+  const { id } = useParams() as { id: string };
+  const { user: professional, isUserLoading } = useFetchUserById(id);
 
   if (!professional) {
     return <p>Professionnel introuvable.</p>;
   }
 
-  if (isLoading) {
+  if (isUserLoading) {
     return <Spinner />;
   }
 

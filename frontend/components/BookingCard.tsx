@@ -1,26 +1,34 @@
+import useFetchUserById from '@/hooks/useFetchUserById';
 import { Booking, BookingStatus } from '@backend/controllers/booking.controller';
 
 interface BookingCardProps {
   booking: Booking;
 }
 
+const statusColors: Record<BookingStatus, string> = {
+  pending: 'bg-yellow-100 text-yellow-800',
+  confirmed: 'bg-green-100 text-green-800',
+  canceled: 'bg-red-100 text-red-800',
+};
+
 export default function BookingCard({ booking }: BookingCardProps) {
   const { customerId, professionalId, selectedDate, selectedHour, status, description, createdAt } =
     booking;
 
-  const statusColors: Record<BookingStatus, string> = {
-    pending: 'bg-yellow-100 text-yellow-800',
-    confirmed: 'bg-green-100 text-green-800',
-    canceled: 'bg-red-100 text-red-800',
-  };
+  const { user: customer } = useFetchUserById(customerId);
+  const { user: pro } = useFetchUserById(professionalId);
 
   return (
     <div className='border rounded-xl shadow-sm p-4 bg-white flex flex-col gap-2 w-full max-w-md'>
       {/* Header: client + professional */}
       <div className='flex justify-between items-center'>
         <div>
-          <p className='font-semibold'>{customerId}</p>
-          <p className='text-gray-500 text-sm'>{professionalId}</p>
+          <p className='font-semibold'>
+            {pro?.firstName} {pro?.lastName}
+          </p>
+          <p className='text-gray-500 text-sm'>
+            {customer?.firstName} {customer?.lastName}
+          </p>
         </div>
         <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}>
           {status.charAt(0).toUpperCase() + status.slice(1)}
