@@ -8,5 +8,7 @@ export default function useFetchUserById(id: string | number) {
     queryFn: () => apiFetch(`/users/${id}`),
   });
 
-  return { user, isUserLoading };
+  const userFullName = `${user?.firstName} ${user?.lastName}`;
+
+  return { user, isUserLoading, userFullName };
 }
