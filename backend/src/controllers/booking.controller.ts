@@ -26,9 +26,9 @@ export const getBookings = async (req: Request, res: Response) => {
 
 // POST /bookings
 export const makeBooking = async (req: Request, res: Response) => {
-  const { customerId, professionalId, startTime, endTime, description } = req.body;
+  const { customerId, professionalId, selectedDate, selectedHour, description } = req.body;
 
-  if (!customerId || !professionalId || !startTime || !endTime) {
+  if (!customerId || !professionalId || !selectedDate || !selectedHour) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -43,16 +43,15 @@ export const makeBooking = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Professional not found' });
     }
 
-    // Vérifier conflit
+    // Vérifier conflit exact (même date + même heure)
     const [conflictCheck] = await db.execute(
       `
       SELECT 1 FROM bookings
       WHERE professionalId = ?
-        AND ((startTime < ? AND endTime > ?) OR
-             (startTime < ? AND endTime > ?) OR
-             (startTime >= ? AND endTime <= ?))
+        AND selectedDate = ?
+        AND selectedHour = ?
       `,
-      [professionalId, endTime, endTime, startTime, startTime, startTime, endTime],
+      [professionalId, selectedDate, selectedHour],
     );
 
     if ((conflictCheck as any[]).length > 0) {
@@ -62,13 +61,24 @@ export const makeBooking = async (req: Request, res: Response) => {
     // Créer réservation
     const [result] = await db.execute(
       `
-      INSERT INTO bookings (customerId, professionalId, startTime, endTime, status, createdAt, description)
-      VALUES (?, ?, ?, ?, 'pending', NOW(), ?)
+      INSERT INTO bookings (
+        customerId,
+        professionalId,
+        selectedDate,
+        selectedHour,
+        status,
+        description,
+        createdAt
+      )
+      VALUES (?, ?, ?, ?, 'pending', ?, NOW())
       `,
-      [customerId, professionalId, startTime, endTime, description || ''],
+      [customerId, professionalId, selectedDate, selectedHour, description || ''],
     );
 
-    res.status(201).json({ message: 'Booking created', bookingId: (result as any).insertId });
+    res.status(201).json({
+      message: 'Booking created',
+      bookingId: (result as any).insertId,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

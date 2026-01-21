@@ -3,6 +3,7 @@ import { useState, FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
 import { getLoggedUser } from '@/utils/utils';
+import Calendar from './Calendar';
 
 interface BookingFormProps {
   professionalId: number;
@@ -11,8 +12,8 @@ interface BookingFormProps {
 interface BookingPayload {
   customerId: number;
   professionalId: number;
-  startTime: string;
-  endTime: string;
+  selectedDate: Date;
+  selectedHour: string;
   description?: string;
 }
 
@@ -20,8 +21,8 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
   const customerId = getLoggedUser()?.id;
   const queryClient = useQueryClient();
 
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [description, setDescription] = useState('');
 
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
@@ -37,21 +38,21 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!startTime || !endTime) return;
+    if (!selectedDate || !selectedHour) return;
 
     try {
       await mutateAsync({
         customerId,
         professionalId,
-        startTime,
-        endTime,
+        selectedDate,
+        selectedHour,
         description,
       });
 
       // Success actions
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
-      setStartTime('');
-      setEndTime('');
+      setSelectedDate(null);
+      setSelectedHour(null);
       setDescription('');
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -64,27 +65,12 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className='flex flex-col gap-4 w-full max-w-md'>
-      <label>
-        Start Time
-        <input
-          type='datetime-local'
-          value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-          required
-          className='border p-2 w-full'
-        />
-      </label>
-
-      <label>
-        End Time
-        <input
-          type='datetime-local'
-          value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-          required
-          className='border p-2 w-full'
-        />
-      </label>
+      <Calendar
+        selectedDate={selectedDate}
+        selectedHour={selectedHour}
+        onSelectedDate={setSelectedDate}
+        onSelectedHour={setSelectedHour}
+      />
 
       <label>
         Description
@@ -99,7 +85,7 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
       <button
         type='submit'
         disabled={isPending}
-        className='bg-blue-600 text-white p-2 rounded hover:bg-blue-700'
+        className='bg-blue-600 text-white p-2 rounded hover:bg-blue-700 font-semibold'
       >
         {isPending ? 'Booking...' : 'Create Booking'}
       </button>

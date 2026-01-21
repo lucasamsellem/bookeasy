@@ -30,7 +30,7 @@ export default function AvailabilitiesPage() {
 
   return (
     <section>
-      <h2>Professionals registered on BookEasy</h2>
+      {/* <h2>Professionals registered on BookEasy</h2> */}
       <ProfessionalsList professionals={professionals} />
     </section>
   );

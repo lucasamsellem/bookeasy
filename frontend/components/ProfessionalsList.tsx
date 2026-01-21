@@ -25,7 +25,7 @@ export default function ProfessionalsList({ professionals }: ProfessionalsListPr
 
   return (
     <>
-      <ul className='grid grid-cols-3 gap-4 '>
+      <ul className='grid grid-cols-4 gap-5'>
         {professionals?.map((professional) => (
           <li
             key={professional.id}
