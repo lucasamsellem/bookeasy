@@ -39,8 +39,6 @@ export default function Calendar({
   selectedHour,
   onSelectedHour,
 }: CalendarProps) {
-  console.log(selectedDate);
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 

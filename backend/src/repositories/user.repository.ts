@@ -12,12 +12,12 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
 };
 
 export const createUser = async (user: Omit<User, 'id'>) => {
-  const { name, email, password, role, address } = user;
+  const { firstName, lastName, email, password, role, address } = user;
 
   const [result] = await db.execute(
-    `INSERT INTO users (name, email, password, role, address)
-     VALUES (?, ?, ?, ?, ?)`,
-    [name, email, password, role, address],
+    `INSERT INTO users (firstName, lastName, email, password, role, address)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [firstName, lastName, email, password, role, address],
   );
 
   return result;

@@ -2,15 +2,17 @@ import { db } from '../config/db';
 import { Request, Response } from 'express';
 import { BOOKING_COLUMNS } from '../utils/columns';
 
+export type BookingStatus = 'pending' | 'confirmed' | 'canceled';
+
 export interface Booking {
   id: number;
   customerId: number;
   professionalId: number;
-  startTime: string;
-  endTime: string;
-  status: string;
-  createdAt: string;
-  description: string;
+  selectedDate: string; // YYYY-MM-DD
+  selectedHour: string; // HH:MM:SS
+  status: BookingStatus;
+  description?: string;
+  createdAt: string; // ISO
 }
 
 // GET /bookings
