@@ -8,7 +8,7 @@ export interface Booking {
   id: number;
   customerId: number;
   professionalId: number;
-  selectedDate: string; // YYYY-MM-DD
+  selectedDate: Date | null;
   selectedHour: string; // HH:MM:SS
   status: BookingStatus;
   description?: string;

@@ -11,16 +11,50 @@ const statusColors: Record<BookingStatus, string> = {
   canceled: 'bg-red-100 text-red-800',
 };
 
+function buildAppointmentDate(date: Date, hour: string): Date {
+  if (!date || !hour) return new Date();
+  const [hours, minutes] = hour.split(':').map(Number);
+
+  const appointment = new Date(date);
+  appointment.setHours(hours, minutes, 0, 0);
+
+  return appointment;
+}
+
+function formatTimeLeft(ms: number): string {
+  const totalMinutes = Math.floor(ms / 1000 / 60);
+  const days = Math.floor(totalMinutes / (60 * 24));
+  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+  const minutes = totalMinutes % 60;
+
+  if (days > 0) return `${days}j ${hours}h`;
+  if (hours > 0) return `${hours}h ${minutes}min`;
+  return `${minutes}min`;
+}
+
 export default function BookingCard({ booking }: BookingCardProps) {
-  const { customerId, professionalId, selectedDate, selectedHour, status, description, createdAt } =
-    booking;
+  const { customerId, professionalId, selectedDate, selectedHour, status, description } = booking;
 
   const { userFullName: customerFullName } = useFetchUserById(customerId);
   const { userFullName: proFullName } = useFetchUserById(professionalId);
 
+  // Date complète du RDV (date + heure)
+  // ⬇️ Date complète fiable
+  const appointmentDate = buildAppointmentDate(selectedDate!, selectedHour);
+
+  const now = new Date();
+
+  const hasPassed = appointmentDate <= now;
+  const timeLeftMs = appointmentDate.getTime() - now.getTime();
+  console.log(timeLeftMs);
+
   return (
-    <div className='border rounded-xl shadow-sm p-4 bg-white flex flex-col gap-2 w-full max-w-md'>
-      {/* Header: client + professional */}
+    <div
+      className={`border rounded-xl shadow-sm p-4 bg-white flex flex-col gap-2 w-full max-w-md ${
+        hasPassed ? 'opacity-50' : ''
+      }`}
+    >
+      {/* Header */}
       <div className='flex justify-between items-center'>
         <div>
           <p className='font-semibold'>{proFullName}</p>
@@ -31,12 +65,19 @@ export default function BookingCard({ booking }: BookingCardProps) {
         </span>
       </div>
 
-      {/* Date + Heure */}
+      {/* Date + heure */}
       <div className='text-sm text-gray-700'>
         <p>
-          📅 {new Date(selectedDate).toLocaleDateString('fr-FR')} à {selectedHour.slice(0, 5)}
+          📅 {new Date(selectedDate!).toLocaleDateString('fr-FR')} à {selectedHour.slice(0, 5)}
         </p>
       </div>
+
+      {/* Temps restant */}
+      {!hasPassed && status !== 'canceled' && (
+        <p className='text-sm text-blue-600 font-medium'>⏳ Dans {formatTimeLeft(timeLeftMs)}</p>
+      )}
+
+      {hasPassed && <p className='text-sm text-gray-400 italic'>RDV passé</p>}
 
       {/* Description */}
       {description && (
@@ -44,12 +85,6 @@ export default function BookingCard({ booking }: BookingCardProps) {
           &quot;{description}&quot;
         </p>
       )}
-
-      {/* Créé le */}
-      <p className='text-gray-400 text-xs'>
-        Créé le {new Date(createdAt).toLocaleDateString('fr-FR')} à{' '}
-        {new Date(createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-      </p>
     </div>
   );
 }
