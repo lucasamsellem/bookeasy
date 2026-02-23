@@ -3,11 +3,11 @@
 import Link from 'next/link';
 import ActionButton from './ActionButton';
 import { User } from '@backend/controllers/user.controller';
-import Image from 'next/image';
 import useModal from '@/hooks/useModal';
 import Modal from './Modal';
 import NewBookingForm from './NewBookingForm';
 import { useState } from 'react';
+import ProfessionalAvatar from './ProfessionalAvatar';
 
 type ProfessionalsListProps = {
   professionals?: User[];
@@ -31,13 +31,7 @@ export default function ProfessionalsList({ professionals }: ProfessionalsListPr
             className='flex text-center flex-col justify-center items-center gap-5 bg-white rounded-3xl p-4'
           >
             <Link href={`/professionals/${professional.id}`} className='flex flex-col items-center'>
-              <Image
-                width={125}
-                height={125}
-                src={`https://i.pravatar.cc/150?img=${professional.id}`}
-                alt='Avatar'
-                className='rounded-full mb-3'
-              />
+              <ProfessionalAvatar professionalId={professional.id} />
 
               {/* Nom et profession */}
               <h3 className='text-2xl font-semibold'>

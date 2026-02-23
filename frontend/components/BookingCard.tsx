@@ -46,7 +46,6 @@ export default function BookingCard({ booking }: BookingCardProps) {
 
   const hasPassed = appointmentDate <= now;
   const timeLeftMs = appointmentDate.getTime() - now.getTime();
-  console.log(timeLeftMs);
 
   return (
     <div
