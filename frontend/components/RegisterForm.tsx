@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
+import PasswordStrengthBar from './PasswordStrengthBar';
 
 type UserRole = 'customer' | 'professional';
 
@@ -12,7 +13,7 @@ interface Address {
   city: string;
 }
 
-interface RegisterBody {
+export interface RegisterBody {
   firstName: string;
   lastName: string;
   email: string;
@@ -36,10 +37,29 @@ const initialForm: RegisterBody = {
   role: 'customer',
 };
 
+// au moins 8 caractères
+// au moins 1 minuscule
+// au moins 1 majuscule
+// au moins 1 chiffre
+// au moins 1 caractère spécial
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
 export default function RegisterForm() {
   const [form, setForm] = useState<RegisterBody>(initialForm);
 
+  const isPasswordValid = PASSWORD_REGEX.test(form.password);
   const isProfessional = form.role === 'professional';
+
+  const isFormValid =
+    form.firstName.trim() !== '' &&
+    form.lastName.trim() !== '' &&
+    form.email.trim() !== '' &&
+    isPasswordValid &&
+    (!isProfessional ||
+      (form.profession.trim() !== '' &&
+        form.address.street.trim() !== '' &&
+        form.address.streetNumber.trim() !== '' &&
+        form.address.city.trim() !== ''));
 
   const { mutate: register, isSuccess } = useMutation({
     mutationFn: async (data: RegisterBody) => {
@@ -76,6 +96,7 @@ export default function RegisterForm() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!isPasswordValid) return;
     register(form);
   };
 
@@ -134,6 +155,8 @@ export default function RegisterForm() {
           value={form.password}
           onChange={handleChange('password')}
         />
+
+        {form.password && <PasswordStrengthBar form={form} />}
       </FormSection>
 
       {isProfessional && (
@@ -170,7 +193,12 @@ export default function RegisterForm() {
 
       <button
         type='submit'
-        className='w-full rounded-md bg-blue-600 py-2 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+        disabled={!isFormValid}
+        className={`w-full rounded-md py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+          isFormValid
+            ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed!'
+        }`}
       >
         Confirm
       </button>
