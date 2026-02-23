@@ -92,24 +92,6 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
             className='bg-transparent text-sm focus:outline-none'
           />
         </div> */}
-
-        {/* Search Button */}
-        <div className='px-4'>
-          <button
-            className='
-              bg-blue-500
-              text-white
-              rounded-full
-              px-6 py-3
-              text-sm
-              font-medium
-              hover:scale-105
-              transition
-            '
-          >
-            Search
-          </button>
-        </div>
       </div>
     </div>
   );
