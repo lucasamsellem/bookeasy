@@ -57,12 +57,23 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 // POST /users
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+
 export const createUser = async (req: Request, res: Response) => {
   const { firstName, lastName, email, password, role = 'customer', profession, address } = req.body;
 
   try {
+    // champs obligatoires
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    // vérification mot de passe côté serveur
+    if (!PASSWORD_REGEX.test(password)) {
+      return res.status(400).json({
+        message:
+          'Password too weak. Must be at least 8 characters with uppercase, lowercase, number, and special character.',
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -105,14 +116,7 @@ export const createUser = async (req: Request, res: Response) => {
       email,
       role,
       profession: role === 'professional' ? (profession ?? null) : null,
-      address:
-        role === 'professional'
-          ? {
-              street,
-              streetNumber,
-              city,
-            }
-          : null,
+      address: role === 'professional' ? { street, streetNumber, city } : null,
     });
   } catch (error: any) {
     console.error(error);
