@@ -4,23 +4,8 @@ import ProfessionalsList from '@/components/ProfessionalsList';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
 import { User } from '@backend/controllers/user.controller';
-
-// const mockAvailabilities: Availability[] = [
-//   {
-//     id: 1,
-//     date: '2025-01-10',
-//     startTime: '09:00',
-//     endTime: '10:00',
-//     isAvailable: true,
-//   },
-//   {
-//     id: 2,
-//     date: '2025-01-10',
-//     startTime: '10:00',
-//     endTime: '11:00',
-//     isAvailable: false,
-//   },
-// ];
+import { useMemo, useState } from 'react';
+import ProfessionalsFilterBar from '@/components/ProfessionalsFilterBar';
 
 export default function AvailabilitiesPage() {
   const { data: professionals } = useQuery<User[]>({
@@ -28,10 +13,42 @@ export default function AvailabilitiesPage() {
     queryFn: () => apiFetch('/customers/professionals'),
   });
 
+  const [filters, setFilters] = useState({
+    profession: null as string | null,
+    name: '',
+    location: '',
+    // date: '',
+  });
+
+  const filteredProfessionals = useMemo(() => {
+    if (!professionals) return [];
+
+    return professionals.filter((p) => {
+      const matchProfession = !filters.profession || p.profession === filters.profession;
+
+      const matchName =
+        !filters.name ||
+        `${p.firstName} ${p.lastName}`.toLowerCase().includes(filters.name.toLowerCase());
+
+      const matchLocation =
+        !filters.location || p.city?.toLowerCase().includes(filters.location.toLowerCase());
+
+      // La logique date dépend de ton modèle availability
+      const matchDate = true;
+
+      return matchProfession && matchName && matchLocation && matchDate;
+    });
+  }, [professionals, filters]);
+
   return (
-    <section>
-      {/* <h2>Professionals registered on BookEasy</h2> */}
-      <ProfessionalsList professionals={professionals} />
+    <section className='space-y-6'>
+      <ProfessionalsFilterBar
+        professionals={professionals}
+        filters={filters}
+        onChange={setFilters}
+      />
+
+      <ProfessionalsList professionals={filteredProfessionals} />
     </section>
   );
 }
