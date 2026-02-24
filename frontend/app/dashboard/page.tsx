@@ -1,3 +1,4 @@
+import UsersList from '@/components/UsersList';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -13,5 +14,9 @@ export default async function DashboardPage() {
     redirect('/');
   }
 
-  return <div>Super Admin Dashboard</div>;
+  return (
+    <div>
+      <UsersList />
+    </div>
+  );
 }
