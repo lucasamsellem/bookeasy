@@ -28,7 +28,11 @@ export default function LoginForm() {
     error,
   } = useMutation({
     mutationFn: async (data: LoginBody) => {
-      return apiFetch<LoginResponse>('/auth/login', { method: 'POST', body: JSON.stringify(data) });
+      return apiFetch<LoginResponse>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
     },
   });
 

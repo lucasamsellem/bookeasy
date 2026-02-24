@@ -27,6 +27,14 @@ export const login = async (req: Request, res: Response) => {
     // Générer le token JWT
     const token = generateToken(user.id.toString(), user.role);
 
+    // 🔐 Cookie httpOnly
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 24 * 60 * 60 * 1000, // 1 jour
+    });
+
     // Répondre avec token et infos utilisateur
     res.json({
       token,

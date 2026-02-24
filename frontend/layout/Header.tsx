@@ -17,7 +17,8 @@ export default function Header() {
     <header style={{ padding: '1rem', borderBottom: '1px solid #ddd' }}>
       <nav className='flex justify-between'>
         <div className='flex gap-x-5'>
-          {loggedUser?.role === 'superAdmin' && <NavLink href='/'>Dashboard</NavLink>}
+          <NavLink href='/'>Home</NavLink>
+          {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
           <NavLink href='/availabilities'>Availabilities</NavLink>
           <NavLink href='/appointments'>My appointments</NavLink>
         </div>

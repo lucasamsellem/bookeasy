@@ -11,8 +11,14 @@ export const app = express();
 
 // app.use() sert à installer des middlewares dans Express, pour traiter, filtrer ou enrichir les requêtes avant qu’elles n’atteignent tes controllers.
 
-app.use(cors());
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+);
 
 // Toutes les routes définies dans userRouter seront préfixées par /api/users.
 app.use('/api/users', userRouter);
