@@ -38,18 +38,15 @@ export default function BookingCard({ booking }: BookingCardProps) {
   const { userFullName: customerFullName } = useFetchUserById(customerId);
   const { userFullName: proFullName } = useFetchUserById(professionalId);
 
-  // Date complète du RDV (date + heure)
-  // ⬇️ Date complète fiable
   const appointmentDate = buildAppointmentDate(selectedDate!, selectedHour);
 
   const now = new Date();
-
   const hasPassed = appointmentDate <= now;
   const timeLeftMs = appointmentDate.getTime() - now.getTime();
 
   return (
     <div
-      className={`border rounded-xl shadow-sm p-4 bg-white flex flex-col gap-2 w-full max-w-md ${
+      className={`rounded-2xl p-4 bg-white flex flex-col gap-2 w-full max-w-md ${
         hasPassed ? 'opacity-50' : ''
       }`}
     >
