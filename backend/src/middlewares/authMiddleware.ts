@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { Role } from '../controllers/user.controller';
 
 export interface UserRequest extends Request {
-  user?: { id: string; role: 'customer' | 'professional' };
+  user?: { id: string; role: Role };
 }
 
 export const authMiddleware = (req: UserRequest, res: Response, next: NextFunction) => {
@@ -12,7 +13,7 @@ export const authMiddleware = (req: UserRequest, res: Response, next: NextFuncti
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
       id: string;
-      role: 'customer' | 'professional';
+      role: Role;
     };
 
     // stocke les infos user pour les autres middlewares

@@ -4,13 +4,15 @@ import bcrypt from 'bcryptjs';
 import { USER_COLUMNS } from '../utils/columns';
 import { RowDataPacket } from 'mysql2';
 
+export type Role = 'professional' | 'customer' | 'superAdmin';
+
 export interface User {
   id: number;
   email: string;
   password: string;
   firstName: string;
   lastName: string;
-  role: 'professional' | 'customer';
+  role: Role;
   profession?: string;
   address?: {
     street: string;
@@ -68,7 +70,7 @@ export const createUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    // vérification mot de passe côté serveur
+    // vérification mot de passe
     if (!PASSWORD_REGEX.test(password)) {
       return res.status(400).json({
         message:

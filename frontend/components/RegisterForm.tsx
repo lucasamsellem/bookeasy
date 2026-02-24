@@ -5,8 +5,7 @@ import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
 import PasswordStrengthBar from './PasswordStrengthBar';
 import PasswordInput from './PasswordInput';
-
-type UserRole = 'customer' | 'professional';
+import { Role } from '@backend/controllers/user.controller';
 
 interface Address {
   street: string;
@@ -21,7 +20,7 @@ export interface RegisterBody {
   password: string;
   profession: string;
   address: Address;
-  role: UserRole;
+  role: Role;
 }
 
 const initialForm: RegisterBody = {
@@ -86,7 +85,7 @@ export default function RegisterForm() {
       }));
     };
 
-  const handleRoleChange = (role: UserRole) => {
+  const handleRoleChange = (role: Role) => {
     setForm((prev) => ({
       ...prev,
       role,
