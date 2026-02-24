@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
 import { type User } from '@backend/controllers/user.controller';
+import PasswordInput from './PasswordInput';
 
 interface LoginBody {
   email: string;
@@ -67,19 +68,7 @@ export default function LoginForm() {
         />
       </div>
 
-      <div className='flex flex-col space-y-1'>
-        <label htmlFor='password' className='text-sm text-gray-600'>
-          Password
-        </label>
-        <input
-          id='password'
-          type='password'
-          placeholder='••••••••'
-          className='rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+      <PasswordInput value={password} handleChange={(e) => setPassword(e.target.value)} />
 
       <button
         type='submit'

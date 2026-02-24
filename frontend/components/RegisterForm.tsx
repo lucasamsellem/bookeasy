@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
 import PasswordStrengthBar from './PasswordStrengthBar';
+import PasswordInput from './PasswordInput';
 
 type UserRole = 'customer' | 'professional';
 
@@ -148,13 +149,7 @@ export default function RegisterForm() {
           onChange={handleChange('email')}
         />
 
-        <Input
-          label='Password'
-          id='password'
-          type='password'
-          value={form.password}
-          onChange={handleChange('password')}
-        />
+        <PasswordInput value={form.password} handleChange={handleChange('password')} />
 
         {form.password && <PasswordStrengthBar form={form} />}
       </FormSection>
@@ -234,7 +229,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
 }
 
-function Input({ label, id, ...props }: InputProps) {
+export function Input({ label, id, ...props }: InputProps) {
   return (
     <div className='flex flex-col space-y-1'>
       <label htmlFor={id} className='text-sm text-gray-600'>
@@ -255,7 +250,7 @@ interface FormSectionProps {
   children: React.ReactNode;
 }
 
-function FormSection({ title, children }: FormSectionProps) {
+export function FormSection({ title, children }: FormSectionProps) {
   return (
     <section className='space-y-3'>
       <h2 className='text-sm font-semibold uppercase tracking-wide text-gray-500'>{title}</h2>
