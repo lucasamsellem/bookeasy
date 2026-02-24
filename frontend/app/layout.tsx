@@ -2,11 +2,14 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Header from '@/layout/Header';
 import ReactQueryProvider from './providers/ReactQueryProvider';
+import { Inter } from 'next/font/google';
 
 export const metadata: Metadata = {
   title: 'BookEasy',
   description: 'Reservations made simple',
 };
+
+const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({
   children,
@@ -14,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en' className='h-full'>
+    <html lang='en' className={`h-full ${inter.className}`}>
       <body className='h-full'>
         <ReactQueryProvider>
           <div className='min-h-screen flex flex-col'>

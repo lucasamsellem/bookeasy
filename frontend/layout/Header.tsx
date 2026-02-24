@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+  import Link from 'next/link';
 import { getLoggedUser } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
 
