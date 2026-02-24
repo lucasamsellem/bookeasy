@@ -1,17 +1,23 @@
 'use client';
 
-  import Link from 'next/link';
+import Link from 'next/link';
 import { getLoggedUser } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
-
-const logout = () => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('user');
-  window.location.href = '/login';
-};
+import { apiFetch } from '@/services/api';
 
 export default function Header() {
   const loggedUser = getLoggedUser();
+
+  const logout = async () => {
+    await apiFetch('/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  };
 
   return (
     <header style={{ padding: '1rem', borderBottom: '1px solid #ddd' }}>
