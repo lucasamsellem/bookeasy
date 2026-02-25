@@ -14,8 +14,8 @@ const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street',
 
 export default function UsersList() {
   const { users } = useFetchUsers();
-  const { deleteUser } = useDeleteUser();
-  const { updateUser } = useUpdateUser();
+  const { deleteUser, isUserDeleting } = useDeleteUser();
+  const { updateUser, isUserUpdating } = useUpdateUser();
 
   const {
     isOpen: isDeletionOpen,
@@ -116,6 +116,7 @@ export default function UsersList() {
       <Modal
         isOpen={isDeletionOpen}
         onClose={closeDeletionModal}
+        isLoading={isUserDeleting}
         title="Supprimer l'utilisateur"
         onConfirm={async () => {
           if (!userIdToDelete) return;
@@ -132,6 +133,7 @@ export default function UsersList() {
         isOpen={isUpdateOpen}
         onClose={closeUpdateModal}
         title="Modifier l'utilisateur"
+        isLoading={isUserUpdating}
         onConfirm={async () => {
           if (!userIdToUpdate || !userToUpdate) return;
 

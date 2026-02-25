@@ -5,7 +5,7 @@ export default function useDeleteUser() {
   const queryClient = useQueryClient();
   const token = localStorage.getItem('token');
 
-  const { mutateAsync: deleteUser } = useMutation({
+  const { mutateAsync: deleteUser, isPending: isUserDeleting } = useMutation({
     mutationFn: (id: number) =>
       apiFetch(`/users/${id}`, {
         method: 'DELETE',
@@ -18,5 +18,5 @@ export default function useDeleteUser() {
     },
   });
 
-  return { deleteUser };
+  return { deleteUser, isUserDeleting };
 }

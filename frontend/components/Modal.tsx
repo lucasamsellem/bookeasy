@@ -1,5 +1,6 @@
 import { ReactNode, useCallback, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import Spinner from './Spinner';
 
 interface ModalProps {
   isOpen: boolean;
@@ -89,7 +90,7 @@ const Modal: React.FC<ModalProps> = ({
               disabled={isLoading}
               className={`px-4 py-2 rounded text-white ${confirmButtonStyle}`}
             >
-              {isLoading ? '...' : confirmLabel}
+              {isLoading ? <Spinner /> : confirmLabel}
             </button>
           </div>
         )}

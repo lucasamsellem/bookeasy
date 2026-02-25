@@ -6,7 +6,7 @@ export default function useUpdateUser() {
   const queryClient = useQueryClient();
   const token = localStorage.getItem('token');
 
-  const { mutateAsync: updateUser } = useMutation({
+  const { mutateAsync: updateUser, isPending: isUserUpdating } = useMutation({
     mutationFn: ({ id, firstName, lastName, city, street, streetNumber }: Partial<User>) =>
       apiFetch(`/users/${id}`, {
         method: 'PUT',
@@ -20,5 +20,5 @@ export default function useUpdateUser() {
     },
   });
 
-  return { updateUser };
+  return { updateUser, isUserUpdating };
 }

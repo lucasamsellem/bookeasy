@@ -11,7 +11,7 @@ export default function ProfessionalPage() {
   const { user: professional, isUserLoading, userFullName: proFullName } = useFetchUserById(id);
 
   if (isUserLoading) {
-    return <Spinner />;
+    return <Spinner centered={true} />;
   }
 
   if (!professional) {
