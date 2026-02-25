@@ -14,11 +14,6 @@ export interface User {
   lastName: string;
   role: Role;
   profession?: string;
-  address?: {
-    street: string;
-    streetNumber: string;
-    city: string;
-  };
   createdAt: string;
   updatedAt: string;
   street?: string;

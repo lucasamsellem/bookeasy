@@ -1,9 +1,12 @@
 'use client';
 
+import useDeleteUser from '@/hooks/useDeleteUser';
 import useFetchUsers from '@/hooks/useFetchUsers';
+import { TrashIcon } from '@heroicons/react/24/outline';
 
 export default function UsersList() {
   const { users } = useFetchUsers();
+  const { deleteUser } = useDeleteUser();
 
   return (
     <div className='w-full overflow-x-auto'>
@@ -15,6 +18,7 @@ export default function UsersList() {
             <th className='px-6 py-4'>Rôle</th>
             <th className='px-6 py-4'>Profession</th>
             <th className='px-6 py-4'>Adresse</th>
+            <th className='px-6 py-4'></th>
           </tr>
         </thead>
 
@@ -33,12 +37,14 @@ export default function UsersList() {
                 </span>
               </td>
 
-              <td className='px-6 py-4 text-gray-700'>{user.profession || '—'}</td>
+              <td className='px-6 py-4 text-gray-700'>{user.profession}</td>
 
-              <td className='px-6 py-4 text-gray-700'>
-                {user.address
-                  ? `${user.address.street} ${user.address.streetNumber}, ${user.address.city}`
-                  : '—'}
+              <td className='px-6 py-4 text-gray-700'>{user.city}</td>
+
+              <td>
+                <button onClick={() => deleteUser(user.id)}>
+                  <TrashIcon className='size-5' />
+                </button>
               </td>
             </tr>
           ))}
