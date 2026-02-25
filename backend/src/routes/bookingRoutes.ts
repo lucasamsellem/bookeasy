@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { makeBooking, getBookings } from '../controllers/booking.controller';
 import { authMiddleware } from '../middlewares/authMiddleware';
-import { customerMiddleware } from '../middlewares/customerMiddleware';
+import { authorizeRoles } from '../middlewares/authorizeRoles';
 
 export const bookingRouter = Router();
 
-bookingRouter.get('/', [authMiddleware, customerMiddleware], getBookings);
-bookingRouter.post('/', [authMiddleware, customerMiddleware], makeBooking);
+bookingRouter.get('/', [authMiddleware, authorizeRoles('customer')], getBookings);
+bookingRouter.post('/', [authMiddleware, authorizeRoles('customer')], makeBooking);
