@@ -2,17 +2,44 @@
 
 import useDeleteUser from '@/hooks/useDeleteUser';
 import useFetchUsers from '@/hooks/useFetchUsers';
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Modal from './Modal';
 import useModal from '@/hooks/useModal';
 import { useState } from 'react';
+import useUpdateUser from '@/hooks/useUpdateUser';
+import { Input } from './RegisterForm';
+import { User } from '@backend/controllers/user.controller';
+
+const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street', 'streetNumber'];
 
 export default function UsersList() {
   const { users } = useFetchUsers();
   const { deleteUser } = useDeleteUser();
-  const { isOpen, openModal, closeModal } = useModal();
+  const { updateUser } = useUpdateUser();
+
+  const {
+    isOpen: isDeletionOpen,
+    openModal: openDeletetionModal,
+    closeModal: closeDeletionModal,
+  } = useModal();
+
+  const {
+    isOpen: isUpdateOpen,
+    openModal: openUpdateModal,
+    closeModal: closeUpdateModal,
+  } = useModal();
 
   const [userIdToDelete, setUserIdToDelete] = useState<null | number>(null);
+  const [userIdToUpdate, setUserIdToUpdate] = useState<null | number>(null);
+  const userToUpdate = users?.find((user) => user.id === userIdToUpdate);
+
+  const [userUpdatedValues, setUserUpdatedValues] = useState({
+    firstName: userToUpdate?.firstName,
+    lastName: userToUpdate?.lastName,
+    city: userToUpdate?.city,
+    street: userToUpdate?.street,
+    streetNumber: userToUpdate?.streetNumber,
+  });
 
   return (
     <>
@@ -25,6 +52,7 @@ export default function UsersList() {
               <th className='px-6 py-4'>Rôle</th>
               <th className='px-6 py-4'>Profession</th>
               <th className='px-6 py-4'>Adresse</th>
+              <th className='px-6 py-4'></th>
               <th className='px-6 py-4'></th>
             </tr>
           </thead>
@@ -46,16 +74,33 @@ export default function UsersList() {
 
                 <td className='px-6 py-4 text-gray-700'>{user.profession}</td>
 
-                <td className='px-6 py-4 text-gray-700'>{user.city}</td>
+                <td className='px-6 py-4 text-gray-700'>
+                  {user.city ? (
+                    <span>
+                      {user.streetNumber} {user.street}, {user.city}
+                    </span>
+                  ) : null}
+                </td>
 
                 <td>
                   <button
                     onClick={() => {
                       setUserIdToDelete(user.id);
-                      openModal();
+                      openDeletetionModal();
                     }}
                   >
                     <TrashIcon className='size-5' />
+                  </button>
+                </td>
+
+                <td>
+                  <button
+                    onClick={() => {
+                      setUserIdToUpdate(user.id);
+                      openUpdateModal();
+                    }}
+                  >
+                    <PencilIcon className='size-5' />
                   </button>
                 </td>
               </tr>
@@ -69,18 +114,50 @@ export default function UsersList() {
       </div>
 
       <Modal
-        isOpen={isOpen}
-        onClose={closeModal}
+        isOpen={isDeletionOpen}
+        onClose={closeDeletionModal}
         title="Supprimer l'utilisateur"
         onConfirm={async () => {
           if (!userIdToDelete) return;
           await deleteUser(userIdToDelete);
-          closeModal();
+          closeDeletionModal();
         }}
         confirmLabel='Supprimer'
         variant='danger'
       >
         <p>Cette action est irréversible. Veux-tu vraiment supprimer cet utilisateur ?</p>
+      </Modal>
+
+      <Modal
+        isOpen={isUpdateOpen}
+        onClose={closeUpdateModal}
+        title="Modifier l'utilisateur"
+        onConfirm={async () => {
+          if (!userIdToUpdate || !userToUpdate) return;
+
+          await updateUser({
+            id: userToUpdate.id,
+            firstName: userUpdatedValues.firstName ?? userToUpdate.firstName,
+            lastName: userUpdatedValues.lastName ?? userToUpdate.lastName,
+            city: userUpdatedValues.city ?? userToUpdate.city,
+            street: userUpdatedValues.street ?? userToUpdate.street,
+            streetNumber: userUpdatedValues.streetNumber ?? userToUpdate.streetNumber,
+          });
+
+          closeUpdateModal();
+        }}
+        confirmLabel='Modifier'
+      >
+        <form className='flex flex-col gap-y-5' onSubmit={(e) => e.preventDefault()}>
+          {editableKeys.map((key) => (
+            <Input
+              key={key}
+              label={key}
+              defaultValue={userToUpdate?.[key] ?? ''}
+              onChange={(e) => setUserUpdatedValues((prev) => ({ ...prev, [key]: e.target.value }))}
+            />
+          ))}
+        </form>
       </Modal>
     </>
   );

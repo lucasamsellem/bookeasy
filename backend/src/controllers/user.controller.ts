@@ -127,6 +127,51 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
+// PUT /users/:id
+export const updateUserByAdmin = async (req: UserRequest, res: Response) => {
+  const { id } = req.params;
+  const { firstName, lastName, city, street, streetNumber } = req.body;
+
+  try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    // 🔐 Autorisation : uniquement superAdmin
+    if (req.user.role !== 'superAdmin') {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // Vérifier existence user
+    const [rows] = await db.execute('SELECT id FROM users WHERE id = ? LIMIT 1', [id]);
+
+    const users = rows as any[];
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update uniquement les champs autorisés
+    await db.execute(
+      `
+      UPDATE users
+      SET firstName = ?,
+          lastName = ?,
+          city = ?,
+          street = ?,
+          streetNumber = ?
+      WHERE id = ?
+      `,
+      [firstName ?? null, lastName ?? null, city ?? null, street ?? null, streetNumber ?? null, id],
+    );
+
+    return res.status(200).json({ message: 'User updated successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // DELETE /users/:id
 export const deleteUser = async (req: UserRequest, res: Response) => {
   const { id } = req.params;
