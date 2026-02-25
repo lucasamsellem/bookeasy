@@ -6,6 +6,24 @@ interface FeatureProps {
   description: string;
 }
 
+const features = [
+  {
+    icon: <BookmarkIcon className='h-10 w-10' />,
+    title: 'Rapide et simple',
+    description: 'Réservez en quelques clics, sans attente',
+  },
+  {
+    icon: <MapPinIcon className='h-10 w-10' />,
+    title: 'Centralisé',
+    description: 'Tous vos rendez-vous dans une seule interface',
+  },
+  {
+    icon: <ShieldCheckIcon className='h-10 w-10' />,
+    title: 'Sécurisé',
+    description: 'Vos informations sont protégées',
+  },
+];
+
 const Feature = ({ icon, title, description }: FeatureProps) => (
   <li className='flex flex-col items-center text-center gap-2'>
     {icon}
@@ -14,25 +32,7 @@ const Feature = ({ icon, title, description }: FeatureProps) => (
   </li>
 );
 
-export default async function FeaturesList() {
-  const features = [
-    {
-      icon: <BookmarkIcon className='h-10 w-10' />,
-      title: 'Rapide et simple',
-      description: 'Réservez en quelques clics, sans attente',
-    },
-    {
-      icon: <MapPinIcon className='h-10 w-10' />,
-      title: 'Centralisé',
-      description: 'Tous vos rendez-vous dans une seule interface',
-    },
-    {
-      icon: <ShieldCheckIcon className='h-10 w-10' />,
-      title: 'Sécurisé',
-      description: 'Vos informations sont protégées',
-    },
-  ];
-
+export default function FeaturesList() {
   return (
     <section>
       <ul className='flex justify-center gap-10'>

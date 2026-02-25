@@ -10,12 +10,12 @@ export default function ProfessionalPage() {
   const { id } = useParams() as { id: string };
   const { user: professional, isUserLoading, userFullName: proFullName } = useFetchUserById(id);
 
-  if (!professional) {
-    return <p>Professionnel introuvable.</p>;
-  }
-
   if (isUserLoading) {
     return <Spinner />;
+  }
+
+  if (!professional) {
+    return <p>Professionnel introuvable.</p>;
   }
 
   return (

@@ -16,7 +16,7 @@ const testimonials = [
   },
 ];
 
-export default async function Testimonials() {
+export default function Testimonials() {
   return (
     <section className='w-full max-w-5xl mt-16'>
       <h2 className='text-2xl font-semibold text-center mb-8'>Ce que nos utilisateurs disent</h2>
