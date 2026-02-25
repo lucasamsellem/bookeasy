@@ -3,6 +3,7 @@ import { db } from '../config/db';
 import bcrypt from 'bcryptjs';
 import { USER_COLUMNS } from '../utils/columns';
 import { RowDataPacket } from 'mysql2';
+import { UserRequest } from '../middlewares/authMiddleware';
 
 export type Role = 'professional' | 'customer' | 'superAdmin';
 
@@ -127,13 +128,31 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 // DELETE /users/:id
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: UserRequest, res: Response) => {
   const { id } = req.params;
 
   try {
+    if (!req.user) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    // ✅ Autorisation
+    const isOwner = req.user.userId === id;
+    const isSuperAdmin = req.user.role === 'superAdmin';
+
+    if (isSuperAdmin && isOwner) {
+      return res.status(400).json({ message: 'SuperAdmin cannot delete himself' });
+    }
+
+    if (!isOwner && !isSuperAdmin) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
     // Vérifier si l'utilisateur existe
     const [rows] = await db.execute('SELECT id FROM users WHERE id = ? LIMIT 1', [id]);
+
     const users = rows as any[];
+
     if (users.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -141,9 +160,9 @@ export const deleteUser = async (req: Request, res: Response) => {
     // Supprimer l'utilisateur
     await db.execute('DELETE FROM users WHERE id = ?', [id]);
 
-    res.status(204).json({ message: 'User deleted successfully' });
+    return res.status(204).send();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };

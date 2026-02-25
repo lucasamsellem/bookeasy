@@ -81,8 +81,8 @@ export default function LoginForm() {
         {isPending ? 'Loading...' : 'Submit'}
       </button>
 
-      {isSuccess && <p className='text-green-500'>Login successful!</p>}
-      {isError && <p className='text-red-500'>Login failed ({error?.message})</p>}
+      {isSuccess && <p className='text-green-500 text-center'>Login successful!</p>}
+      {isError && <p className='text-red-500 text-center'>Login failed ({error?.message})</p>}
     </form>
   );
 }

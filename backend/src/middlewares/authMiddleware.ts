@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Role } from '../controllers/user.controller';
 
 export interface UserRequest extends Request {
-  user?: { id: string; role: Role };
+  user?: { userId: string; role: Role };
 }
 
 export const authMiddleware = (req: UserRequest, res: Response, next: NextFunction) => {
@@ -12,7 +12,7 @@ export const authMiddleware = (req: UserRequest, res: Response, next: NextFuncti
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET!) as {
-      id: string;
+      userId: string;
       role: Role;
     };
 
