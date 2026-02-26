@@ -3,6 +3,7 @@ import './globals.css';
 import Header from '@/layout/Header';
 import ReactQueryProvider from './providers/ReactQueryProvider';
 import { Inter } from 'next/font/google';
+import Footer from '@/layout/Footer';
 
 export const metadata: Metadata = {
   title: 'BookEasy',
@@ -23,6 +24,7 @@ export default function RootLayout({
           <div className='min-h-screen flex flex-col'>
             <Header />
             <main className='flex-1 px-5 bg-blue-100'>{children}</main>
+            <Footer />
           </div>
         </ReactQueryProvider>
       </body>
