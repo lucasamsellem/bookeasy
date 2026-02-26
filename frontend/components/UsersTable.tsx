@@ -51,6 +51,8 @@ export default function UsersTable() {
 
   return (
     <>
+      <h2 className='text-2xl font-semibold mb-3'>Liste des utilisateurs</h2>
+
       <div className='w-full overflow-x-auto'>
         <table className='min-w-full bg-white shadow-md rounded-xl overflow-hidden'>
           <thead className='bg-gray-100 text-left text-sm uppercase tracking-wider text-gray-600'>

@@ -67,6 +67,16 @@ export const makeBooking = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Professional not found' });
     }
 
+    // Vérifier que c'est un customer ou superAdmin
+    const [customerCheck] = await db.execute(
+      'SELECT id FROM users WHERE id = ? AND role IN (?, ?)',
+      [customerId, 'customer', 'superAdmin'],
+    );
+
+    if ((customerCheck as any[]).length === 0) {
+      return res.status(404).json({ message: 'Customer or superAdmin not found' });
+    }
+
     // Vérifier conflit exact (même date + même heure)
     const [conflictCheck] = await db.execute(
       `

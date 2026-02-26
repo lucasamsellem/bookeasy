@@ -1,3 +1,4 @@
+import AllBookings from '@/components/AllBookings';
 import UsersTable from '@/components/UsersTable';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -15,8 +16,9 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div>
+    <div className='space-y-10'>
       <UsersTable />
+      <AllBookings />
     </div>
   );
 }
