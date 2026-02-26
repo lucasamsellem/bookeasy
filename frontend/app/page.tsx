@@ -5,6 +5,7 @@ import FeaturesList from '@/components/FeaturesList';
 import { redirect } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import Testimonials from '@/components/Testimonials';
+import Logo from '@/components/Logo';
 
 export default function HomePage() {
   return (
@@ -14,6 +15,8 @@ export default function HomePage() {
         <h1 className='text-center text-4xl font-bold mt-10'>
           Réservez vos services en toute simplicité
         </h1>
+
+        <Logo size={200} />
 
         {/* CTA */}
         <ActionButton

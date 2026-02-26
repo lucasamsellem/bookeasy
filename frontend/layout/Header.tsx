@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getLoggedUser } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
 import { apiFetch } from '@/services/api';
+import Logo from '@/components/Logo';
 
 export default function Header() {
   const loggedUser = getLoggedUser();
@@ -21,12 +22,14 @@ export default function Header() {
 
   return (
     <header style={{ padding: '1rem', borderBottom: '1px solid #ddd' }}>
-      <nav className='flex justify-between'>
-        <div className='flex gap-x-5'>
+      <nav className='flex justify-between items-center'>
+        <div className='flex gap-x-5 items-center'>
+          <Logo size={40} />
           <NavLink href='/'>Home</NavLink>
           {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
           <NavLink href='/availabilities'>Availabilities</NavLink>
           <NavLink href='/appointments'>My appointments</NavLink>
+          <NavLink href='/about'>About</NavLink>
         </div>
 
         {loggedUser && (
