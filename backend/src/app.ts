@@ -6,10 +6,11 @@ import { authRouter } from './routes/authRoutes';
 import { userRouter } from './routes/userRoutes';
 import { customerRouter } from './routes/customerRoutes';
 import { bookingRouter } from './routes/bookingRoutes';
-
-export const app = express();
+import { availabilitiesRouter } from './routes/availabilitiesRoutes';
+import { reviewsRouter } from './routes/reviewsRoutes';
 
 // app.use() sert à installer des middlewares dans Express, pour traiter, filtrer ou enrichir les requêtes avant qu’elles n’atteignent tes controllers.
+export const app = express();
 
 app.use(express.json());
 
@@ -25,6 +26,8 @@ app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/customers', customerRouter);
 app.use('/api/bookings', bookingRouter);
+app.use('/api/reviews', reviewsRouter);
+app.use('/api/availabilities', availabilitiesRouter);
 
 app.get('/health', (_, res) => {
   res.status(200).json({ status: "let's get healthy!!" });

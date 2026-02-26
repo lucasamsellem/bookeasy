@@ -1,7 +1,8 @@
 export type Availability = {
   id: number;
-  date: string; // YYYY-MM-DD
-  startTime: string; // HH:mm
-  endTime: string; // HH:mm
-  isAvailable: boolean;
+  dayOfWeek: number;
+  startHour: string; // HH:mm
+  endHour: string; // HH:mm
+  createdAt: string; // HH:mm
+  updatedAt: string; // HH:mm
 };
