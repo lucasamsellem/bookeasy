@@ -26,6 +26,28 @@ export const getBookings = async (req: Request, res: Response) => {
   }
 };
 
+export const getUserBookings = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id;
+
+    if (!userId) {
+      return res.status(400).json({ message: 'Invalid user id' });
+    }
+
+    const [rows] = await db.execute(
+      `SELECT ${BOOKING_COLUMNS} 
+       FROM bookings 
+       WHERE customerId = ? OR professionalId = ?`,
+      [userId, userId],
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // POST /bookings
 export const makeBooking = async (req: Request, res: Response) => {
   const { customerId, professionalId, selectedDate, selectedHour, description } = req.body;

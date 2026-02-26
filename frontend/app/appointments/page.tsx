@@ -1,20 +1,20 @@
 'use client';
 
 import BookingCard from '@/components/BookingCard';
-import useFetchBookings from '@/hooks/useFetchBookings';
+import useFetchUserBookings from '@/hooks/useFetchUserBookings';
 import { getLoggedUser } from '@/utils/utils';
 // import { getLoggedUser } from '@/utils/utils';
 
 export default function AppointmentsPage() {
   const loggedUser = getLoggedUser();
-  const { bookings } = useFetchBookings();
+  const { userBookings } = useFetchUserBookings(loggedUser?.id ?? 0);
 
   if (!loggedUser) return <p>Please log in to view your appointments.</p>;
 
   return (
     <div>
-      <ul className='flex'>
-        {bookings?.map((booking) => (
+      <ul className='grid grid-cols-5 gap-5'>
+        {userBookings?.map((booking) => (
           <li key={booking.id}>
             <BookingCard booking={booking} />
           </li>

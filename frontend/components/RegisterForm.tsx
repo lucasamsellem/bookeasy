@@ -50,8 +50,6 @@ export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
     const { createUser, isUserCreated } = useCreateUser();
     const [form, setForm] = useState<RegisterBody>(initialForm);
 
-    console.log(form);
-
     const isPasswordValid = PASSWORD_REGEX.test(form.password);
     const isProfessional = form.role === 'professional';
     const hasSuperAdmin = allowedRoles.includes('superAdmin');
