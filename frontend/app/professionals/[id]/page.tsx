@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import Spinner from '@/components/Spinner';
 import NewBookingForm from '@/components/NewBookingForm';
 import useFetchUserById from '@/hooks/useFetchUserById';
-import ProfessionalAvatar from '@/components/ProfessionalAvatar';
+import Avatar from '@/components/Avatar';
 
 export default function ProfessionalPage() {
   const { id } = useParams() as { id: string };
@@ -22,7 +22,7 @@ export default function ProfessionalPage() {
     <div className='grid grid-cols-2 gap-x-5 max-w-4xl mx-auto p-6'>
       <div className='bg-white rounded-2xl text-center flex flex-col items-center p-4 h-fit'>
         <h1 className='text-2xl font-bold mb-2'>{proFullName}</h1>
-        <ProfessionalAvatar professionalId={professional.id} />
+        <Avatar id={professional.id} />
         <p className='text-lg text-gray-700 mb-4'>{professional.profession}</p>
 
         <div className='mb-4'>

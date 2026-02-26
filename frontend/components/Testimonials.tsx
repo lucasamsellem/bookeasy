@@ -1,3 +1,5 @@
+import Avatar from './Avatar';
+
 const testimonials = [
   {
     name: 'Alice M.',
@@ -26,9 +28,15 @@ export default function Testimonials() {
             key={i}
             className='bg-white shadow-lg rounded-xl p-6 flex flex-col items-start hover:scale-105 transition-transform'
           >
-            <p className='text-gray-700 mb-4'>“{t.text}”</p>
-            <span className='font-semibold'>{t.name}</span>
-            <span className='text-sm text-gray-500'>{t.role}</span>
+            <div className='grid grid-cols-2 items-center gap-x-2 mb-2'>
+              <Avatar id={i} size={80} />
+              <div className='flex flex-col text-xl'>
+                <span className='font-semibold'>{t.name}</span>
+                <span className='text-sm text-gray-500'>{t.role}</span>
+              </div>
+            </div>
+
+            <p className='text-gray-700 mb-4 border-t border-gray-200 pt-4'>“{t.text}”</p>
           </div>
         ))}
       </div>

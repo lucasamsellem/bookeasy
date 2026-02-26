@@ -7,7 +7,7 @@ import useModal from '@/hooks/useModal';
 import Modal from './Modal';
 import NewBookingForm from './NewBookingForm';
 import { useState } from 'react';
-import ProfessionalAvatar from './ProfessionalAvatar';
+import Avatar from './Avatar';
 
 type ProfessionalsListProps = {
   professionals?: User[];
@@ -31,7 +31,7 @@ export default function ProfessionalsList({ professionals }: ProfessionalsListPr
             className='flex text-center flex-col justify-center items-center gap-5 bg-white rounded-3xl p-4'
           >
             <Link href={`/professionals/${professional.id}`} className='flex flex-col items-center'>
-              <ProfessionalAvatar professionalId={professional.id} />
+              <Avatar id={professional.id} />
 
               {/* Nom et profession */}
               <h3 className='text-2xl font-semibold'>
