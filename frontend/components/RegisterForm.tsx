@@ -1,17 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { apiFetch } from '@/services/api';
-import { useMutation } from '@tanstack/react-query';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import PasswordStrengthBar from './PasswordStrengthBar';
 import PasswordInput from './PasswordInput';
 import { Role } from '@backend/controllers/user.controller';
-
-interface Address {
-  street: string;
-  streetNumber: string;
-  city: string;
-}
+import useCreateUser from '@/hooks/useCreateUser';
 
 export interface RegisterBody {
   firstName: string;
@@ -19,7 +12,9 @@ export interface RegisterBody {
   email: string;
   password: string;
   profession: string;
-  address: Address;
+  street: string;
+  streetNumber: string;
+  city: string;
   role: Role;
 }
 
@@ -29,11 +24,9 @@ const initialForm: RegisterBody = {
   email: '',
   password: '',
   profession: '',
-  address: {
-    street: '',
-    streetNumber: '',
-    city: '',
-  },
+  street: '',
+  streetNumber: '',
+  city: '',
   role: 'customer',
 };
 
@@ -44,165 +37,186 @@ const initialForm: RegisterBody = {
 // au moins 1 caractère spécial
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
-export default function RegisterForm() {
-  const [form, setForm] = useState<RegisterBody>(initialForm);
+export interface RegisterFormRef {
+  submit: () => Promise<void>;
+}
 
-  const isPasswordValid = PASSWORD_REGEX.test(form.password);
-  const isProfessional = form.role === 'professional';
+interface RegisterFormProps {
+  allowedRoles?: Role[];
+}
 
-  const isFormValid =
-    form.firstName.trim() !== '' &&
-    form.lastName.trim() !== '' &&
-    form.email.trim() !== '' &&
-    isPasswordValid &&
-    (!isProfessional ||
-      (form.profession.trim() !== '' &&
-        form.address.street.trim() !== '' &&
-        form.address.streetNumber.trim() !== '' &&
-        form.address.city.trim() !== ''));
+export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
+  ({ allowedRoles = ['customer', 'professional'] }, ref) => {
+    const { createUser, isUserCreated } = useCreateUser();
+    const [form, setForm] = useState<RegisterBody>(initialForm);
 
-  const { mutate: register, isSuccess } = useMutation({
-    mutationFn: async (data: RegisterBody) => {
-      return apiFetch('/users', { method: 'POST', body: JSON.stringify(data) });
-    },
-  });
+    console.log(form);
 
-  const handleChange = (field: keyof RegisterBody) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm((prev) => ({
-      ...prev,
-      [field]: e.target.value,
-    }));
-  };
+    const isPasswordValid = PASSWORD_REGEX.test(form.password);
+    const isProfessional = form.role === 'professional';
+    const hasSuperAdmin = allowedRoles.includes('superAdmin');
 
-  const handleAddressChange =
-    (field: keyof Address) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isFormValid =
+      form.firstName.trim() !== '' &&
+      form.lastName.trim() !== '' &&
+      form.email.trim() !== '' &&
+      isPasswordValid &&
+      (!isProfessional ||
+        (form.profession.trim() !== '' &&
+          form.street.trim() !== '' &&
+          form.streetNumber.trim() !== '' &&
+          form.city.trim() !== ''));
+
+    const handleChange =
+      (field: keyof RegisterBody) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm((prev) => ({
+          ...prev,
+          [field]: e.target.value,
+        }));
+      };
+
+    const handleRoleChange = (role: Role) => {
       setForm((prev) => ({
         ...prev,
-        address: {
-          ...prev.address,
-          [field]: e.target.value,
-        },
+        role,
+        profession: role === 'professional' ? prev.profession : '',
+        street: role === 'professional' ? prev.street : '',
+        streetNumber: role === 'professional' ? prev.streetNumber : '',
+        city: role === 'professional' ? prev.city : '',
       }));
     };
 
-  const handleRoleChange = (role: Role) => {
-    setForm((prev) => ({
-      ...prev,
-      role,
-      profession: role === 'professional' ? prev.profession : '',
-      address: role === 'professional' ? prev.address : { street: '', streetNumber: '', city: '' },
+    const submitForm = async () => {
+      if (!isFormValid) return;
+      await createUser(form);
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      await submitForm();
+    };
+
+    useImperativeHandle(ref, () => ({
+      submit: submitForm,
     }));
-  };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!isPasswordValid) return;
-    register(form);
-  };
+    return (
+      <form
+        onSubmit={handleSubmit}
+        className='w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow-md'
+      >
+        {!hasSuperAdmin && (
+          <h1 className='text-center text-2xl font-semibold text-gray-800'>Register</h1>
+        )}
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className='w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow-md'
-    >
-      <h1 className='text-center text-2xl font-semibold text-gray-800'>Register</h1>
+        <FormSection title='Role'>
+          <div className='flex gap-3 text-sm'>
+            {allowedRoles.includes('customer') && (
+              <RoleButton
+                label='Customer'
+                isActive={form.role === 'customer'}
+                onClick={() => handleRoleChange('customer')}
+              />
+            )}
 
-      <FormSection title='Role'>
-        <h3 className='text-sm'>
-          You are:{' '}
-          <RoleButton
-            label='Customer'
-            isActive={form.role === 'customer'}
-            onClick={() => handleRoleChange('customer')}
-          />{' '}
-          <RoleButton
-            label='Professional'
-            isActive={form.role === 'professional'}
-            onClick={() => handleRoleChange('professional')}
-          />
-        </h3>
-      </FormSection>
+            {allowedRoles.includes('professional') && (
+              <RoleButton
+                label='Professional'
+                isActive={form.role === 'professional'}
+                onClick={() => handleRoleChange('professional')}
+              />
+            )}
 
-      <FormSection title='Identity'>
-        <Input
-          label='First name'
-          id='firstName'
-          value={form.firstName}
-          onChange={handleChange('firstName')}
-        />
+            {hasSuperAdmin && (
+              <RoleButton
+                label='Super Admin'
+                isActive={form.role === 'superAdmin'}
+                onClick={() => handleRoleChange('superAdmin')}
+              />
+            )}
+          </div>
+        </FormSection>
 
-        <Input
-          label='Last name'
-          id='lastName'
-          value={form.lastName}
-          onChange={handleChange('lastName')}
-        />
-      </FormSection>
-
-      <FormSection title='Login information'>
-        <Input
-          label='Email'
-          id='email'
-          type='email'
-          value={form.email}
-          onChange={handleChange('email')}
-        />
-
-        <PasswordInput value={form.password} handleChange={handleChange('password')} />
-
-        {form.password && <PasswordStrengthBar form={form} />}
-      </FormSection>
-
-      {isProfessional && (
-        <FormSection title='Professional details'>
+        <FormSection title='Identity'>
           <Input
-            label='Profession'
-            id='profession'
-            value={form.profession}
-            onChange={handleChange('profession')}
+            label='First name'
+            id='firstName'
+            value={form.firstName}
+            onChange={handleChange('firstName')}
           />
 
           <Input
-            label='Street'
-            id='street'
-            value={form.address.street}
-            onChange={handleAddressChange('street')}
-          />
-
-          <Input
-            label='Street number'
-            id='streetNumber'
-            value={form.address.streetNumber}
-            onChange={handleAddressChange('streetNumber')}
-          />
-
-          <Input
-            label='City'
-            id='city'
-            value={form.address.city}
-            onChange={handleAddressChange('city')}
+            label='Last name'
+            id='lastName'
+            value={form.lastName}
+            onChange={handleChange('lastName')}
           />
         </FormSection>
-      )}
 
-      <button
-        type='submit'
-        disabled={!isFormValid}
-        className={`w-full rounded-md py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-          isFormValid
-            ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed!'
-        }`}
-      >
-        Confirm
-      </button>
+        <FormSection title='Login information'>
+          <Input
+            label='Email'
+            id='email'
+            type='email'
+            value={form.email}
+            onChange={handleChange('email')}
+          />
 
-      {isSuccess && (
-        <p className='text-center font-semibold text-green-500'>User registered successfully!</p>
-      )}
-    </form>
-  );
-}
+          <PasswordInput value={form.password} handleChange={handleChange('password')} />
+
+          {form.password && <PasswordStrengthBar form={form} />}
+        </FormSection>
+
+        {isProfessional && (
+          <FormSection title='Professional details'>
+            <Input
+              label='Profession'
+              id='profession'
+              value={form.profession}
+              onChange={handleChange('profession')}
+            />
+
+            <Input
+              label='Street'
+              id='street'
+              value={form.street}
+              onChange={handleChange('street')}
+            />
+
+            <Input
+              label='Street number'
+              id='streetNumber'
+              value={form.streetNumber}
+              onChange={handleChange('streetNumber')}
+            />
+
+            <Input label='City' id='city' value={form.city} onChange={handleChange('city')} />
+          </FormSection>
+        )}
+
+        {!hasSuperAdmin && (
+          <button
+            type='submit'
+            disabled={!isFormValid}
+            className={`w-full rounded-md py-2 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+              isFormValid
+                ? 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed!'
+            }`}
+          >
+            Confirm
+          </button>
+        )}
+
+        {isUserCreated && (
+          <p className='text-center font-semibold text-green-500'>User registered successfully!</p>
+        )}
+      </form>
+    );
+  },
+);
+
+RegisterForm.displayName = 'RegisterForm';
 
 interface RoleButtonProps {
   label: string;

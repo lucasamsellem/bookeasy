@@ -1,4 +1,4 @@
-import UsersList from '@/components/UsersList';
+import UsersTable from '@/components/UsersTable';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
@@ -16,7 +16,7 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <UsersList />
+      <UsersTable />
     </div>
   );
 }

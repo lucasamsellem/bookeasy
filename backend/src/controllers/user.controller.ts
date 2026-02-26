@@ -58,7 +58,17 @@ export const getUserById = async (req: Request, res: Response) => {
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
 export const createUser = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password, role = 'customer', profession, address } = req.body;
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    role = 'customer',
+    profession,
+    street: bodyStreet,
+    streetNumber: bodyStreetNumber,
+    city: bodyCity,
+  } = req.body;
 
   try {
     // champs obligatoires
@@ -76,9 +86,9 @@ export const createUser = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const street = role === 'professional' ? (address?.street ?? null) : null;
-    const streetNumber = role === 'professional' ? (address?.streetNumber ?? null) : null;
-    const city = role === 'professional' ? (address?.city ?? null) : null;
+    const street = role === 'professional' ? bodyStreet : null;
+    const streetNumber = role === 'professional' ? bodyStreetNumber : null;
+    const city = role === 'professional' ? bodyCity : null;
 
     const [result] = await db.execute(
       `INSERT INTO users (

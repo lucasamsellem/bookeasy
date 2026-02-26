@@ -2,20 +2,22 @@
 
 import useDeleteUser from '@/hooks/useDeleteUser';
 import useFetchUsers from '@/hooks/useFetchUsers';
-import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Modal from './Modal';
 import useModal from '@/hooks/useModal';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import useUpdateUser from '@/hooks/useUpdateUser';
-import { Input } from './RegisterForm';
+import { RegisterForm, Input, RegisterFormRef } from './RegisterForm';
 import { User } from '@backend/controllers/user.controller';
 
 const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street', 'streetNumber'];
 
-export default function UsersList() {
+export default function UsersTable() {
   const { users } = useFetchUsers();
   const { deleteUser, isUserDeleting } = useDeleteUser();
   const { updateUser, isUserUpdating } = useUpdateUser();
+
+  const formRef = useRef<RegisterFormRef>(null);
 
   const {
     isOpen: isDeletionOpen,
@@ -27,6 +29,12 @@ export default function UsersList() {
     isOpen: isUpdateOpen,
     openModal: openUpdateModal,
     closeModal: closeUpdateModal,
+  } = useModal();
+
+  const {
+    isOpen: isCreateOpen,
+    openModal: openCreateModal,
+    closeModal: closeCreateModal,
   } = useModal();
 
   const [userIdToDelete, setUserIdToDelete] = useState<null | number>(null);
@@ -53,7 +61,12 @@ export default function UsersList() {
               <th className='px-6 py-4'>Profession</th>
               <th className='px-6 py-4'>Adresse</th>
               <th className='px-6 py-4'></th>
-              <th className='px-6 py-4'></th>
+
+              <th className='px-6 py-4'>
+                <button onClick={openCreateModal}>
+                  <PlusIcon className='size-5' />
+                </button>
+              </th>
             </tr>
           </thead>
 
@@ -112,6 +125,20 @@ export default function UsersList() {
           <div className='text-center py-10 text-gray-500'>Aucun utilisateur trouvé.</div>
         )}
       </div>
+
+      <Modal
+        isOpen={isCreateOpen}
+        onClose={closeCreateModal}
+        // isLoading={isUserCreated}
+        title='Nouvel utilisateur'
+        onConfirm={async () => {
+          await formRef.current?.submit();
+          closeCreateModal();
+        }}
+        confirmLabel='Créer'
+      >
+        <RegisterForm ref={formRef} allowedRoles={['customer', 'professional', 'superAdmin']} />
+      </Modal>
 
       <Modal
         isOpen={isDeletionOpen}
