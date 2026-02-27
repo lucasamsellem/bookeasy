@@ -9,7 +9,7 @@ export default function AvailabilitiesPage() {
 
   return (
     <section className='space-y-6'>
-      {userRole === 'customer' && <ProfessionalsList />}
+      {userRole === 'customer' || (userRole === 'superAdmin' && <ProfessionalsList />)}
       {userRole === 'professional' && <ProAvailabilities />}
     </section>
   );
