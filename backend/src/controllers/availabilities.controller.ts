@@ -3,9 +3,9 @@ import { db } from '../config/db';
 
 // POST /availabilities
 export const createAvailability = async (req: Request, res: Response) => {
-  const { professionalId, dayOfWeek, startHour, endHour } = req.body;
+  const { professionalId, date, startHour, endHour } = req.body;
 
-  if (!professionalId || dayOfWeek === undefined || !startHour || !endHour) {
+  if (!professionalId || !date || !startHour || !endHour) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
@@ -19,18 +19,37 @@ export const createAvailability = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Professional not found' });
     }
 
+    // Vérifier chevauchement sur la même date
+    const [existing] = await db.execute(
+      `
+      SELECT id FROM availabilities
+      WHERE professionalId = ?
+        AND date = ?
+        AND NOT (endHour <= ? OR startHour >= ?)
+      LIMIT 1
+      `,
+      [professionalId, date, startHour, endHour],
+    );
+
+    if ((existing as any[]).length > 0) {
+      return res
+        .status(400)
+        .json({ message: 'This availability already exists or overlaps with an existing one.' });
+    }
+
     // Ajouter le créneau
     const [result] = await db.execute(
       `
-      INSERT INTO availabilities (professionalId, dayOfWeek, startHour, endHour, createdAt, updatedAt)
+      INSERT INTO availabilities (professionalId, date, startHour, endHour, createdAt, updatedAt)
       VALUES (?, ?, ?, ?, NOW(), NOW())
       `,
-      [professionalId, dayOfWeek, startHour, endHour],
+      [professionalId, date, startHour, endHour],
     );
 
-    res
-      .status(201)
-      .json({ message: 'Availability created', availabilityId: (result as any).insertId });
+    res.status(201).json({
+      message: 'Availability created',
+      availabilityId: (result as any).insertId,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -43,7 +62,7 @@ export const getAvailabilitiesByProfessional = async (req: Request, res: Respons
 
   try {
     const [availabilities] = await db.execute(
-      'SELECT * FROM availabilities WHERE professionalId = ? ORDER BY dayOfWeek, startHour',
+      'SELECT * FROM availabilities WHERE professionalId = ? ORDER BY date, startHour',
       [id],
     );
 
