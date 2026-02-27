@@ -18,7 +18,7 @@ export interface RegisterBody {
   role: Role;
 }
 
-const initialForm: RegisterBody = {
+export const initialForm: RegisterBody = {
   firstName: '',
   lastName: '',
   email: '',
@@ -35,7 +35,7 @@ const initialForm: RegisterBody = {
 // au moins 1 majuscule
 // au moins 1 chiffre
 // au moins 1 caractère spécial
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+export const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
 export interface RegisterFormRef {
   submit: () => Promise<void>;
@@ -47,7 +47,8 @@ interface RegisterFormProps {
 
 export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
   ({ allowedRoles = ['customer', 'professional'] }, ref) => {
-    const { createUser, isUserCreated } = useCreateUser();
+    const { createUser, createUserFromAdmin, isUserCreated } = useCreateUser();
+
     const [form, setForm] = useState<RegisterBody>(initialForm);
 
     const isPasswordValid = PASSWORD_REGEX.test(form.password);
@@ -86,6 +87,12 @@ export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
 
     const submitForm = async () => {
       if (!isFormValid) return;
+
+      if (hasSuperAdmin) {
+        await createUserFromAdmin(form);
+        return;
+      }
+
       await createUser(form);
     };
 
