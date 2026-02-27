@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { makeBooking, getBookings, getUserBookings } from '../controllers/booking.controller';
+import {
+  makeBooking,
+  getBookings,
+  getUserBookings,
+  updateBookingStatus,
+} from '../controllers/booking.controller';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { authorizeRoles } from '../middlewares/authorizeRoles';
 
@@ -14,3 +19,4 @@ bookingRouter.get(
 );
 
 bookingRouter.post('/', [authMiddleware, authorizeRoles('customer')], makeBooking);
+bookingRouter.patch('/:id/status', updateBookingStatus);

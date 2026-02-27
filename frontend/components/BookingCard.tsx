@@ -1,5 +1,6 @@
 import useFetchUserById from '@/hooks/useFetchUserById';
 import { Booking, BookingStatus } from '@backend/controllers/booking.controller';
+import { UserIcon } from '@heroicons/react/24/outline';
 
 interface BookingCardProps {
   booking: Booking;
@@ -46,19 +47,23 @@ export default function BookingCard({ booking }: BookingCardProps) {
 
   return (
     <div
-      className={`rounded-2xl p-4 bg-white flex flex-col gap-2 w-full max-w-md ${
+      className={`rounded-2xl p-4 bg-white flex flex-col gap-3 max-w-md ${
         hasPassed ? 'opacity-50' : ''
       }`}
     >
       {/* Header */}
-      <div className='flex justify-between items-center'>
-        <div>
-          <p className='font-semibold'>{proFullName}</p>
+      <div className='flex justify-between flex-col gap-y-1'>
+        <div className='flex items-center gap-x-7'>
+          <p className='font-semibold text-lg'>{proFullName}</p>
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </span>
+        </div>
+
+        <div className='flex gap-x-1 items-center'>
+          <UserIcon className='size-5 text-gray-400' />
           <p className='text-gray-500 text-sm'>{customerFullName}</p>
         </div>
-        <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}>
-          {status.charAt(0).toUpperCase() + status.slice(1)}
-        </span>
       </div>
 
       {/* Date + heure */}

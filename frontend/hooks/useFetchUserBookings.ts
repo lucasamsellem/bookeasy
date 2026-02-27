@@ -6,7 +6,7 @@ export default function useFetchUserBookings(userId: number) {
   const token = localStorage.getItem('token');
 
   const { data: userBookings, isLoading: isFetchingUserBookings } = useQuery<Booking[]>({
-    queryKey: ['userBookings', userId],
+    queryKey: ['bookings', userId],
     queryFn: () => {
       return apiFetch(`/bookings/user/${userId}`, {
         method: 'GET',

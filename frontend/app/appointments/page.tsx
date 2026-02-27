@@ -3,7 +3,6 @@
 import BookingCard from '@/components/BookingCard';
 import useFetchUserBookings from '@/hooks/useFetchUserBookings';
 import { getLoggedUser } from '@/utils/utils';
-// import { getLoggedUser } from '@/utils/utils';
 
 export default function AppointmentsPage() {
   const loggedUser = getLoggedUser();
@@ -12,14 +11,12 @@ export default function AppointmentsPage() {
   if (!loggedUser) return <p>Please log in to view your appointments.</p>;
 
   return (
-    <div>
-      <ul className='grid grid-cols-5 gap-5'>
-        {userBookings?.map((booking) => (
-          <li key={booking.id}>
-            <BookingCard booking={booking} />
-          </li>
-        ))}
-      </ul>
-    </div>
+    <ul className='grid grid-cols-5 gap-5'>
+      {userBookings?.map((booking) => (
+        <li key={booking.id}>
+          <BookingCard booking={booking} />
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -8,7 +8,7 @@ export interface Booking {
   id: number;
   customerId: number;
   professionalId: number;
-  selectedDate: Date | null;
+  selectedDate: Date;
   selectedHour: string; // HH:MM:SS
   status: BookingStatus;
   description?: string;
@@ -113,6 +113,39 @@ export const makeBooking = async (req: Request, res: Response) => {
       message: 'Booking created',
       bookingId: (result as any).insertId,
     });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// PATCH /bookings/:id
+export const updateBookingStatus = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  if (!id || !status) {
+    return res.status(400).json({ message: 'Missing booking id or status' });
+  }
+
+  const allowedStatuses = ['pending', 'confirmed', 'canceled'];
+
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ message: 'Invalid status value' });
+  }
+
+  try {
+    // Vérifier que la réservation existe
+    const [bookingCheck] = await db.execute('SELECT id FROM bookings WHERE id = ?', [id]);
+
+    if ((bookingCheck as any[]).length === 0) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // Mise à jour
+    await db.execute('UPDATE bookings SET status = ? WHERE id = ?', [status, id]);
+
+    res.status(200).json({ message: 'Booking status updated' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
