@@ -74,7 +74,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
       </div>
 
       {/* Temps restant */}
-      {!hasPassed && status !== 'canceled' && (
+      {!hasPassed && (
         <p className='text-sm text-blue-600 font-medium'>⏳ Dans {formatTimeLeft(timeLeftMs)}</p>
       )}
 
