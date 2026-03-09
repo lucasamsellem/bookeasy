@@ -9,8 +9,15 @@ import { useRef, useState } from 'react';
 import useUpdateUser from '@/hooks/useUpdateUser';
 import { RegisterForm, Input, RegisterFormRef } from './RegisterForm';
 import { User } from '@backend/controllers/user.controller';
+import { capitalizeFirstLetter } from '@/utils/utils';
 
 const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street', 'streetNumber'];
+
+const roleStyles: Record<string, string> = {
+  customer: 'bg-blue-100 text-blue-700',
+  professional: 'bg-green-100 text-green-700',
+  superAdmin: 'bg-purple-100 text-purple-700',
+};
 
 export default function UsersTable() {
   const { users } = useFetchUsers();
@@ -82,8 +89,12 @@ export default function UsersTable() {
                 <td className='px-6 py-4 text-gray-700'>{user.email}</td>
 
                 <td className='px-6 py-4'>
-                  <span className='px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-700'>
-                    {user.role}
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                      roleStyles[user.role] ?? 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    {capitalizeFirstLetter(user.role)}
                   </span>
                 </td>
 
