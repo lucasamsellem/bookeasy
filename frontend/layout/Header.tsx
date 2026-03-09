@@ -5,6 +5,8 @@ import { getLoggedUser } from '@/utils/utils';
 import { usePathname } from 'next/navigation';
 import { apiFetch } from '@/services/api';
 import Logo from '@/components/Logo';
+import { UserCircleIcon } from '@heroicons/react/24/solid';
+import Separator from '@/components/Separator';
 
 export default function Header() {
   const loggedUser = getLoggedUser();
@@ -32,12 +34,6 @@ export default function Header() {
           <NavLink href='/about'>About</NavLink>
         </div>
 
-        {loggedUser && (
-          <p>
-            Welcome, {loggedUser.firstName} {loggedUser.lastName} ({loggedUser.role})
-          </p>
-        )}
-
         {!loggedUser && (
           <div className='flex gap-x-5'>
             <NavLink href='/login'>Login</NavLink>
@@ -45,7 +41,18 @@ export default function Header() {
           </div>
         )}
 
-        {loggedUser && <button onClick={logout}>Logout</button>}
+        {loggedUser && (
+          <div className='flex'>
+            <p className='flex items-center gap-x-2'>
+              {<UserCircleIcon className='size-8' />}
+              {loggedUser.firstName} {loggedUser.lastName} ({loggedUser.role})
+            </p>
+
+            <Separator orientation='vertical' className=' mx-4' />
+
+            <button onClick={logout}>Logout</button>
+          </div>
+        )}
       </nav>
     </header>
   );
@@ -56,8 +63,21 @@ function NavLink({ href, children }: { href: string; children: React.ReactNode }
   const isActive = pathname === href;
 
   return (
-    <Link href={href} className={isActive ? 'text-blue-600 font-semibold' : 'text-gray-600'}>
+    <Link
+      href={href}
+      className={`
+        relative px-1 text-md font-medium transition-colors
+        ${isActive ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'}
+      `}
+    >
       {children}
+
+      <span
+        className={`
+          absolute left-0 -bottom-1 h-0.5 w-full rounded bg-blue-600 transition-all
+          ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
+        `}
+      />
     </Link>
   );
 }
