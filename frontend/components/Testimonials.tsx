@@ -26,7 +26,7 @@ export default function Testimonials() {
         {testimonials.map((t, i) => (
           <div
             key={i}
-            className='bg-white shadow-lg rounded-xl p-6 flex flex-col items-start hover:scale-105 transition-transform'
+            className='bg-white shadow-lg rounded-xl p-6 flex flex-col items-start transition-transform'
           >
             <div className='grid grid-cols-2 items-center gap-x-2 mb-2'>
               <Avatar id={i} size={80} />
