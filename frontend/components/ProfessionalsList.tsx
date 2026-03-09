@@ -61,33 +61,59 @@ export default function ProfessionalsList() {
         onChange={setFilters}
       />
 
-      <ul className='grid grid-cols-5 gap-5'>
+      <ul
+        className='
+    grid 
+    grid-cols-1 
+    gap-4
+    
+    sm:grid-cols-2
+    lg:grid-cols-3
+    xl:grid-cols-4
+  '
+      >
         {filteredProfessionals?.map((professional) => (
           <li
             key={professional.id}
-            className='flex text-center flex-col justify-center items-center gap-5 bg-white rounded-3xl p-4'
+            className='
+        group
+        flex flex-col items-center text-center
+        bg-white
+        rounded-2xl
+        border border-gray-200
+        p-6
+        transition
+        hover:shadow-md
+        hover:border-gray-300
+      '
           >
-            <Link href={`/professionals/${professional.id}`} className='flex flex-col items-center'>
+            <Link
+              href={`/professionals/${professional.id}`}
+              className='flex flex-col items-center gap-3'
+            >
               <Avatar id={professional.id} />
 
-              {/* Nom et profession */}
-              <h3 className='text-2xl font-semibold'>
-                {professional.firstName} {professional.lastName}
-              </h3>
+              <div>
+                <h3 className='text-lg font-semibold text-gray-900'>
+                  {professional.firstName} {professional.lastName}
+                </h3>
 
-              <h4 className='text-lg text-gray-600'>{professional.profession}</h4>
+                <p className='text-sm text-gray-500'>{professional.profession}</p>
+              </div>
             </Link>
 
             {/* Adresse */}
             {professional.street && professional.city && (
-              <p className='text-lg text-gray-500'>{professional.city}</p>
+              <p className='mt-2 text-sm text-gray-400'>{professional.city}</p>
             )}
 
-            <ActionButton
-              text='New Appointment'
-              icon='+'
-              onClick={() => handleNewAppointment(professional)}
-            />
+            <div className='mt-5 w-full flex justify-center'>
+              <ActionButton
+                text='New Appointment'
+                icon='+'
+                onClick={() => handleNewAppointment(professional)}
+              />
+            </div>
           </li>
         ))}
       </ul>
