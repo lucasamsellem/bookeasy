@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useCreateUser() {
   const queryClient = useQueryClient();
-  const token = localStorage.getItem('token');
 
   const { mutateAsync: createUser, isSuccess: isUserCreated } = useMutation({
     mutationFn: (data: RegisterBody) =>
@@ -24,8 +23,6 @@ export default function useCreateUser() {
       apiFetch('/users/admin', {
         method: 'POST',
         body: JSON.stringify(form),
-        headers: { Authorization: `Bearer ${token}` },
-        credentials: 'include',
       }),
 
     onSuccess: () => {

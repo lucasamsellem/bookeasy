@@ -13,6 +13,7 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
   const defaultHeaders = { 'Content-Type': 'application/json' };
 
   const res = await fetch(url, {
+    credentials: 'include',
     ...options,
     headers: {
       ...defaultHeaders,

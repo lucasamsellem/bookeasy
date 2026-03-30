@@ -8,11 +8,14 @@ import { customerRouter } from './routes/customerRoutes';
 import { bookingRouter } from './routes/bookingRoutes';
 import { availabilitiesRouter } from './routes/availabilitiesRoutes';
 import { reviewsRouter } from './routes/reviewsRoutes';
+import cookieParser from 'cookie-parser';
 
 // app.use() sert à installer des middlewares dans Express, pour traiter, filtrer ou enrichir les requêtes avant qu’elles n’atteignent tes controllers.
 export const app = express();
 
 app.use(express.json());
+
+app.use(cookieParser()); // avant les routes
 
 app.use(
   cors({

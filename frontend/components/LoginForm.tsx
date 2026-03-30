@@ -12,7 +12,6 @@ interface LoginBody {
 }
 
 interface LoginResponse {
-  token: string;
   user: User;
 }
 
@@ -31,7 +30,6 @@ export default function LoginForm() {
       return apiFetch<LoginResponse>('/auth/login', {
         method: 'POST',
         body: JSON.stringify(data),
-        credentials: 'include',
       });
     },
   });
@@ -43,7 +41,6 @@ export default function LoginForm() {
       { email, password },
       {
         onSuccess: (data) => {
-          localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
           window.location.href = '/';
         },

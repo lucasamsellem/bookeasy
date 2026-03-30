@@ -18,7 +18,6 @@ interface BookingPayload {
 }
 
 export default function BookingForm({ professionalId }: BookingFormProps) {
-  const token = localStorage.getItem('token');
   const customerId = getLoggedUser()?.id;
   const queryClient = useQueryClient();
 
@@ -31,7 +30,6 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
       apiFetch('/bookings', {
         method: 'POST',
         body: JSON.stringify(payload),
-        headers: { Authorization: `Bearer ${token}` },
       }),
   });
 

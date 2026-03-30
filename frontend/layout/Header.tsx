@@ -11,16 +11,13 @@ import { useState } from 'react';
 
 export default function Header() {
   const loggedUser = getLoggedUser();
-  console.log(loggedUser);
   const [open, setOpen] = useState(false);
 
   const logout = async () => {
     await apiFetch('/auth/logout', {
       method: 'POST',
-      credentials: 'include',
     });
 
-    localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.href = '/login';
   };

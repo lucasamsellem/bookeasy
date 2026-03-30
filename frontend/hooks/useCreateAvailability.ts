@@ -4,15 +4,12 @@ import { Availability } from '@/types/availability';
 
 export default function useCreateAvailability() {
   const queryClient = useQueryClient();
-  const token = localStorage.getItem('token');
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: (availability: Availability) =>
       apiFetch('/availabilities', {
         method: 'POST',
         body: JSON.stringify(availability),
-        headers: { Authorization: `Bearer ${token}` },
-        credentials: 'include',
       }),
 
     onSuccess: () => {

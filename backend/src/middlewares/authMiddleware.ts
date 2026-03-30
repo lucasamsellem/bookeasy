@@ -7,7 +7,9 @@ export interface UserRequest extends Request {
 }
 
 export const authMiddleware = (req: UserRequest, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  // 👇 Lire depuis le cookie en priorité
+  const token = req.cookies?.token ?? req.headers.authorization?.split(' ')[1];
+
   if (!token) return res.status(401).json({ message: 'User not authenticated' });
 
   try {
@@ -16,9 +18,7 @@ export const authMiddleware = (req: UserRequest, res: Response, next: NextFuncti
       role: Role;
     };
 
-    // stocke les infos user pour les autres middlewares
     req.user = payload;
-
     next();
   } catch {
     return res.status(401).json({ message: 'Token invalide' });
