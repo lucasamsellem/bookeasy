@@ -110,7 +110,7 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
 
 function FilterItem({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className='flex flex-col md:px-6 md:py-3'>
+    <div className='flex flex-col border-none md:px-6 md:py-3'>
       <label className='text-xs font-semibold text-gray-500 mb-1'>{label}</label>
 
       {children}

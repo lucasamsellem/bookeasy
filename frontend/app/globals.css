@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* nextjs-portal {
+  display: none !important;
+} */
+
 button {
   cursor: pointer;
 }
