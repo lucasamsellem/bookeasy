@@ -1,7 +1,9 @@
+const RATING = [1, 2, 3, 4, 5];
+
 export default function StarRating({ rating }: { rating: number }) {
   return (
     <div className='flex gap-0.5'>
-      {[1, 2, 3, 4, 5].map((star) => (
+      {RATING.map((star) => (
         <svg
           key={star}
           className={`w-3.5 h-3.5 ${star <= rating ? 'text-amber-400' : 'text-gray-200'}`}

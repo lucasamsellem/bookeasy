@@ -1,6 +1,17 @@
 import { Request, Response } from 'express';
 import { db } from '../config/db';
 
+// GET /reviews
+export const getAllReviews = async (req: Request, res: Response) => {
+  try {
+    const [reviews] = await db.execute('SELECT * FROM reviews ORDER BY createdAt DESC');
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 // POST /reviews
 export const createReview = async (req: Request, res: Response) => {
   const { bookingId, professionalId, customerId, rating, comment } = req.body;

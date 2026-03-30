@@ -45,7 +45,7 @@ export default function ProfessionalPage() {
           <div className='px-8 pb-8'>
             {/* Avatar chevauchant la bannière */}
             <div className='-mt-10 mb-4'>
-              <div className='w-20 h-20 rounded-2xl ring-4 ring-white shadow-md overflow-hidden bg-gray-100'>
+              <div className='w-20 h-20 rounded-full ring-4 ring-white shadow-md overflow-hidden bg-gray-100'>
                 <Avatar id={professional.id} />
               </div>
             </div>
