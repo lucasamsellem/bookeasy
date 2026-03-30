@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   createReview,
+  deleteReview,
   getAllReviews,
   getReviewsByProfessional,
 } from '../controllers/reviews.controller';
@@ -12,3 +13,4 @@ export const reviewsRouter = Router();
 reviewsRouter.get('/', getAllReviews);
 reviewsRouter.get('/:professionalId', getReviewsByProfessional);
 reviewsRouter.post('/', authMiddleware, authorizeRoles('customer'), createReview);
+reviewsRouter.delete('/:id', deleteReview);

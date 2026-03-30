@@ -82,3 +82,18 @@ export const getReviewsByProfessional = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// DELETE /reviews/:id
+export const deleteReview = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const [result] = await db.execute('DELETE FROM reviews WHERE id = ?', [id]);
+    if ((result as any).affectedRows === 0) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+    res.status(200).json({ message: 'Review deleted' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
