@@ -5,7 +5,7 @@ export default function Footer() {
 
       <div className='flex justify-center gap-4 mb-2'>
         <a
-          href='https://github.com/lucasamsellem'
+          href='https://github.com/lucasamsellem/bookeasy'
           target='_blank'
           rel='noopener noreferrer'
           className='text-gray-500 hover:text-gray-900 transition'
