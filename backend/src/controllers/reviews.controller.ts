@@ -3,14 +3,17 @@ import { db } from '../config/db';
 
 // POST /reviews
 export const createReview = async (req: Request, res: Response) => {
-  const { professionalId, customerId, rating, comment } = req.body;
+  const { bookingId, professionalId, customerId, rating, comment } = req.body;
 
-  if (!professionalId || !customerId || !rating) {
+  if (!bookingId || !professionalId || !customerId || !rating) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
+  if (rating < 1 || rating > 5) {
+    return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+  }
+
   try {
-    // Vérifier le professionnel
     const [proCheck] = await db.execute('SELECT id FROM users WHERE id = ? AND role = ?', [
       professionalId,
       'professional',
@@ -19,13 +22,27 @@ export const createReview = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Professional not found' });
     }
 
-    // Ajouter le review
+    const [bookingCheck] = await db.execute(
+      `SELECT id FROM bookings
+       WHERE id = ? AND customerId = ? AND professionalId = ?
+       AND ADDTIME(selectedDate, selectedHour) <= NOW()`,
+      [bookingId, customerId, professionalId],
+    );
+    if ((bookingCheck as any[]).length === 0) {
+      return res.status(403).json({ message: 'No completed booking found with this professional' });
+    }
+
+    const [existingReview] = await db.execute('SELECT id FROM reviews WHERE bookingId = ?', [
+      bookingId,
+    ]);
+    if ((existingReview as any[]).length > 0) {
+      return res.status(409).json({ message: 'Review already exists for this booking' });
+    }
+
     const [result] = await db.execute(
-      `
-      INSERT INTO reviews (professionalId, customerId, rating, comment, createdAt)
-      VALUES (?, ?, ?, ?, NOW())
-      `,
-      [professionalId, customerId, rating, comment || null],
+      `INSERT INTO reviews (bookingId, professionalId, customerId, rating, comment)
+       VALUES (?, ?, ?, ?, ?)`,
+      [bookingId, professionalId, customerId, rating, comment || null],
     );
 
     res.status(201).json({ message: 'Review created', reviewId: (result as any).insertId });
