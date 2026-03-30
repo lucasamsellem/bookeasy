@@ -55,6 +55,10 @@ export const createReview = async (req: Request, res: Response) => {
 export const getReviewsByProfessional = async (req: Request, res: Response) => {
   const { professionalId } = req.params;
 
+  if (!professionalId) {
+    return res.status(400).json({ message: 'Missing professionalId' });
+  }
+
   try {
     const [reviews] = await db.execute(
       'SELECT * FROM reviews WHERE professionalId = ? ORDER BY createdAt DESC',

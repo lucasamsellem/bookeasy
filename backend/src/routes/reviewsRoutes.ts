@@ -5,5 +5,5 @@ import { authorizeRoles } from '../middlewares/authorizeRoles';
 
 export const reviewsRouter = Router();
 
-reviewsRouter.get('/:id', getReviewsByProfessional);
+reviewsRouter.get('/:professionalId', getReviewsByProfessional);
 reviewsRouter.post('/', authMiddleware, authorizeRoles('customer'), createReview);
