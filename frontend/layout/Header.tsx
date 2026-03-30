@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 export default function Header() {
   const loggedUser = getLoggedUser();
+  console.log(loggedUser);
   const [open, setOpen] = useState(false);
 
   const logout = async () => {
@@ -37,7 +38,9 @@ export default function Header() {
           {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
 
           <NavLink href='/availabilities'>Availabilities</NavLink>
-          <NavLink href='/appointments'>My appointments</NavLink>
+
+          {loggedUser && <NavLink href='/appointments'>My appointments</NavLink>}
+
           <NavLink href='/about'>About</NavLink>
         </div>
 
