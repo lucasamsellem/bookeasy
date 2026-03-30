@@ -1,7 +1,7 @@
 import useCreateReview from '@/hooks/useCreateReview';
 import useFetchUserById from '@/hooks/useFetchUserById';
 import { Booking, BookingStatus } from '@backend/controllers/booking.controller';
-import { UserIcon, StarIcon } from '@heroicons/react/24/outline';
+import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 
@@ -9,10 +9,10 @@ interface BookingCardProps {
   booking: Booking;
 }
 
-const statusColors: Record<BookingStatus, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  confirmed: 'bg-green-100 text-green-800',
-  canceled: 'bg-red-100 text-red-800',
+const statusConfig: Record<BookingStatus, { label: string; dot: string; text: string }> = {
+  pending: { label: 'En attente', dot: 'bg-amber-400', text: 'text-amber-700' },
+  confirmed: { label: 'Confirmé', dot: 'bg-emerald-400', text: 'text-emerald-700' },
+  canceled: { label: 'Annulé', dot: 'bg-rose-400', text: 'text-rose-700' },
 };
 
 function buildAppointmentDate(date: Date, hour: string): Date {
@@ -28,7 +28,6 @@ function formatTimeLeft(ms: number): string {
   const days = Math.floor(totalMinutes / (60 * 24));
   const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
   const minutes = totalMinutes % 60;
-
   if (days > 0) return `${days}j ${hours}h`;
   if (hours > 0) return `${hours}h ${minutes}min`;
   return `${minutes}min`;
@@ -53,7 +52,6 @@ export default function BookingCard({ booking }: BookingCardProps) {
 
   const handleSubmitReview = () => {
     if (rating === 0) return;
-
     createReview({
       bookingId: booking.id,
       professionalId,
@@ -63,106 +61,133 @@ export default function BookingCard({ booking }: BookingCardProps) {
     });
   };
 
+  const s = statusConfig[status];
+
   return (
     <div
-      className={`rounded-2xl p-4 bg-white flex flex-col gap-3 max-w-md ${
-        hasPassed ? 'opacity-50' : ''
-      }`}
+      className={`relative bg-white rounded-3xl overflow-hidden max-w-sm w-full transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 `}
     >
-      {/* Header */}
-      <div className='flex justify-between flex-col gap-y-1'>
-        <div className='flex items-center gap-x-7'>
-          <p className='font-semibold text-lg'>{proFullName}</p>
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status]}`}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+      {/* Bande colorée top selon statut */}
+      <div
+        className={`h-1 w-full ${
+          status === 'confirmed'
+            ? 'bg-emerald-400'
+            : status === 'pending'
+              ? 'bg-amber-400'
+              : 'bg-rose-400'
+        }`}
+      />
+
+      <div className='p-5 flex flex-col gap-4'>
+        {/* Header : pro + statut */}
+        <div className='flex items-start justify-between gap-2'>
+          <div>
+            <p className='font-semibold text-gray-900 text-base leading-tight'>{proFullName}</p>
+            <p className='text-gray-400 text-xs mt-0.5'>avec {customerFullName}</p>
+          </div>
+          <span
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-50 border border-gray-100 ${s.text} shrink-0`}
+          >
+            <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
+            {s.label}
           </span>
         </div>
-        <div className='flex gap-x-1 items-center'>
-          <UserIcon className='size-5 text-gray-400' />
-          <p className='text-gray-500 text-sm'>{customerFullName}</p>
+
+        {/* Séparateur */}
+        <div className='h-px bg-gray-100' />
+
+        {/* Date + heure */}
+        <div className='flex items-center justify-between text-sm'>
+          <div className='flex items-center gap-2 text-gray-600'>
+            <span className='text-base'>📅</span>
+            <span className='font-medium'>
+              {new Date(selectedDate!).toLocaleDateString('fr-FR', {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
+              })}
+            </span>
+          </div>
+          <span className='bg-gray-50 border border-gray-100 text-gray-700 font-mono text-xs px-2.5 py-1 rounded-lg'>
+            {selectedHour.slice(0, 5)}
+          </span>
         </div>
-      </div>
 
-      {/* Date + heure */}
-      <div className='text-sm text-gray-700'>
-        <p>
-          📅 {new Date(selectedDate!).toLocaleDateString('fr-FR')} à {selectedHour.slice(0, 5)}
-        </p>
-      </div>
-
-      {/* Temps restant */}
-      {!hasPassed && (
-        <p className='text-sm text-blue-600 font-medium'>⏳ Dans {formatTimeLeft(timeLeftMs)}</p>
-      )}
-
-      {hasPassed && (
-        <div className='flex flex-col gap-2'>
-          <p className='text-sm text-gray-400 italic'>RDV passé</p>
-
-          {/* Bouton / confirmation */}
-          {isReviewCreated ? (
-            <p className='text-sm text-green-600 font-medium'>✅ Avis envoyé, merci !</p>
-          ) : (
-            <button
-              onClick={() => setShowReviewForm((prev) => !prev)}
-              className='flex items-center gap-1 text-sm text-indigo-600 font-medium hover:underline w-fit'
-            >
-              <StarIcon className='size-4' />
-              {showReviewForm ? 'Annuler' : 'Laisser un avis'}
-            </button>
-          )}
-
-          {/* Formulaire inline */}
-          {showReviewForm && !isReviewCreated && (
-            <div className='flex flex-col gap-2 pt-1'>
-              {/* Étoiles */}
-              <div className='flex gap-1'>
-                {[1, 2, 3, 4, 5].map((star) => {
-                  const filled = star <= (hoveredRating || rating);
-                  return (
-                    <button
-                      key={star}
-                      onMouseEnter={() => setHoveredRating(star)}
-                      onMouseLeave={() => setHoveredRating(0)}
-                      onClick={() => setRating(star)}
-                    >
-                      {filled ? (
-                        <StarIconSolid className='size-6 text-yellow-400' />
-                      ) : (
-                        <StarIcon className='size-6 text-gray-300' />
-                      )}
-                    </button>
-                  );
-                })}
+        {/* Temps restant ou RDV passé */}
+        {!hasPassed ? (
+          <div className='flex items-center gap-2 bg-blue-50 text-blue-600 text-xs font-medium px-3 py-2 rounded-xl'>
+            <span>⏳</span>
+            <span>Dans {formatTimeLeft(timeLeftMs)}</span>
+          </div>
+        ) : (
+          <div className='flex flex-col gap-3'>
+            {isReviewCreated ? (
+              <div className='flex items-center gap-2 bg-emerald-50 text-emerald-600 text-xs font-medium px-3 py-2 rounded-xl'>
+                <span>✅</span>
+                <span>Avis envoyé, merci !</span>
               </div>
-
-              {/* Commentaire */}
-              <textarea
-                value={reviewText}
-                onChange={(e) => setReviewText(e.target.value)}
-                placeholder='Votre commentaire (optionnel)...'
-                rows={3}
-                className='text-sm border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-300'
-              />
-
+            ) : (
               <button
-                onClick={handleSubmitReview}
-                disabled={rating === 0}
-                className='self-end text-sm bg-indigo-600 text-white px-4 py-1.5 rounded-lg hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors'
+                onClick={() => setShowReviewForm((prev) => !prev)}
+                className='flex items-center gap-1.5 text-xs font-medium text-indigo-500 hover:text-indigo-700 transition-colors w-fit'
               >
-                Envoyer
+                <StarIcon className='size-3.5' />
+                {showReviewForm ? 'Annuler' : 'Laisser un avis'}
               </button>
-            </div>
-          )}
-        </div>
-      )}
+            )}
 
-      {/* Description */}
-      {description && (
-        <p className='text-gray-600 text-sm italic border-l-2 border-gray-200 pl-2'>
-          &quot;{description}&quot;
-        </p>
-      )}
+            {/* Formulaire review */}
+            {showReviewForm && !isReviewCreated && (
+              <div className='flex flex-col gap-3 pt-1 border-t border-gray-100'>
+                {/* Étoiles */}
+                <div className='flex gap-1'>
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const filled = star <= (hoveredRating || rating);
+                    return (
+                      <button
+                        key={star}
+                        onMouseEnter={() => setHoveredRating(star)}
+                        onMouseLeave={() => setHoveredRating(0)}
+                        onClick={() => setRating(star)}
+                        className='transition-transform hover:scale-110'
+                      >
+                        {filled ? (
+                          <StarIconSolid className='size-6 text-amber-400' />
+                        ) : (
+                          <StarIcon className='size-6 text-gray-200' />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <textarea
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  placeholder='Votre commentaire (optionnel)...'
+                  rows={2}
+                  className='text-xs text-gray-700 border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-gray-300'
+                />
+
+                <button
+                  onClick={handleSubmitReview}
+                  disabled={rating === 0}
+                  className='self-end text-xs font-semibold bg-indigo-500 text-white px-4 py-1.5 rounded-xl hover:bg-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all'
+                >
+                  Envoyer
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Description */}
+        {description && (
+          <p className='text-xs text-gray-400 italic border-l-2 border-gray-100 pl-3 leading-relaxed'>
+            &quot;{description}&quot;
+          </p>
+        )}
+      </div>
     </div>
   );
 }
