@@ -78,7 +78,11 @@ export default function Calendar({
   const month = currentDate.getMonth();
   const days = getMonthDays(year, month);
 
-  const daysWithAvailability = new Set(availabilities.map((a) => a.date));
+  const daysWithAvailability = new Set(
+    availabilities
+      .map((a) => a.date)
+      .filter((dateKey) => getAvailableHours(dateKey, availabilities, bookedHours).size > 0),
+  );
 
   const availableHours = selectedDate
     ? getAvailableHours(selectedDate, availabilities, bookedHours)
