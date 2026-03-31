@@ -1,4 +1,4 @@
-export type Appointment = {
+export type Booking = {
   id: number;
   date: string;
   startTime: string;

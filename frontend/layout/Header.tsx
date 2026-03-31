@@ -11,6 +11,7 @@ import { useState } from 'react';
 
 export default function Header() {
   const loggedUser = getLoggedUser();
+  const isPro = loggedUser?.role === 'professional';
   const [open, setOpen] = useState(false);
 
   const logout = async () => {
@@ -34,9 +35,9 @@ export default function Header() {
 
           {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
 
-          <NavLink href='/availabilities'>Availabilities</NavLink>
+          <NavLink href='/availabilities'>{isPro ? 'My' : ''} Availabilities</NavLink>
 
-          {loggedUser && <NavLink href='/appointments'>My appointments</NavLink>}
+          {loggedUser && <NavLink href='/bookings'>My Bookings</NavLink>}
 
           <NavLink href='/about'>About</NavLink>
         </div>
@@ -87,7 +88,7 @@ export default function Header() {
           {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
 
           <NavLink href='/availabilities'>Availabilities</NavLink>
-          <NavLink href='/appointments'>My appointments</NavLink>
+          <NavLink href='/bookings'>My Bookings</NavLink>
           <NavLink href='/about'>About</NavLink>
 
           <Separator className='my-2' />

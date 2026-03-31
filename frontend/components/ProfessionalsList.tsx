@@ -84,7 +84,7 @@ export default function ProfessionalsList() {
     });
   }, [professionals, filters]);
 
-  const handleNewAppointment = (pro: User) => {
+  const handleNewBooking = (pro: User) => {
     setSelectedPro(pro);
     openModal();
   };
@@ -133,11 +133,7 @@ export default function ProfessionalsList() {
               </Link>
 
               <div className='mt-5 w-full flex justify-center'>
-                <ActionButton
-                  text='New Appointment'
-                  icon='+'
-                  onClick={() => handleNewAppointment(pro)}
-                />
+                <ActionButton text='New Booking' icon='+' onClick={() => handleNewBooking(pro)} />
               </div>
             </li>
           );
@@ -148,7 +144,7 @@ export default function ProfessionalsList() {
         <Modal
           isOpen={isOpen}
           onClose={closeModal}
-          title={`New Appointment - ${selectedPro.firstName} ${selectedPro.lastName}`}
+          title={`New Booking - ${selectedPro.firstName} ${selectedPro.lastName}`}
         >
           <NewBookingForm professionalId={selectedPro.id} />
         </Modal>

@@ -4,11 +4,11 @@ import BookingCard from '@/components/BookingCard';
 import useFetchUserBookings from '@/hooks/useFetchUserBookings';
 import { getLoggedUser } from '@/utils/utils';
 
-export default function AppointmentsPage() {
+export default function BookingsPage() {
   const loggedUser = getLoggedUser();
   const { userBookings } = useFetchUserBookings(loggedUser?.id ?? 0);
 
-  if (!loggedUser) return <p>Please log in to view your appointments.</p>;
+  if (!loggedUser) return <p>Please log in to view your Bookings.</p>;
 
   return (
     <ul className='grid grid-cols-5 gap-5'>

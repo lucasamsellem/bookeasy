@@ -1,5 +1,7 @@
 import useCreateReview from '@/hooks/useCreateReview';
 import useFetchUserById from '@/hooks/useFetchUserById';
+import useUpdateBookingStatus from '@/hooks/useUpdateBookingStatus';
+import { getLoggedUser } from '@/utils/utils';
 import { Booking, BookingStatus } from '@backend/controllers/booking.controller';
 import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
@@ -15,7 +17,7 @@ const statusConfig: Record<BookingStatus, { label: string; dot: string; text: st
   canceled: { label: 'Annulé', dot: 'bg-rose-400', text: 'text-rose-700' },
 };
 
-function buildAppointmentDate(date: Date | string, hour: string): Date {
+function buildBookingDate(date: Date | string, hour: string): Date {
   if (!date || !hour) return new Date();
   const [hours, minutes] = hour.split(':').map(Number);
   const dateStr = typeof date === 'string' ? date : date.toISOString();
@@ -26,18 +28,23 @@ function buildAppointmentDate(date: Date | string, hour: string): Date {
 export default function BookingCard({ booking }: BookingCardProps) {
   const { customerId, professionalId, selectedDate, selectedHour, status, description } = booking;
 
+  const loggedUser = getLoggedUser();
+  const isPro = loggedUser?.id === professionalId;
+
   const { userFullName: customerFullName } = useFetchUserById(customerId);
   const { userFullName: proFullName } = useFetchUserById(professionalId);
   const { createReview, isReviewCreated } = useCreateReview();
 
-  const appointmentDate = buildAppointmentDate(selectedDate!, selectedHour);
+  const BookingDate = buildBookingDate(selectedDate!, selectedHour);
   const now = new Date();
-  const hasPassed = appointmentDate <= now;
+  const hasPassed = BookingDate <= now;
 
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
+
+  const { updateBookingStatus } = useUpdateBookingStatus();
 
   const handleSubmitReview = () => {
     if (rating === 0) return;
@@ -59,11 +66,13 @@ export default function BookingCard({ booking }: BookingCardProps) {
       {/* Bande colorée top selon statut */}
       <div
         className={`h-1 w-full ${
-          status === 'confirmed'
-            ? 'bg-emerald-400'
-            : status === 'pending'
-              ? 'bg-amber-400'
-              : 'bg-rose-400'
+          hasPassed
+            ? 'bg-gray-200'
+            : status === 'confirmed'
+              ? 'bg-emerald-400'
+              : status === 'pending'
+                ? 'bg-amber-400'
+                : 'bg-rose-400'
         }`}
       />
 
@@ -74,11 +83,16 @@ export default function BookingCard({ booking }: BookingCardProps) {
             <p className='font-semibold text-gray-900 text-base leading-tight'>{proFullName}</p>
             <p className='text-gray-400 text-xs mt-0.5'>avec {customerFullName}</p>
           </div>
+
           <span
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-50 border border-gray-100 ${s.text} shrink-0`}
+            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium shrink-0 ${
+              hasPassed
+                ? 'bg-gray-50 border border-gray-100 text-gray-400'
+                : `bg-gray-50 border border-gray-100 ${s.text}`
+            }`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-            {s.label}
+            <span className={`w-1.5 h-1.5 rounded-full ${hasPassed ? 'bg-gray-300' : s.dot}`} />
+            {hasPassed ? 'Passé' : s.label}
           </span>
         </div>
 
@@ -108,6 +122,23 @@ export default function BookingCard({ booking }: BookingCardProps) {
             {selectedHour.slice(0, 5)}
           </span>
         </div>
+
+        {isPro && status === 'pending' && !hasPassed && (
+          <div className='flex gap-2'>
+            <button
+              onClick={() => updateBookingStatus({ id: booking.id, status: 'confirmed' })}
+              className='flex-1 text-xs font-semibold bg-emerald-500 text-white px-3 py-1.5 rounded-xl hover:bg-emerald-600 transition-all'
+            >
+              Confirmer
+            </button>
+            <button
+              onClick={() => updateBookingStatus({ id: booking.id, status: 'canceled' })}
+              className='flex-1 text-xs font-semibold bg-rose-500 text-white px-3 py-1.5 rounded-xl hover:bg-rose-600 transition-all'
+            >
+              Annuler
+            </button>
+          </div>
+        )}
 
         {/* Temps restant ou RDV passé */}
         {!hasPassed ? null : (
