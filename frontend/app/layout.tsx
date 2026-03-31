@@ -23,7 +23,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <div className='min-h-screen flex flex-col'>
             <Header />
-            <main className='flex-1 bg-slate-50 p-10'>{children}</main>
+            <main className='flex-1 bg-slate-50'>{children}</main>
             <Footer />
           </div>
         </ReactQueryProvider>

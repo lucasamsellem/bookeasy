@@ -9,14 +9,14 @@ export default function AvailabilitiesPage() {
 
   if (!userRole || userRole === 'customer' || userRole === 'superAdmin')
     return (
-      <section className='space-y-6'>
+      <section className='space-y-6 p-10'>
         <ProfessionalsList />
       </section>
     );
 
   if (userRole === 'professional')
     return (
-      <section className='space-y-6'>
+      <section className='space-y-6 p-10'>
         <ProAvailabilities />
       </section>
     );

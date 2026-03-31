@@ -11,12 +11,14 @@ export default function BookingsPage() {
   if (!loggedUser) return <p>Please log in to view your Bookings.</p>;
 
   return (
-    <ul className='grid grid-cols-5 gap-5'>
-      {userBookings?.map((booking) => (
-        <li key={booking.id}>
-          <BookingCard booking={booking} />
-        </li>
-      ))}
-    </ul>
+    <div className='p-10'>
+      <ul className='grid grid-cols-5 gap-5 '>
+        {userBookings?.map((booking) => (
+          <li key={booking.id}>
+            <BookingCard booking={booking} />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
