@@ -38,12 +38,10 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
       }),
   });
 
-  if (!customerId) return <p>Please log in to book a session.</p>;
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!selectedDate || !selectedHour) return;
+    if (!customerId || !selectedDate || !selectedHour) return;
 
     try {
       await mutateAsync({

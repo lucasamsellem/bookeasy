@@ -2,6 +2,7 @@
 
 import { User } from '@backend/controllers/user.controller';
 import { useMemo } from 'react';
+import Select from './Select';
 
 type Props = {
   professionals?: User[];
@@ -19,8 +20,12 @@ const INPUT_STYLE =
 export default function ProfessionalsFilterBar({ professionals, filters, onChange }: Props) {
   const professionOptions = useMemo(() => {
     if (!professionals) return [];
-
     return Array.from(new Set(professionals.map((p) => p.profession).filter(Boolean)));
+  }, [professionals]);
+
+  const locationOptions = useMemo(() => {
+    if (!professionals) return [];
+    return Array.from(new Set(professionals.map((p) => p.city).filter(Boolean)));
   }, [professionals]);
 
   const update = (key: keyof Props['filters'], value: string) => {
@@ -34,7 +39,7 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
     <div className='w-full flex justify-center px-4'>
       <div
         className='
-        w-fit max-w-5xl
+        w-1/2 
         bg-white
         shadow-sm
         rounded-2xl
@@ -42,9 +47,9 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
         flex flex-col gap-4
         
         md:flex-row
+        md:justify-between
         md:items-end
         md:gap-0
-        md:divide-x
         md:rounded-2xl
         md:shadow-md
         md:p-0
@@ -52,34 +57,12 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
       >
         {/* Profession */}
         <FilterItem label='Profession'>
-          <select
+          <Select
             value={filters.profession ?? ''}
-            onChange={(e) => onChange({ ...filters, profession: e.target.value || null })}
-            className='
-    w-full
-    h-10
-    px-3
-    rounded-lg
-    border border-gray-200
-    bg-gray-50
-    text-sm text-gray-800
-    cursor-pointer
-    transition
-
-    focus:outline-none
-    focus:ring-2
-    focus:ring-blue-500
-    focus:border-blue-500
-    focus:bg-white
-  '
-          >
-            <option value=''>All</option>
-            {professionOptions.map((profession) => (
-              <option key={profession} value={profession}>
-                {profession}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => onChange({ ...filters, profession: v || null })}
+            options={professionOptions.map((p) => ({ label: p!, value: p! }))}
+            placeholder='Toutes'
+          />
         </FilterItem>
 
         {/* Name */}
@@ -95,12 +78,11 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
 
         {/* Location */}
         <FilterItem label='Location'>
-          <input
-            type='text'
-            placeholder='City'
+          <Select
             value={filters.location}
-            onChange={(e) => update('location', e.target.value)}
-            className={INPUT_STYLE}
+            onChange={(v) => update('location', v)}
+            options={locationOptions.map((l) => ({ label: l!, value: l! }))}
+            placeholder='Toutes'
           />
         </FilterItem>
       </div>
@@ -110,9 +92,8 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
 
 function FilterItem({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className='flex flex-col border-none md:px-6 md:py-3'>
+    <div className='flex flex-col border-none md:px-6 md:py-3 w-full'>
       <label className='text-xs font-semibold text-gray-500 mb-1'>{label}</label>
-
       {children}
     </div>
   );
