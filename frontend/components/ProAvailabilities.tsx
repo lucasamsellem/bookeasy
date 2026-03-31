@@ -9,9 +9,11 @@ import useModal from '@/hooks/useModal';
 import Modal from './Modal';
 import AvailabilityForm from './AvailabilityForm';
 import { Availability } from '@/types/availability';
+import { useRef } from 'react';
 
 export default function ProAvailabilities() {
   const userId = getLoggedUser()?.id ?? 0;
+  const formRef = useRef<HTMLFormElement>(null); // 👈
 
   const { isOpen, openModal, closeModal } = useModal();
   const { availabilities } = useFetchProAvailabilities(userId);
@@ -38,18 +40,28 @@ export default function ProAvailabilities() {
           onClose={closeModal}
           title='Nouvelle disponibilité'
           confirmLabel='Ajouter'
-          onConfirm={() => {}}
+          onConfirm={() => formRef.current?.requestSubmit()}
           isLoading={isCreating}
         >
-          <AvailabilityForm professionalId={userId} onSubmit={handleSubmit} />
+          <AvailabilityForm ref={formRef} professionalId={userId} onSubmit={handleSubmit} />
         </Modal>
       </div>
 
       <ul className='mt-4 space-y-2'>
         {availabilities?.map((availability) => (
-          <li key={availability.professionalId} className='p-2 bg-gray-100 rounded-md'>
-            <span className='font-medium'>{formatDateFR(availability.date)}</span> —{' '}
-            {availability.startHour} à {availability.endHour}
+          <li
+            key={availability.id}
+            className='flex items-center justify-between px-4 py-3 bg-white rounded-2xl shadow-sm border border-gray-100'
+          >
+            <div className='flex items-center gap-3'>
+              <span className='text-xl'>📅</span>
+              <span className='text-sm font-semibold text-gray-800'>
+                {formatDateFR(availability.date)}
+              </span>
+            </div>
+            <span className='text-xs font-mono bg-gray-50 border border-gray-100 text-gray-600 px-3 py-1 rounded-lg'>
+              {availability.startHour.slice(0, 5)} → {availability.endHour.slice(0, 5)}
+            </span>
           </li>
         ))}
       </ul>

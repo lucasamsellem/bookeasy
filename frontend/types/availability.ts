@@ -1,5 +1,5 @@
 export type Availability = {
-  id: number;
+  id?: number;
   professionalId: number;
   date: string; // YYYY-MM-DD
   startHour: string; // HH:mm
