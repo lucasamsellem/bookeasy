@@ -10,15 +10,27 @@ export function toDateKey(date: Date) {
 }
 
 export default function useFetchProAvailabilities(proId: number) {
-  const { data: availabilities, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['availabilities', proId],
-    queryFn: () => apiFetch<Availability[]>(`/availabilities/${proId}`),
-    select: (availabilities) =>
-      availabilities.map((a) => ({
+
+    queryFn: () =>
+      apiFetch<{
+        availabilities: Availability[];
+        bookedHours: { date: string; selectedHour: string }[];
+      }>(`/availabilities/${proId}`),
+
+    select: (data) => ({
+      availabilities: data.availabilities.map((a) => ({
         ...a,
         date: toDateKey(new Date(a.date)),
       })),
+      bookedHours: data.bookedHours,
+    }),
   });
 
-  return { availabilities, isLoading };
+  return {
+    availabilities: data?.availabilities ?? [],
+    bookedHours: data?.bookedHours ?? [],
+    isLoading,
+  };
 }

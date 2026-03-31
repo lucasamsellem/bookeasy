@@ -56,17 +56,34 @@ export const createAvailability = async (req: Request, res: Response) => {
   }
 };
 
-// GET /availabilities
 export const getAvailabilitiesByProfessional = async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
     const [availabilities] = await db.execute(
-      'SELECT * FROM availabilities WHERE professionalId = ? ORDER BY date, startHour',
+      `SELECT 
+        id,
+        professionalId,
+        DATE_FORMAT(date, '%Y-%m-%d') as date,
+        startHour,
+        endHour
+       FROM availabilities
+       WHERE professionalId = ?
+       ORDER BY date, startHour`,
       [id],
     );
 
-    res.status(200).json(availabilities);
+    const [bookedHours] = await db.execute(
+      `SELECT 
+        DATE_FORMAT(selectedDate, '%Y-%m-%d') as date,
+        selectedHour
+       FROM bookings
+       WHERE professionalId = ?
+         AND status IN ('pending', 'confirmed')`,
+      [id],
+    );
+
+    res.status(200).json({ availabilities, bookedHours });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });

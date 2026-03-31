@@ -11,7 +11,8 @@ type CalendarProps = {
   selectedHour: string | null;
   onSelectedDate: React.Dispatch<React.SetStateAction<string | null>>;
   onSelectedHour: React.Dispatch<React.SetStateAction<string | null>>;
-  availabilities: Availability[]; // 👈 nouvelle prop
+  availabilities: Availability[];
+  bookedHours: { date: string; selectedHour: string }[];
 };
 
 // ---- Helpers ----
@@ -34,17 +35,24 @@ function hourToMinutes(h: string) {
  * Pour une date donnée, renvoie les heures (parmi HOURS) couvertes
  * par au moins un créneau de disponibilité.
  */
-function getAvailableHours(dateKey: string, availabilities: Availability[]): Set<string> {
+function getAvailableHours(
+  dateKey: string,
+  availabilities: Availability[],
+  bookedHours: { date: string; selectedHour: string }[], // 👈
+): Set<string> {
   const slots = availabilities.filter((a) => a.date === dateKey);
+  const booked = new Set(
+    bookedHours.filter((b) => b.date === dateKey).map((b) => b.selectedHour.slice(0, 5)), // "10:00:00" → "10:00"
+  );
   const available = new Set<string>();
 
   for (const slot of slots) {
     const start = hourToMinutes(slot.startHour);
     const end = hourToMinutes(slot.endHour);
-
     for (const hour of HOURS) {
       const h = hourToMinutes(hour);
-      if (h >= start && h < end) {
+      if (h >= start && h < end && !booked.has(hour)) {
+        // 👈
         available.add(hour);
       }
     }
@@ -59,6 +67,7 @@ export default function Calendar({
   selectedHour,
   onSelectedHour,
   availabilities,
+  bookedHours,
 }: CalendarProps) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -72,7 +81,7 @@ export default function Calendar({
   const daysWithAvailability = new Set(availabilities.map((a) => a.date));
 
   const availableHours = selectedDate
-    ? getAvailableHours(selectedDate, availabilities)
+    ? getAvailableHours(selectedDate, availabilities, bookedHours)
     : new Set<string>();
 
   return (

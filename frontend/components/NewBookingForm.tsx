@@ -27,7 +27,7 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
   const [description, setDescription] = useState('');
 
   // Fetch availabilities
-  const { availabilities } = useFetchProAvailabilities(professionalId);
+  const { availabilities, bookedHours } = useFetchProAvailabilities(professionalId);
 
   // Create booking
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
@@ -76,6 +76,7 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
         onSelectedDate={setSelectedDate}
         onSelectedHour={setSelectedHour}
         availabilities={availabilities ?? []}
+        bookedHours={bookedHours}
       />
 
       <label className='flex flex-col gap-1.5'>
