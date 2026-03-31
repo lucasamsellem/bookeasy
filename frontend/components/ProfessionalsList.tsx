@@ -98,29 +98,29 @@ export default function ProfessionalsList() {
       />
 
       <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {filteredProfessionals?.map((professional) => {
-          const proReviews = reviewsByPro[professional.id];
+        {filteredProfessionals?.map((pro) => {
+          const proReviews = reviewsByPro[pro.id];
           const avg = proReviews ? proReviews.avg / proReviews.count : null;
 
           return (
             <li
-              key={professional.id}
+              key={pro.id}
               className='group flex flex-col bg-white rounded-2xl border border-gray-200 p-6 transition hover:shadow-md hover:border-gray-300'
             >
               <Link
-                href={`/professionals/${professional.id}`}
+                href={`/professionals/${pro.id}`}
                 className='flex flex-col items-center gap-3 text-center'
               >
-                <Avatar id={professional.id} />
+                <Avatar id={pro.id} />
 
                 <div>
                   <h3 className='text-lg font-semibold text-gray-900'>
-                    {professional.firstName} {professional.lastName}
+                    {pro.firstName} {pro.lastName}
                   </h3>
-                  <p className='text-sm text-gray-500'>{professional.profession}</p>
+                  <p className='text-sm text-gray-500'>{pro.profession}</p>
                 </div>
 
-                {professional.city && <p className='text-xs text-gray-400'>{professional.city}</p>}
+                {pro.city && <p className='text-xs text-gray-400'>{pro.city}</p>}
 
                 {/* Aperçu reviews */}
                 {avg !== null && proReviews ? (
@@ -136,7 +136,7 @@ export default function ProfessionalsList() {
                 <ActionButton
                   text='New Appointment'
                   icon='+'
-                  onClick={() => handleNewAppointment(professional)}
+                  onClick={() => handleNewAppointment(pro)}
                 />
               </div>
             </li>

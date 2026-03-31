@@ -8,7 +8,7 @@ export interface Booking {
   id: number;
   customerId: number;
   professionalId: number;
-  selectedDate: Date;
+  selectedDate: string;
   selectedHour: string; // HH:MM:SS
   status: BookingStatus;
   description?: string;
@@ -92,6 +92,8 @@ export const makeBooking = async (req: Request, res: Response) => {
       return res.status(409).json({ message: 'Time slot not available' });
     }
 
+    const dateOnly = new Date(selectedDate).toISOString().slice(0, 10);
+
     // Créer réservation
     const [result] = await db.execute(
       `
@@ -106,7 +108,7 @@ export const makeBooking = async (req: Request, res: Response) => {
       )
       VALUES (?, ?, ?, ?, 'pending', ?, NOW())
       `,
-      [customerId, professionalId, selectedDate, selectedHour, description || ''],
+      [customerId, professionalId, dateOnly, selectedHour, description || ''],
     );
 
     res.status(201).json({

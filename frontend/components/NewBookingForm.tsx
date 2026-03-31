@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
 import { getLoggedUser } from '@/utils/utils';
 import Calendar from './Calendar';
+import useFetchProAvailabilities from '@/hooks/useFetchProAvailabilities';
 
 interface BookingFormProps {
   professionalId: number;
@@ -12,7 +13,7 @@ interface BookingFormProps {
 interface BookingPayload {
   customerId: number;
   professionalId: number;
-  selectedDate: Date;
+  selectedDate: string;
   selectedHour: string;
   description?: string;
 }
@@ -21,10 +22,14 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
   const customerId = getLoggedUser()?.id;
   const queryClient = useQueryClient();
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedHour, setSelectedHour] = useState<string | null>(null);
   const [description, setDescription] = useState('');
 
+  // Fetch availabilities
+  const { availabilities } = useFetchProAvailabilities(professionalId);
+
+  // Create booking
   const { mutateAsync, isPending, isSuccess, isError } = useMutation({
     mutationFn: (payload: BookingPayload) =>
       apiFetch('/bookings', {
@@ -70,6 +75,7 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
         selectedHour={selectedHour}
         onSelectedDate={setSelectedDate}
         onSelectedHour={setSelectedHour}
+        availabilities={availabilities ?? []}
       />
 
       <label className='flex flex-col gap-1.5'>

@@ -16,7 +16,7 @@ export const BOOKING_COLUMNS = [
   'id',
   'customerId',
   'professionalId',
-  'selectedDate',
+  "DATE_FORMAT(selectedDate, '%Y-%m-%d') as selectedDate", // ✅
   'selectedHour',
   'status',
   'createdAt',

@@ -15,22 +15,12 @@ const statusConfig: Record<BookingStatus, { label: string; dot: string; text: st
   canceled: { label: 'Annulé', dot: 'bg-rose-400', text: 'text-rose-700' },
 };
 
-function buildAppointmentDate(date: Date, hour: string): Date {
+function buildAppointmentDate(date: Date | string, hour: string): Date {
   if (!date || !hour) return new Date();
   const [hours, minutes] = hour.split(':').map(Number);
-  const appointment = new Date(date);
-  appointment.setHours(hours, minutes, 0, 0);
-  return appointment;
-}
-
-function formatTimeLeft(ms: number): string {
-  const totalMinutes = Math.floor(ms / 1000 / 60);
-  const days = Math.floor(totalMinutes / (60 * 24));
-  const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-  const minutes = totalMinutes % 60;
-  if (days > 0) return `${days}j ${hours}h`;
-  if (hours > 0) return `${hours}h ${minutes}min`;
-  return `${minutes}min`;
+  const dateStr = typeof date === 'string' ? date : date.toISOString();
+  const [y, m, d] = dateStr.slice(0, 10).split('-').map(Number);
+  return new Date(y, m - 1, d, hours, minutes, 0, 0);
 }
 
 export default function BookingCard({ booking }: BookingCardProps) {
@@ -43,7 +33,6 @@ export default function BookingCard({ booking }: BookingCardProps) {
   const appointmentDate = buildAppointmentDate(selectedDate!, selectedHour);
   const now = new Date();
   const hasPassed = appointmentDate <= now;
-  const timeLeftMs = appointmentDate.getTime() - now.getTime();
 
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [rating, setRating] = useState(0);
@@ -101,11 +90,18 @@ export default function BookingCard({ booking }: BookingCardProps) {
           <div className='flex items-center gap-2 text-gray-600'>
             <span className='text-base'>📅</span>
             <span className='font-medium'>
-              {new Date(selectedDate!).toLocaleDateString('fr-FR', {
-                weekday: 'short',
-                day: 'numeric',
-                month: 'short',
-              })}
+              {(() => {
+                const raw = new Date(selectedDate!);
+                return new Date(
+                  raw.getUTCFullYear(),
+                  raw.getUTCMonth(),
+                  raw.getUTCDate(),
+                ).toLocaleDateString('fr-FR', {
+                  weekday: 'short',
+                  day: 'numeric',
+                  month: 'short',
+                });
+              })()}
             </span>
           </div>
           <span className='bg-gray-50 border border-gray-100 text-gray-700 font-mono text-xs px-2.5 py-1 rounded-lg'>
@@ -114,12 +110,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
         </div>
 
         {/* Temps restant ou RDV passé */}
-        {!hasPassed ? (
-          <div className='flex items-center gap-2 bg-blue-50 text-blue-600 text-xs font-medium px-3 py-2 rounded-xl'>
-            <span>⏳</span>
-            <span>Dans {formatTimeLeft(timeLeftMs)}</span>
-          </div>
-        ) : (
+        {!hasPassed ? null : (
           <div className='flex flex-col gap-3'>
             {isReviewCreated ? (
               <div className='flex items-center gap-2 bg-emerald-50 text-emerald-600 text-xs font-medium px-3 py-2 rounded-xl'>
