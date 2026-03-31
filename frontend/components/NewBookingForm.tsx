@@ -92,8 +92,8 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
 
       <button
         type='submit'
-        disabled={isPending}
-        className='w-full py-2.5 rounded-xl text-sm font-semibold bg-slate-800 text-white hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all'
+        disabled={isPending || !customerId || !selectedDate || !selectedHour}
+        className='w-full py-2.5 rounded-xl text-sm font-semibold bg-blue-500 text-white  disabled:opacity-40 disabled:cursor-not-allowed! transition-all'
       >
         {isPending ? (
           <span className='flex items-center justify-center gap-2'>
@@ -115,7 +115,7 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
             Réservation...
           </span>
         ) : (
-          'Créer le rendez-vous'
+          <span>{!customerId ? 'Connexion requise' : 'Créer le rendez-vous'}</span>
         )}
       </button>
 

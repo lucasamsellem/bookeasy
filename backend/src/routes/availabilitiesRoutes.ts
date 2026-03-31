@@ -10,7 +10,7 @@ export const availabilitiesRouter = Router();
 
 availabilitiesRouter.get(
   '/:id',
-  [authMiddleware, authorizeRoles('professional')],
+  // [authMiddleware, authorizeRoles('professional')],
   getAvailabilitiesByProfessional,
 );
 

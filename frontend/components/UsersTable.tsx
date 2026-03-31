@@ -62,7 +62,7 @@ export default function UsersTable() {
 
       <div className='w-full overflow-x-auto'>
         <table className='min-w-full bg-white shadow-md rounded-xl overflow-hidden'>
-          <thead className='bg-gray-100 text-left text-sm uppercase tracking-wider text-gray-600'>
+          <thead className='bg-blue-500 text-left text-sm uppercase tracking-wide text-white'>
             <tr>
               <th className='px-6 py-4'>Nom</th>
               <th className='px-6 py-4'>Email</th>

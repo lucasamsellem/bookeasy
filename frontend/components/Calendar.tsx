@@ -141,7 +141,7 @@ export default function Calendar({
               }}
               disabled={isDisabled}
               className={`relative flex h-10 items-center justify-center rounded-lg text-sm transition
-                ${isSelected ? 'bg-black text-white' : ''}
+                ${isSelected ? 'bg-blue-500 text-white' : ''}
                 ${!isSelected && !isDisabled ? 'hover:bg-gray-100' : ''}
                 ${isToday && !isSelected ? 'bg-blue-100' : ''}
                 ${isDisabled ? 'text-gray-300 pointer-events-none' : ''}
@@ -187,7 +187,7 @@ export default function Calendar({
                   onClick={() => onSelectedHour(hour)}
                   disabled={isDisabled}
                   className={`rounded-lg border px-2 py-1 text-sm transition
-                    ${isSelected ? 'bg-black text-white border-black' : ''}
+                    ${isSelected ? 'bg-blue-500 text-white border-blue-500' : ''}
                     ${!isSelected && !isDisabled ? 'hover:bg-gray-100' : ''}
                     ${isDisabled ? 'text-gray-300 border-gray-100 pointer-events-none' : 'border-gray-200'}
                   `}

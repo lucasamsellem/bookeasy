@@ -135,17 +135,17 @@ export default function AllReviews() {
       {reviewList.length === 0 ? (
         <div className='flex flex-col items-center justify-center py-16 text-center gap-2 bg-white rounded-2xl border border-gray-100'>
           <span className='text-4xl'>⭐</span>
-          <p className='text-sm text-gray-400'>Aucun avis pour le moment.</p>
+          <p className='text-sm text-white'>Aucun avis pour le moment.</p>
         </div>
       ) : (
         <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
           <table className='w-full'>
             <thead>
-              <tr className='border-b border-gray-100 bg-gray-50/80'>
+              <tr className='border-b border-gray-100 bg-blue-500 '>
                 {['Client', 'Professionnel', 'Note', 'Commentaire', 'Date', ''].map((h) => (
                   <th
                     key={h}
-                    className='py-3 px-4 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider'
+                    className='py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider'
                   >
                     {h}
                   </th>

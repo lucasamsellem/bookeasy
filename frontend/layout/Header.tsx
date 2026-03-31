@@ -36,7 +36,7 @@ export default function Header() {
         </div>
 
         {/* Right side desktop */}
-        <div className='hidden md:flex items-center gap-x-3'>
+        <div className='hidden md:flex items-center gap-x-5'>
           {!loggedUser && (
             <>
               <Link
@@ -47,7 +47,7 @@ export default function Header() {
               </Link>
               <Link
                 href='/register'
-                className='text-sm font-semibold bg-slate-900 text-white px-4 py-1.5 rounded-lg hover:bg-slate-700 transition'
+                className='text-sm font-semibold bg-blue-500 text-white px-4 py-1.5 rounded-lg hover:bg-blue-400 transition'
               >
                 Register
               </Link>
