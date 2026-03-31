@@ -16,7 +16,7 @@ export default function ProAvailabilities() {
   const formRef = useRef<HTMLFormElement>(null); // 👈
 
   const { isOpen, openModal, closeModal } = useModal();
-  const { availabilities } = useFetchProAvailabilities(userId);
+  const { availabilities, bookedHours } = useFetchProAvailabilities(userId);
   const { createAvailability, isCreating } = useCreateAvailability();
 
   const handleSubmit = async (values: Availability) => {
@@ -48,22 +48,43 @@ export default function ProAvailabilities() {
       </div>
 
       <ul className='mt-4 space-y-2'>
-        {availabilities?.map((availability) => (
-          <li
-            key={availability.id}
-            className='flex items-center justify-between px-4 py-3 bg-white rounded-2xl shadow-sm border border-gray-100'
-          >
-            <div className='flex items-center gap-3'>
-              <span className='text-xl'>📅</span>
-              <span className='text-sm font-semibold text-gray-800'>
-                {formatDateFR(availability.date)}
-              </span>
-            </div>
-            <span className='text-xs font-mono bg-gray-50 border border-gray-100 text-gray-600 px-3 py-1 rounded-lg'>
-              {availability.startHour.slice(0, 5)} → {availability.endHour.slice(0, 5)}
-            </span>
-          </li>
-        ))}
+        {availabilities?.map((availability) => {
+          const booked = bookedHours
+            .filter((b) => b.date === availability.date)
+            .map((b) => b.selectedHour.slice(0, 5));
+
+          return (
+            <li
+              key={availability.id}
+              className='flex flex-col gap-2 px-4 py-3 bg-white rounded-2xl shadow-sm border border-gray-100'
+            >
+              <div className='flex items-center justify-between'>
+                <div className='flex items-center gap-3'>
+                  <span className='text-xl'>📅</span>
+                  <span className='text-sm font-semibold text-gray-800'>
+                    {formatDateFR(availability.date)}
+                  </span>
+                </div>
+                <span className='text-xs font-mono bg-gray-50 border border-gray-100 text-gray-600 px-3 py-1 rounded-lg'>
+                  {availability.startHour.slice(0, 5)} → {availability.endHour.slice(0, 5)}
+                </span>
+              </div>
+
+              {booked.length > 0 && (
+                <div className='flex flex-wrap gap-1.5'>
+                  {booked.map((hour) => (
+                    <span
+                      key={hour}
+                      className='text-xs font-mono bg-rose-50 border border-rose-100 text-rose-400 px-2 py-0.5 rounded-lg'
+                    >
+                      {hour} réservé
+                    </span>
+                  ))}
+                </div>
+              )}
+            </li>
+          );
+        })}
       </ul>
     </>
   );
