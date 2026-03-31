@@ -1,4 +1,5 @@
 import useCreateReview from '@/hooks/useCreateReview';
+import useDeleteBooking from '@/hooks/useDeleteBooking';
 import useFetchUserById from '@/hooks/useFetchUserById';
 import useUpdateBookingStatus from '@/hooks/useUpdateBookingStatus';
 import { getLoggedUser } from '@/utils/utils';
@@ -30,6 +31,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
 
   const loggedUser = getLoggedUser();
   const isPro = loggedUser?.id === professionalId;
+  const isAdmin = loggedUser?.role === 'superAdmin';
 
   const { userFullName: customerFullName } = useFetchUserById(customerId);
   const { userFullName: proFullName } = useFetchUserById(professionalId);
@@ -45,6 +47,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
   const [reviewText, setReviewText] = useState('');
 
   const { updateBookingStatus } = useUpdateBookingStatus();
+  const { deleteBooking } = useDeleteBooking();
 
   const handleSubmitReview = () => {
     if (rating === 0) return;
@@ -123,7 +126,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
           </span>
         </div>
 
-        {isPro && status === 'pending' && !hasPassed && (
+        {(isPro || isAdmin) && !hasPassed && (
           <div className='flex gap-2'>
             <button
               onClick={() => updateBookingStatus({ id: booking.id, status: 'confirmed' })}
@@ -132,7 +135,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
               Confirmer
             </button>
             <button
-              onClick={() => updateBookingStatus({ id: booking.id, status: 'canceled' })}
+              onClick={() => deleteBooking(booking.id)}
               className='flex-1 text-xs font-semibold bg-rose-500 text-white px-3 py-1.5 rounded-xl hover:bg-rose-600 transition-all'
             >
               Annuler

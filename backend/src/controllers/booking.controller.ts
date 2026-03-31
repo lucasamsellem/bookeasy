@@ -153,3 +153,34 @@ export const updateBookingStatus = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+// DELETE /bookings/:id
+export const deleteBooking = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!id) {
+    return res.status(400).json({ message: 'Missing booking id' });
+  }
+
+  try {
+    // Vérifier que le booking existe
+    const [rows] = await db.execute(
+      'SELECT customerId, professionalId FROM bookings WHERE id = ?',
+      [id],
+    );
+
+    const booking = (rows as any[])[0];
+
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // Suppression
+    await db.execute('DELETE FROM bookings WHERE id = ?', [id]);
+
+    res.status(200).json({ message: 'Booking deleted' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
