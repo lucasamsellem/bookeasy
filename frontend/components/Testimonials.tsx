@@ -20,8 +20,10 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className='w-full max-w-5xl mt-16'>
-      <h2 className='text-2xl font-semibold text-center mb-8'>Ce que nos utilisateurs disent</h2>
+    <section className='w-full bg-linear-to-b from-white to-slate-50 px-4 py-24 md:px-20'>
+      <h2 className='text-4xl font-bold text-slate-900  text-center mb-8'>
+        Ce que nos utilisateurs disent
+      </h2>
       <div className='grid gap-6 md:grid-cols-3'>
         {testimonials.map((t, i) => (
           <div

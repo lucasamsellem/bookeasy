@@ -34,7 +34,7 @@ const Feature = ({ icon, title, description }: FeatureProps) => (
 
 export default function FeaturesList() {
   return (
-    <section>
+    <section className='w-full px-4 md:px-20 py-16'>
       <ul className='flex justify-center gap-10'>
         {features.map((f, i) => (
           <Feature key={i} {...f} />

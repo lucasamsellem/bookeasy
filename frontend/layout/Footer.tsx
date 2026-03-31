@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className='text-center py-6 border-t border-gray-300 bg-gray-50'>
+    <footer className='text-center py-6 border-t border-gray-200'>
       <p className='mb-2 text-sm text-gray-600'>&copy; 2023 BookEasy - All rights reserved</p>
 
       <div className='flex justify-center gap-4 mb-2'>
