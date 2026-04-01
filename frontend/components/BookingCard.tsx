@@ -7,6 +7,7 @@ import { Booking, BookingStatus } from '@backend/controllers/booking.controller'
 import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useState } from 'react';
+import './BookingCard.scss';
 
 interface BookingCardProps {
   booking: Booking;
@@ -63,50 +64,42 @@ export default function BookingCard({ booking }: BookingCardProps) {
   const s = statusConfig[status];
 
   return (
-    <div
-      className={`relative bg-white rounded-3xl overflow-hidden max-w-sm w-full transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 `}
-    >
-      {/* Bande colorée top selon statut */}
+    <div className='booking-card'>
+      {/* Top bar */}
       <div
-        className={`h-1 w-full ${
-          hasPassed
-            ? 'bg-gray-200'
-            : status === 'confirmed'
-              ? 'bg-emerald-400'
-              : status === 'pending'
-                ? 'bg-amber-400'
-                : 'bg-rose-400'
-        }`}
+        className={`
+          booking-card__bar
+          ${hasPassed ? 'booking-card__bar--past' : `booking-card__bar--${status}`}
+        `}
       />
 
-      <div className='p-5 flex flex-col gap-4'>
-        {/* Header : pro + statut */}
-        <div className='flex items-start justify-between gap-2'>
+      <div className='booking-card__content'>
+        {/* Header */}
+        <div className='booking-card__header'>
           <div>
-            <p className='font-semibold text-gray-900 text-base leading-tight'>{proFullName}</p>
-            <p className='text-gray-400 text-xs mt-0.5'>{pro?.profession}</p>
+            <p className='booking-card__name'>{proFullName}</p>
+            <p className='booking-card__profession'>{pro?.profession}</p>
           </div>
 
           <span
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium shrink-0 ${
-              hasPassed
-                ? 'bg-gray-50 border border-gray-100 text-gray-400'
-                : `bg-gray-50 border border-gray-100 ${s.text}`
-            }`}
+            className={`
+              booking-card__status
+              ${hasPassed ? 'booking-card__status--past' : `booking-card__status--${status}`}
+            `}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${hasPassed ? 'bg-gray-300' : s.dot}`} />
+            <span className='booking-card__status-dot' />
             {hasPassed ? 'Passé' : s.label}
           </span>
         </div>
 
-        {/* Séparateur */}
-        <div className='h-px bg-gray-100' />
+        <div className='booking-card__divider' />
 
-        {/* Date + heure */}
-        <div className='grid grid-cols-2 items-center justify-between text-sm gap-1'>
-          <div className='flex items-center gap-2 text-gray-600'>
-            <span className='text-base'>📅</span>
-            <span className='font-medium'>
+        {/* Date */}
+        <div className='booking-card__datetime'>
+          <div className='booking-card__date'>
+            <span>📅</span>
+            <span className='booking-card__date-text'>
+              {' '}
               {(() => {
                 const raw = new Date(selectedDate!);
                 return new Date(
@@ -122,53 +115,50 @@ export default function BookingCard({ booking }: BookingCardProps) {
             </span>
           </div>
 
-          <span className='bg-gray-50 border border-gray-100 text-gray-700 font-mono text-xs px-2.5 py-1 rounded-lg w-fit ml-auto'>
-            {selectedHour.slice(0, 5)}
-          </span>
+          <span className='booking-card__hour'>{selectedHour.slice(0, 5)}</span>
 
-          <span className='text-xs opacity-50'>avec {customerFullName}</span>
+          <span className='booking-card__customer'>avec {customerFullName}</span>
         </div>
 
         {(isPro || isAdmin) && !hasPassed && (
-          <div className='flex gap-2'>
+          <div className='booking-card__actions'>
             <button
               onClick={() => updateBookingStatus({ id: booking.id, status: 'confirmed' })}
-              className='flex-1 text-xs font-semibold bg-emerald-500 text-white px-3 py-1.5 rounded-xl hover:bg-emerald-600 transition-all'
+              className='booking-card__btn booking-card__btn--confirm'
             >
               Confirmer
             </button>
+
             <button
               onClick={() => deleteBooking(booking.id)}
-              className='flex-1 text-xs font-semibold bg-rose-500 text-white px-3 py-1.5 rounded-xl hover:bg-rose-600 transition-all'
+              className='booking-card__btn booking-card__btn--cancel'
             >
               Annuler
             </button>
           </div>
         )}
 
-        {/* Temps restant ou RDV passé */}
-        {!hasPassed ? null : (
-          <div className='flex flex-col gap-3'>
+        {/* Review */}
+        {hasPassed && (
+          <div className='booking-card__review'>
             {isReviewCreated ? (
-              <div className='flex items-center gap-2 bg-emerald-50 text-emerald-600 text-xs font-medium px-3 py-2 rounded-xl'>
+              <div className='booking-card__review-success'>
                 <span>✅</span>
                 <span>Avis envoyé, merci !</span>
               </div>
             ) : (
               <button
                 onClick={() => setShowReviewForm((prev) => !prev)}
-                className='flex items-center gap-1.5 text-xs font-medium text-indigo-500 hover:text-indigo-700 transition-colors w-fit'
+                className='booking-card__review-toggle'
               >
-                <StarIcon className='size-3.5' />
+                <StarIcon className='booking-card__icon-small' />
                 {showReviewForm ? 'Annuler' : 'Laisser un avis'}
               </button>
             )}
 
-            {/* Formulaire review */}
             {showReviewForm && !isReviewCreated && (
-              <div className='flex flex-col gap-3 pt-1 border-t border-gray-100'>
-                {/* Étoiles */}
-                <div className='flex gap-1'>
+              <div className='booking-card__review-form'>
+                <div className='booking-card__stars'>
                   {[1, 2, 3, 4, 5].map((star) => {
                     const filled = star <= (hoveredRating || rating);
                     return (
@@ -177,12 +167,12 @@ export default function BookingCard({ booking }: BookingCardProps) {
                         onMouseEnter={() => setHoveredRating(star)}
                         onMouseLeave={() => setHoveredRating(0)}
                         onClick={() => setRating(star)}
-                        className='transition-transform hover:scale-110'
+                        className='booking-card__star'
                       >
                         {filled ? (
-                          <StarIconSolid className='size-6 text-amber-400' />
+                          <StarIconSolid className='booking-card__star-icon booking-card__star-icon--filled' />
                         ) : (
-                          <StarIcon className='size-6 text-gray-200' />
+                          <StarIcon className='booking-card__star-icon' />
                         )}
                       </button>
                     );
@@ -192,15 +182,14 @@ export default function BookingCard({ booking }: BookingCardProps) {
                 <textarea
                   value={reviewText}
                   onChange={(e) => setReviewText(e.target.value)}
+                  className='booking-card__textarea'
                   placeholder='Votre commentaire (optionnel)...'
-                  rows={2}
-                  className='text-xs text-gray-700 border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-200 placeholder:text-gray-300'
                 />
 
                 <button
                   onClick={handleSubmitReview}
                   disabled={rating === 0}
-                  className='self-end text-xs font-semibold bg-indigo-500 text-white px-4 py-1.5 rounded-xl hover:bg-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all'
+                  className='booking-card__submit'
                 >
                   Envoyer
                 </button>
@@ -209,12 +198,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
           </div>
         )}
 
-        {/* Description */}
-        {description && (
-          <p className='text-xs text-gray-400 italic border-l-2 border-gray-100 pl-3 leading-relaxed'>
-            &quot;{description}&quot;
-          </p>
-        )}
+        {description && <p className='booking-card__description'>&quot;{description}&quot;</p>}
       </div>
     </div>
   );

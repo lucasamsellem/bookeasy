@@ -1,0 +1,269 @@
+.booking-card {
+  width: 100%;
+  max-width: 24rem;
+  background: white;
+  border-radius: 1.5rem;
+  overflow: hidden;
+
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s;
+
+  &:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+
+  &__bar {
+    height: 4px;
+    width: 100%;
+
+    &--past {
+      background: #e5e7eb;
+    }
+    &--confirmed {
+      background: #34d399;
+    }
+    &--pending {
+      background: #fbbf24;
+    }
+    &--canceled {
+      background: #fb7185;
+    }
+  }
+
+  &__content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__name {
+    font-weight: 700;
+    color: #111827;
+  }
+
+  &__profession {
+    font-size: 0.75rem;
+    color: #9ca3af;
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    border: 1px solid #f3f4f6;
+    background: #f9fafb;
+
+    &--past {
+      color: #9ca3af;
+    }
+    &--confirmed {
+      color: #059669;
+    }
+    &--pending {
+      color: #b45309;
+    }
+    &--canceled {
+      color: #be123c;
+    }
+  }
+
+  &__status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: currentColor;
+  }
+
+  &__divider {
+    height: 1px;
+    background: #f3f4f6;
+  }
+
+  &__datetime {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  &__date {
+    display: flex;
+    gap: 0.5rem;
+    color: #4b5563;
+  }
+
+  &__date-text {
+    font-weight: 500;
+  }
+
+  &__hour {
+    background: #f9fafb;
+    border: 1px solid #f3f4f6;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    font-size: 0.75rem;
+    margin-left: auto;
+  }
+
+  &__customer {
+    grid-column: span 2;
+    font-size: 0.75rem;
+    opacity: 0.5;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__btn {
+    flex: 1;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.375rem;
+    border-radius: 0.75rem;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &--confirm {
+      background: #10b981;
+
+      &:hover {
+        background: #059669;
+      }
+    }
+
+    &--cancel {
+      background: #f43f5e;
+
+      &:hover {
+        background: #e11d48;
+      }
+    }
+  }
+
+  &__review {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__review-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: #6366f1;
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      color: #4338ca;
+    }
+  }
+
+  &__review-success {
+    display: flex;
+    gap: 0.5rem;
+    background: #ecfdf5;
+    color: #059669;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  &__review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 0.5rem;
+  }
+
+  &__stars {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  &__star {
+    background: none;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  &__star-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #e5e7eb;
+
+    &--filled {
+      color: #fbbf24;
+    }
+  }
+
+  &__textarea {
+    font-size: 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+    resize: none;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #c7d2fe;
+    }
+  }
+
+  &__submit {
+    align-self: flex-end;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #6366f1;
+    color: white;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background: #4f46e5;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  &__description {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-style: italic;
+    border-left: 2px solid #f3f4f6;
+    padding-left: 0.75rem;
+  }
+
+  &__icon-small {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
