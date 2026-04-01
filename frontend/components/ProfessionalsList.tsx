@@ -105,7 +105,7 @@ export default function ProfessionalsList() {
           return (
             <li
               key={pro.id}
-              className='group flex flex-col bg-white rounded-2xl border border-gray-200 p-6 transition hover:shadow-md hover:border-gray-300'
+              className='group flex flex-col bg-white rounded-2xl border border-gray-200 p-6 transition hover:shadow-sm hover:border-gray-300'
             >
               <Link
                 href={`/professionals/${pro.id}`}

@@ -128,7 +128,7 @@ export default function AllReviews() {
     <div className='flex flex-col gap-6'>
       {/* Header + stats */}
       <div className='flex items-center justify-between'>
-        <h2 className='text-lg font-semibold text-gray-900'>Avis clients</h2>
+        <h2 className='text-2xl font-semibold text-gray-900'>Avis clients</h2>
       </div>
 
       {/* Table */}

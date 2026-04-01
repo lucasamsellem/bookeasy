@@ -34,7 +34,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
   const isAdmin = loggedUser?.role === 'superAdmin';
 
   const { userFullName: customerFullName } = useFetchUserById(customerId);
-  const { userFullName: proFullName } = useFetchUserById(professionalId);
+  const { userFullName: proFullName, user: pro } = useFetchUserById(professionalId);
   const { createReview, isReviewCreated } = useCreateReview();
 
   const BookingDate = buildBookingDate(selectedDate!, selectedHour);
@@ -84,7 +84,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
         <div className='flex items-start justify-between gap-2'>
           <div>
             <p className='font-semibold text-gray-900 text-base leading-tight'>{proFullName}</p>
-            <p className='text-gray-400 text-xs mt-0.5'>avec {customerFullName}</p>
+            <p className='text-gray-400 text-xs mt-0.5'>{pro?.profession}</p>
           </div>
 
           <span
@@ -103,7 +103,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
         <div className='h-px bg-gray-100' />
 
         {/* Date + heure */}
-        <div className='flex items-center justify-between text-sm'>
+        <div className='grid grid-cols-2 items-center justify-between text-sm gap-1'>
           <div className='flex items-center gap-2 text-gray-600'>
             <span className='text-base'>📅</span>
             <span className='font-medium'>
@@ -121,9 +121,12 @@ export default function BookingCard({ booking }: BookingCardProps) {
               })()}
             </span>
           </div>
-          <span className='bg-gray-50 border border-gray-100 text-gray-700 font-mono text-xs px-2.5 py-1 rounded-lg'>
+
+          <span className='bg-gray-50 border border-gray-100 text-gray-700 font-mono text-xs px-2.5 py-1 rounded-lg w-fit ml-auto'>
             {selectedHour.slice(0, 5)}
           </span>
+
+          <span className='text-xs opacity-50'>avec {customerFullName}</span>
         </div>
 
         {(isPro || isAdmin) && !hasPassed && (
