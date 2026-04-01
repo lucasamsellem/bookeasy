@@ -5,6 +5,7 @@ import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
 import { type User } from '@backend/controllers/user.controller';
 import PasswordInput from './PasswordInput';
+import './LoginForm.scss';
 
 interface LoginBody {
   email: string;
@@ -49,21 +50,18 @@ export default function LoginForm() {
   };
 
   return (
-    <form
-      className='w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow-md'
-      onSubmit={handleSubmit}
-    >
-      <h1 className='text-center text-2xl font-semibold text-gray-800'>Login</h1>
+    <form className='login' onSubmit={handleSubmit}>
+      <h1 className='login__title'>Login</h1>
 
-      <div className='flex flex-col space-y-1'>
-        <label htmlFor='email' className='text-sm text-gray-600'>
+      <div className='login__field'>
+        <label htmlFor='email' className='login__label'>
           Email
         </label>
         <input
           id='email'
           type='email'
           placeholder='you@example.com'
-          className='rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
+          className='login__input'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -71,15 +69,12 @@ export default function LoginForm() {
 
       <PasswordInput value={password} handleChange={(e) => setPassword(e.target.value)} />
 
-      <button
-        type='submit'
-        className='w-full rounded-md bg-blue-600 py-2 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-      >
+      <button type='submit' className='login__submit'>
         {isPending ? 'Loading...' : 'Submit'}
       </button>
 
-      {isSuccess && <p className='text-green-500 text-center'>Login successful!</p>}
-      {isError && <p className='text-red-500 text-center'>Login failed ({error?.message})</p>}
+      {isSuccess && <p className='login__success'>Login successful!</p>}
+      {isError && <p className='login__error'>Login failed ({error?.message})</p>}
     </form>
   );
 }
