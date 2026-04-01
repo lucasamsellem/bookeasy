@@ -1,11 +1,13 @@
 'use client';
 
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { TrashIcon } from '@heroicons/react/24/outline';
+import { apiFetch } from '@/services/api';
 import useFetchUserById from '@/hooks/users/useFetchUserById';
 import useDeleteReview from '@/hooks/reviews/useDeleteReview';
-import { useQuery } from '@tanstack/react-query';
-import { apiFetch } from '@/services/api';
-import { useState } from 'react';
-import { TrashIcon } from '@heroicons/react/24/outline';
+
+import './AllReviews.scss';
 
 type Review = {
   id: number;
@@ -19,11 +21,11 @@ type Review = {
 
 function StarRating({ rating }: { rating: number }) {
   return (
-    <div className='flex gap-0.5'>
+    <div className='reviews__stars'>
       {[1, 2, 3, 4, 5].map((star) => (
         <svg
           key={star}
-          className={`w-3.5 h-3.5 ${star <= rating ? 'text-amber-400' : 'text-gray-200'}`}
+          className={`reviews__star ${star <= rating ? 'reviews__star--filled' : ''}`}
           fill='currentColor'
           viewBox='0 0 20 20'
         >
@@ -40,42 +42,40 @@ function ReviewRow({ review, onDelete }: { review: Review; onDelete: (id: number
   const [confirming, setConfirming] = useState(false);
 
   return (
-    <tr className='group border-b border-gray-100 last:border-0 hover:bg-gray-50/60 transition-colors'>
+    <tr className='reviews__row'>
       {/* Client */}
-      <td className='py-3.5 px-4'>
-        <div className='flex items-center gap-2'>
-          <div className='w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-xs font-semibold text-slate-500 shrink-0'>
-            {customerName?.charAt(0).toUpperCase() ?? '?'}
-          </div>
-          <span className='text-sm text-gray-800 font-medium'>{customerName ?? '…'}</span>
+      <td className='reviews__cell'>
+        <div className='reviews__user'>
+          <div className='reviews__avatar'>{customerName?.charAt(0).toUpperCase() ?? '?'}</div>
+          <span className='reviews__name'>{customerName ?? '…'}</span>
         </div>
       </td>
 
       {/* Pro */}
-      <td className='py-3.5 px-4'>
-        <span className='text-sm text-gray-600'>{proName ?? '…'}</span>
+      <td className='reviews__cell'>
+        <span className='reviews__pro'>{proName ?? '…'}</span>
       </td>
 
-      {/* Note */}
-      <td className='py-3.5 px-4'>
-        <div className='flex items-center gap-1.5'>
+      {/* Rating */}
+      <td className='reviews__cell'>
+        <div className='reviews__rating'>
           <StarRating rating={review.rating} />
-          <span className='text-xs text-gray-400 tabular-nums'>{review.rating}/5</span>
+          <span className='reviews__rating-value'>{review.rating}/5</span>
         </div>
       </td>
 
-      {/* Commentaire */}
-      <td className='py-3.5 px-4 max-w-xs'>
+      {/* Comment */}
+      <td className='reviews__cell reviews__cell--comment'>
         {review.comment ? (
-          <p className='text-sm text-gray-500 italic truncate'>&quot;{review.comment}&quot;</p>
+          <p className='reviews__comment'>&quot;{review.comment}&quot;</p>
         ) : (
-          <span className='text-xs text-gray-300'>—</span>
+          <span className='reviews__empty'>—</span>
         )}
       </td>
 
       {/* Date */}
-      <td className='py-3.5 px-4 whitespace-nowrap'>
-        <span className='text-xs text-gray-400'>
+      <td className='reviews__cell reviews__cell--date'>
+        <span className='reviews__date'>
           {new Date(review.createdAt).toLocaleDateString('fr-FR', {
             day: 'numeric',
             month: 'short',
@@ -84,28 +84,25 @@ function ReviewRow({ review, onDelete }: { review: Review; onDelete: (id: number
         </span>
       </td>
 
-      {/* Supprimer */}
-      <td className='py-3.5 px-4'>
+      {/* Delete */}
+      <td className='reviews__cell'>
         {confirming ? (
-          <div className='flex items-center gap-2'>
+          <div className='reviews__actions-confirm'>
             <button
               onClick={() => onDelete(review.id)}
-              className='text-xs font-semibold text-rose-600 hover:text-rose-700 transition-colors'
+              className='reviews__btn reviews__btn--confirm'
             >
               Confirmer
             </button>
             <button
               onClick={() => setConfirming(false)}
-              className='text-xs text-gray-400 hover:text-gray-600 transition-colors'
+              className='reviews__btn reviews__btn--cancel'
             >
               Annuler
             </button>
           </div>
         ) : (
-          <button
-            onClick={() => setConfirming(true)}
-            className='opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-rose-50 text-gray-300 hover:text-rose-500'
-          >
+          <button onClick={() => setConfirming(true)} className='reviews__delete'>
             <TrashIcon className='w-4 h-4' />
           </button>
         )}
@@ -125,28 +122,25 @@ export default function AllReviews() {
   const reviewList = reviews ?? [];
 
   return (
-    <div className='flex flex-col gap-6'>
-      {/* Header + stats */}
-      <div className='flex items-center justify-between'>
-        <h2 className='text-2xl font-semibold text-gray-900'>Avis clients</h2>
+    <div className='reviews'>
+      {/* Header */}
+      <div className='reviews__header'>
+        <h2 className='reviews__title'>Avis clients</h2>
       </div>
 
       {/* Table */}
       {reviewList.length === 0 ? (
-        <div className='flex flex-col items-center justify-center py-16 text-center gap-2 bg-white rounded-2xl border border-gray-100'>
-          <span className='text-4xl'>⭐</span>
-          <p className='text-sm text-white'>Aucun avis pour le moment.</p>
+        <div className='reviews__empty-state'>
+          <span>⭐</span>
+          <p className='reviews__empty-text'>Aucun avis pour le moment.</p>
         </div>
       ) : (
-        <div className='bg-white rounded-2xl border border-gray-100 overflow-hidden'>
-          <table className='w-full'>
+        <div className='reviews__table-wrapper'>
+          <table className='reviews__table'>
             <thead>
-              <tr className='border-b border-gray-100 bg-blue-500 '>
+              <tr className='reviews__thead-row'>
                 {['Client', 'Professionnel', 'Note', 'Commentaire', 'Date', ''].map((h) => (
-                  <th
-                    key={h}
-                    className='py-3 px-4 text-left text-xs font-semibold text-white uppercase tracking-wider'
-                  >
+                  <th key={h} className='reviews__th'>
                     {h}
                   </th>
                 ))}
