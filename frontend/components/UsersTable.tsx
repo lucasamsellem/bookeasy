@@ -10,14 +10,9 @@ import useUpdateUser from '@/hooks/users/useUpdateUser';
 import { RegisterForm, Input, RegisterFormRef } from './RegisterForm';
 import { User } from '@backend/controllers/user.controller';
 import { capitalizeFirstLetter } from '@/utils/utils';
+import styles from './UsersTable.module.scss';
 
 const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street', 'streetNumber'];
-
-const roleStyles: Record<string, string> = {
-  customer: 'bg-blue-100 text-blue-700',
-  professional: 'bg-green-100 text-green-700',
-  superAdmin: 'bg-purple-100 text-purple-700',
-};
 
 export default function UsersTable() {
   const { users } = useFetchUsers();
@@ -31,13 +26,11 @@ export default function UsersTable() {
     openModal: openDeletetionModal,
     closeModal: closeDeletionModal,
   } = useModal();
-
   const {
     isOpen: isUpdateOpen,
     openModal: openUpdateModal,
     closeModal: closeUpdateModal,
   } = useModal();
-
   const {
     isOpen: isCreateOpen,
     openModal: openCreateModal,
@@ -56,22 +49,34 @@ export default function UsersTable() {
     streetNumber: userToUpdate?.streetNumber,
   });
 
+  const roleClass = (role: string) => {
+    switch (role) {
+      case 'customer':
+        return 'customer';
+      case 'professional':
+        return 'professional';
+      case 'superAdmin':
+        return 'superAdmin';
+      default:
+        return 'default';
+    }
+  };
+
   return (
-    <>
-      <h2 className='text-2xl font-semibold mb-3'>Liste des utilisateurs</h2>
+    <div className={styles['users-table']}>
+      <h2>Liste des utilisateurs</h2>
 
-      <div className='w-full overflow-x-auto'>
-        <table className='min-w-full bg-white shadow-md rounded-xl overflow-hidden'>
-          <thead className='bg-blue-500 text-left text-sm uppercase tracking-wide text-white'>
+      <div className={styles['table-wrapper']}>
+        <table>
+          <thead>
             <tr>
-              <th className='px-6 py-4'>Nom</th>
-              <th className='px-6 py-4'>Email</th>
-              <th className='px-6 py-4'>Rôle</th>
-              <th className='px-6 py-4'>Profession</th>
-              <th className='px-6 py-4'>Adresse</th>
-              <th className='px-6 py-4'></th>
-
-              <th className='px-6 py-4'>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Rôle</th>
+              <th>Profession</th>
+              <th>Adresse</th>
+              <th></th>
+              <th>
                 <button onClick={openCreateModal}>
                   <PlusIcon className='size-5' />
                 </button>
@@ -79,35 +84,18 @@ export default function UsersTable() {
             </tr>
           </thead>
 
-          <tbody className='divide-y divide-gray-200 text-sm'>
+          <tbody>
             {users?.map((user) => (
-              <tr key={user.id} className='hover:bg-gray-50 transition-colors'>
-                <td className='px-6 py-4 font-medium text-gray-900'>
+              <tr key={user.id}>
+                <td>
                   {user.firstName} {user.lastName}
                 </td>
-
-                <td className='px-6 py-4 text-gray-700'>{user.email}</td>
-
-                <td className='px-6 py-4'>
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      roleStyles[user.role] ?? 'bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    {capitalizeFirstLetter(user.role)}
-                  </span>
+                <td>{user.email}</td>
+                <td className={`role ${roleClass(user.role)}`}>
+                  <span>{capitalizeFirstLetter(user.role)}</span>
                 </td>
-
-                <td className='px-6 py-4 text-gray-700'>{user.profession}</td>
-
-                <td className='px-6 py-4 text-gray-700'>
-                  {user.city ? (
-                    <span>
-                      {user.streetNumber} {user.street}, {user.city}
-                    </span>
-                  ) : null}
-                </td>
-
+                <td>{user.profession}</td>
+                <td>{user.city ? `${user.streetNumber} ${user.street}, ${user.city}` : null}</td>
                 <td>
                   <button
                     onClick={() => {
@@ -118,7 +106,6 @@ export default function UsersTable() {
                     <TrashIcon className='size-5' />
                   </button>
                 </td>
-
                 <td>
                   <button
                     onClick={() => {
@@ -134,15 +121,12 @@ export default function UsersTable() {
           </tbody>
         </table>
 
-        {!users?.length && (
-          <div className='text-center py-10 text-gray-500'>Aucun utilisateur trouvé.</div>
-        )}
+        {!users?.length && <div className={styles.empty}>Aucun utilisateur trouvé.</div>}
       </div>
 
       <Modal
         isOpen={isCreateOpen}
         onClose={closeCreateModal}
-        // isLoading={isUserCreated}
         title='Nouvel utilisateur'
         onConfirm={async () => {
           await formRef.current?.submit();
@@ -176,7 +160,6 @@ export default function UsersTable() {
         isLoading={isUserUpdating}
         onConfirm={async () => {
           if (!userIdToUpdate || !userToUpdate) return;
-
           await updateUser({
             id: userToUpdate.id,
             firstName: userUpdatedValues.firstName ?? userToUpdate.firstName,
@@ -185,12 +168,11 @@ export default function UsersTable() {
             street: userUpdatedValues.street ?? userToUpdate.street,
             streetNumber: userUpdatedValues.streetNumber ?? userToUpdate.streetNumber,
           });
-
           closeUpdateModal();
         }}
         confirmLabel='Modifier'
       >
-        <form className='flex flex-col gap-y-5' onSubmit={(e) => e.preventDefault()}>
+        <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
           {editableKeys.map((key) => (
             <Input
               key={key}
@@ -201,6 +183,6 @@ export default function UsersTable() {
           ))}
         </form>
       </Modal>
-    </>
+    </div>
   );
 }
