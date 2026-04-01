@@ -1,10 +1,10 @@
 'use client';
 
-import useFetchProAvailabilities from '@/hooks/useFetchProAvailabilities';
+import useFetchProAvailabilities from '@/hooks/availabilities/useFetchProAvailabilities';
 import { formatDateFR, getLoggedUser } from '@/utils/utils';
 import ActionButton from './ActionButton';
 import { PlusIcon } from '@heroicons/react/24/outline';
-import useCreateAvailability from '@/hooks/useCreateAvailability';
+import useCreateAvailability from '@/hooks/availabilities/useCreateAvailability';
 import useModal from '@/hooks/useModal';
 import Modal from './Modal';
 import AvailabilityForm from './AvailabilityForm';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Availability } from '@/types/availability';
-import { toDateKey } from '@/hooks/useFetchProAvailabilities';
+import { toDateKey } from '@/hooks/availabilities/useFetchProAvailabilities';
 
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 const HOURS = Array.from({ length: 12 }, (_, i) => `${String(8 + i).padStart(2, '0')}:00`);

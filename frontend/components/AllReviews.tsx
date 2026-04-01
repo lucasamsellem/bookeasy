@@ -1,7 +1,7 @@
 'use client';
 
-import useFetchUserById from '@/hooks/useFetchUserById';
-import useDeleteReview from '@/hooks/useDeleteReview';
+import useFetchUserById from '@/hooks/users/useFetchUserById';
+import useDeleteReview from '@/hooks/reviews/useDeleteReview';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
 import { useState } from 'react';

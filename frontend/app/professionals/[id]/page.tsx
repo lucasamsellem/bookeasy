@@ -3,9 +3,9 @@
 import { useParams } from 'next/navigation';
 import Spinner from '@/components/Spinner';
 import NewBookingForm from '@/components/NewBookingForm';
-import useFetchUserById from '@/hooks/useFetchUserById';
+import useFetchUserById from '@/hooks/users/useFetchUserById';
 import Avatar from '@/components/Avatar';
-import useFetchProReview, { Review } from '@/hooks/useFetchUserReviews';
+import useFetchProReview, { Review } from '@/hooks/reviews/useFetchUserReviews';
 import StarRating from '@/components/StarRating';
 import ReviewCard from '@/components/ReviewCard';
 

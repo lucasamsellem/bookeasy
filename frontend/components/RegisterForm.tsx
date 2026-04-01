@@ -4,7 +4,7 @@ import { forwardRef, useImperativeHandle, useState } from 'react';
 import PasswordStrengthBar from './PasswordStrengthBar';
 import PasswordInput from './PasswordInput';
 import { Role } from '@backend/controllers/user.controller';
-import useCreateUser from '@/hooks/useCreateUser';
+import useCreateUser from '@/hooks/users/useCreateUser';
 
 export interface RegisterBody {
   firstName: string;

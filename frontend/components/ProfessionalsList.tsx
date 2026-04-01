@@ -11,7 +11,7 @@ import Avatar from './Avatar';
 import ProfessionalsFilterBar from './ProfessionalsFilterBar';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
-import { Review } from '@/hooks/useFetchUserReviews';
+import { Review } from '@/hooks/reviews/useFetchUserReviews';
 
 function MiniStars({ rating, count }: { rating: number; count: number }) {
   return (

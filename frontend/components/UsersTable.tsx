@@ -1,12 +1,12 @@
 'use client';
 
-import useDeleteUser from '@/hooks/useDeleteUser';
-import useFetchUsers from '@/hooks/useFetchUsers';
+import useDeleteUser from '@/hooks/users/useDeleteUser';
+import useFetchUsers from '@/hooks/users/useFetchUsers';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Modal from './Modal';
 import useModal from '@/hooks/useModal';
 import { useRef, useState } from 'react';
-import useUpdateUser from '@/hooks/useUpdateUser';
+import useUpdateUser from '@/hooks/users/useUpdateUser';
 import { RegisterForm, Input, RegisterFormRef } from './RegisterForm';
 import { User } from '@backend/controllers/user.controller';
 import { capitalizeFirstLetter } from '@/utils/utils';

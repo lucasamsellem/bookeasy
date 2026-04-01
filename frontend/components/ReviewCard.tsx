@@ -1,5 +1,5 @@
-import useFetchUserById from '@/hooks/useFetchUserById';
-import { Review } from '@/hooks/useFetchUserReviews';
+import useFetchUserById from '@/hooks/users/useFetchUserById';
+import { Review } from '@/hooks/reviews/useFetchUserReviews';
 import StarRating from './StarRating';
 
 export default function ReviewCard({ review }: { review: Review }) {
