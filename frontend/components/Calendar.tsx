@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Availability } from '@/types/availability';
 import { toDateKey } from '@/hooks/availabilities/useFetchProAvailabilities';
+import './Calendar.scss';
 
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 const HOURS = Array.from({ length: 12 }, (_, i) => `${String(8 + i).padStart(2, '0')}:00`);
@@ -89,35 +90,37 @@ export default function Calendar({
     : new Set<string>();
 
   return (
-    <div className='w-full max-w-md space-y-4 rounded-2xl bg-white p-4 shadow-sm'>
+    <div className='calendar'>
       {/* Header */}
-      <div className='flex items-center justify-between'>
+      <div className='calendar__header'>
         <button
           onClick={() => setCurrentDate(new Date(year, month - 1, 1))}
-          className='rounded-lg p-2 hover:bg-gray-100'
+          className='calendar__nav'
         >
-          <ChevronLeftIcon className='h-5 w-5' />
+          <ChevronLeftIcon className='calendar__icon' />
         </button>
-        <h2 className='text-lg font-semibold capitalize'>
+
+        <h2 className='calendar__title'>
           {currentDate.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
         </h2>
+
         <button
           onClick={() => setCurrentDate(new Date(year, month + 1, 1))}
-          className='rounded-lg p-2 hover:bg-gray-100'
+          className='calendar__nav'
         >
-          <ChevronRightIcon className='h-5 w-5' />
+          <ChevronRightIcon className='calendar__icon' />
         </button>
       </div>
 
       {/* Days header */}
-      <div className='grid grid-cols-7 gap-2 text-center text-sm text-gray-500'>
+      <div className='calendar__days'>
         {DAYS.map((d) => (
           <div key={d}>{d}</div>
         ))}
       </div>
 
-      {/* Calendar grid */}
-      <div className='grid grid-cols-7 gap-2'>
+      {/* Grid */}
+      <div className='calendar__grid'>
         {days.map((date, index) => {
           if (!date) return <div key={index} />;
 
@@ -140,38 +143,37 @@ export default function Calendar({
                 onSelectedHour(null);
               }}
               disabled={isDisabled}
-              className={`relative flex h-10 items-center justify-center rounded-lg text-sm transition
-                ${isSelected ? 'bg-blue-500 text-white' : ''}
-                ${!isSelected && !isDisabled ? 'hover:bg-gray-100' : ''}
-                ${isToday && !isSelected ? 'bg-blue-100' : ''}
-                ${isDisabled ? 'text-gray-300 pointer-events-none' : ''}
+              className={`
+                calendar__day
+                ${isSelected ? 'calendar__day--selected' : ''}
+                ${isToday ? 'calendar__day--today' : ''}
+                ${isDisabled ? 'calendar__day--disabled' : ''}
               `}
             >
               {date.getDate()}
-              {hasSlots && !isPast && !isSelected && (
-                <span className='absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-green-400' />
-              )}
+
+              {hasSlots && !isPast && !isSelected && <span className='calendar__dot' />}
             </button>
           );
         })}
       </div>
 
-      {/* Time selection */}
+      {/* Hours */}
       {selectedDate && (
-        <div className='space-y-2'>
-          <p>
+        <div className='calendar__hours'>
+          <p className='calendar__hours-label'>
             Heures disponibles –{' '}
             {(() => {
               const [y, m, d] = selectedDate.split('-').map(Number);
               return new Date(y, m - 1, d).toLocaleDateString('fr-FR');
             })()}
           </p>
-          <div className='grid grid-cols-4 gap-2'>
+
+          <div className='calendar__hours-grid'>
             {HOURS.map((hour) => {
               const isSelected = selectedHour === hour;
               const isAvailable = availableHours.has(hour);
 
-              // Bloquer les heures passées si aujourd'hui
               let isPastHour = false;
               if (selectedDate === todayKey) {
                 const [h] = hour.split(':').map(Number);
@@ -186,10 +188,10 @@ export default function Calendar({
                   type='button'
                   onClick={() => onSelectedHour(hour)}
                   disabled={isDisabled}
-                  className={`rounded-lg border px-2 py-1 text-sm transition
-                    ${isSelected ? 'bg-blue-500 text-white border-blue-500' : ''}
-                    ${!isSelected && !isDisabled ? 'hover:bg-gray-100' : ''}
-                    ${isDisabled ? 'text-gray-300 border-gray-100 pointer-events-none' : 'border-gray-200'}
+                  className={`
+                    calendar__hour
+                    ${isSelected ? 'calendar__hour--selected' : ''}
+                    ${isDisabled ? 'calendar__hour--disabled' : ''}
                   `}
                 >
                   {hour}
@@ -200,9 +202,9 @@ export default function Calendar({
         </div>
       )}
 
-      {/* Résumé */}
+      {/* Summary */}
       {selectedDate && selectedHour && (
-        <div className='rounded-lg bg-gray-50 p-2 text-sm text-gray-700'>
+        <div className='calendar__summary'>
           Sélection :{' '}
           <strong>
             {(() => {
