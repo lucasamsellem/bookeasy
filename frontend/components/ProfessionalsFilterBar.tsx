@@ -3,6 +3,7 @@
 import { User } from '@backend/controllers/user.controller';
 import { useMemo } from 'react';
 import Select from './Select';
+import './ProfessionalsFilterBar.scss';
 
 type Props = {
   professionals?: User[];
@@ -13,9 +14,6 @@ type Props = {
   };
   onChange: (filters: Props['filters']) => void;
 };
-
-const INPUT_STYLE =
-  'w-full h-10 px-3 rounded-lg border border-gray-200 bg-gray-50 text-sm text-gray-800 placeholder:text-gray-400 transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white';
 
 export default function ProfessionalsFilterBar({ professionals, filters, onChange }: Props) {
   const professionOptions = useMemo(() => {
@@ -36,26 +34,8 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
   };
 
   return (
-    <div className='w-full flex justify-center px-4'>
-      <div
-        className='
-        w-1/2 
-        bg-white
-        shadow-sm
-        rounded-2xl
-        p-4
-        flex flex-col gap-4
-        
-        md:flex-row
-        md:justify-between
-        md:items-end
-        md:gap-0
-        md:rounded-2xl
-        md:shadow-md
-        md:p-0
-        '
-      >
-        {/* Profession */}
+    <div className='filter-bar-wrapper'>
+      <div className='filter-bar'>
         <FilterItem label='Profession'>
           <Select
             value={filters.profession ?? ''}
@@ -65,18 +45,16 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
           />
         </FilterItem>
 
-        {/* Name */}
         <FilterItem label='Name'>
           <input
             type='text'
             placeholder='Search name'
             value={filters.name}
             onChange={(e) => update('name', e.target.value)}
-            className={INPUT_STYLE}
+            className='filter-bar__input'
           />
         </FilterItem>
 
-        {/* Location */}
         <FilterItem label='Location'>
           <Select
             value={filters.location}
@@ -92,8 +70,8 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
 
 function FilterItem({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div className='flex flex-col border-none md:px-6 md:py-3 w-full'>
-      <label className='text-xs font-semibold text-gray-500 mb-1'>{label}</label>
+    <div className='filter-bar__item'>
+      <label className='filter-bar__label'>{label}</label>
       {children}
     </div>
   );
