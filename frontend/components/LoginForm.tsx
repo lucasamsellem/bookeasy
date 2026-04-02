@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import { type User } from '@backend/controllers/user.controller';
 import PasswordInput from './PasswordInput';
 import './LoginForm.scss';
+import ActionButton from './ActionButton';
 
 interface LoginBody {
   email: string;
@@ -23,7 +24,6 @@ export default function LoginForm() {
   const {
     mutate: loginMutation,
     isPending,
-    isSuccess,
     isError,
     error,
   } = useMutation({
@@ -69,11 +69,8 @@ export default function LoginForm() {
 
       <PasswordInput value={password} handleChange={(e) => setPassword(e.target.value)} />
 
-      <button type='submit' className='login__submit'>
-        {isPending ? 'Loading...' : 'Submit'}
-      </button>
+      <ActionButton text='Submit' type='submit' isLoading={isPending} />
 
-      {isSuccess && <p className='login__success'>Login successful!</p>}
       {isError && <p className='login__error'>Login failed ({error?.message})</p>}
     </form>
   );
