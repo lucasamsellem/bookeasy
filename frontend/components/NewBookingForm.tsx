@@ -5,6 +5,8 @@ import { apiFetch } from '@/services/api';
 import { getLoggedUser } from '@/utils/utils';
 import Calendar from './Calendar';
 import useFetchProAvailabilities from '@/hooks/availabilities/useFetchProAvailabilities';
+import ActionButton from './ActionButton';
+import { CalendarIcon } from '@heroicons/react/24/solid';
 
 interface BookingFormProps {
   professionalId: number;
@@ -90,34 +92,15 @@ export default function BookingForm({ professionalId }: BookingFormProps) {
         />
       </label>
 
-      <button
+      <ActionButton
         type='submit'
-        disabled={isPending || !customerId || !selectedDate || !selectedHour}
-        className='w-full py-2.5 rounded-xl text-sm font-semibold bg-blue-500 text-white  disabled:opacity-40 disabled:cursor-not-allowed! transition-all'
-      >
-        {isPending ? (
-          <span className='flex items-center justify-center gap-2'>
-            <svg className='w-4 h-4 animate-spin' viewBox='0 0 24 24' fill='none'>
-              <circle
-                className='opacity-25'
-                cx='12'
-                cy='12'
-                r='10'
-                stroke='currentColor'
-                strokeWidth='4'
-              />
-              <path
-                className='opacity-75'
-                fill='currentColor'
-                d='M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z'
-              />
-            </svg>
-            Réservation...
-          </span>
-        ) : (
-          <span>{!customerId ? 'Connexion requise' : 'Créer le rendez-vous'}</span>
-        )}
-      </button>
+        isLoading={isPending}
+        icon={customerId ? <CalendarIcon className='size-5' /> : undefined}
+        disabled={!customerId || !selectedDate || !selectedHour}
+        text={
+          isPending ? 'Réservation...' : !customerId ? 'Connexion requise' : 'Créer le rendez-vous'
+        }
+      />
 
       {isSuccess && <p className='text-center'>Booking created successfully!</p>}
       {isError && <p>Failed to create booking. Please try again.</p>}
