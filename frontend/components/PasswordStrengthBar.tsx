@@ -1,4 +1,4 @@
-import { RegisterBody } from './RegisterForm';
+import { RegisterBody } from '../features/users/components/RegisterForm';
 
 type PasswordStrengthBarProps = {
   form: RegisterBody;

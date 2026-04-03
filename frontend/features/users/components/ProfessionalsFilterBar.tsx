@@ -2,7 +2,7 @@
 
 import { User } from '@backend/controllers/user.controller';
 import { useMemo } from 'react';
-import Select from './Select';
+import Select from '../../../components/Select';
 import './ProfessionalsFilterBar.scss';
 
 type Props = {

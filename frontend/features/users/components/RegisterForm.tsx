@@ -1,8 +1,8 @@
 'use client';
 
 import { forwardRef, useImperativeHandle, useState } from 'react';
-import PasswordStrengthBar from './PasswordStrengthBar';
-import PasswordInput from './PasswordInput';
+import PasswordStrengthBar from '../../../components/PasswordStrengthBar';
+import PasswordInput from '../../../components/PasswordInput';
 import { Role } from '@backend/controllers/user.controller';
 import useCreateUser from '@/hooks/users/useCreateUser';
 

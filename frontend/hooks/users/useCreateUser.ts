@@ -1,4 +1,4 @@
-import { RegisterBody } from '@/components/RegisterForm';
+import { RegisterBody } from '@/features/users/components/RegisterForm';
 import { apiFetch } from '@/services/api';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

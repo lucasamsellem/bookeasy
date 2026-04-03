@@ -5,7 +5,7 @@ import { apiFetch } from '@/services/api';
 import { getLoggedUser } from '@/utils/utils';
 import Calendar from './Calendar';
 import useFetchProAvailabilities from '@/hooks/availabilities/useFetchProAvailabilities';
-import ActionButton from './ActionButton';
+import ActionButton from '@/components/ActionButton';
 import { CalendarIcon } from '@heroicons/react/24/solid';
 
 interface BookingFormProps {

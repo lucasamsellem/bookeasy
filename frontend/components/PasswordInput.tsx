@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from 'react';
-import { Input } from './RegisterForm';
+import { Input } from '../features/users/components/RegisterForm';
 import { EyeSlashIcon, EyeIcon } from '@heroicons/react/24/solid';
 
 type PasswordInputProps = {

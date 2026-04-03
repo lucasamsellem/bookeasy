@@ -3,7 +3,7 @@
 import useDeleteUser from '@/hooks/users/useDeleteUser';
 import useFetchUsers from '@/hooks/users/useFetchUsers';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import Modal from './Modal';
+import Modal from '../../../components/Modal';
 import useModal from '@/hooks/useModal';
 import { useRef, useState } from 'react';
 import useUpdateUser from '@/hooks/users/useUpdateUser';

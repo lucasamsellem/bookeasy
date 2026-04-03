@@ -4,9 +4,9 @@ import { useState } from 'react';
 import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
 import { type User } from '@backend/controllers/user.controller';
-import PasswordInput from './PasswordInput';
+import PasswordInput from '../../../components/PasswordInput';
 import './LoginForm.scss';
-import ActionButton from './ActionButton';
+import ActionButton from '../../../components/ActionButton';
 
 interface LoginBody {
   email: string;

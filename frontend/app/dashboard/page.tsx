@@ -1,6 +1,6 @@
-import AllBookings from '@/components/AllBookings';
-import AllReviews from '@/components/AllReviews';
-import UsersTable from '@/components/UsersTable';
+import AllBookings from '@/features/bookings/components/AllBookings';
+import AllReviews from '@/features/reviews/components/AllReviews';
+import UsersTable from '@/features/users/components/UsersTable';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 

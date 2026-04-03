@@ -1,7 +1,7 @@
 'use client';
 
-import ProAvailabilities from '@/components/ProAvailabilities';
-import ProfessionalsList from '@/components/ProfessionalsList';
+import ProAvailabilities from '@/features/availabilities/components/ProAvailabilities';
+import ProfessionalsList from '@/features/users/components/ProfessionalsList';
 import { getLoggedUser } from '@/utils/utils';
 
 export default function AvailabilitiesPage() {

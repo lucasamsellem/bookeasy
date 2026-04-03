@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import ActionButton from './ActionButton';
+import ActionButton from '../../../components/ActionButton';
 import { User } from '@backend/controllers/user.controller';
 import useModal from '@/hooks/useModal';
-import Modal from './Modal';
-import NewBookingForm from './NewBookingForm';
+import Modal from '../../../components/Modal';
+import NewBookingForm from '@/features/bookings/components/NewBookingForm';
 import { useMemo, useState } from 'react';
 import Avatar from './Avatar';
 import ProfessionalsFilterBar from './ProfessionalsFilterBar';

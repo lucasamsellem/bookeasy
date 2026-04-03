@@ -1,10 +1,10 @@
 'use client';
 
 import ActionButton from '@/components/ActionButton';
-import FeaturesList from '@/components/FeaturesList';
+import FeaturesList from '@/layout/FeaturesList';
 import { redirect } from 'next/navigation';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import Testimonials from '@/components/Testimonials';
+import Testimonials from '@/features/reviews/components/Testimonials';
 import Logo from '@/components/Logo';
 import './HomePage.scss';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import BookingCard from '@/components/BookingCard';
+import BookingCard from '@/features/bookings/components/BookingCard';
 import useFetchUserBookings from '@/hooks/bookings/useFetchUserBookings';
 import { getLoggedUser } from '@/utils/utils';
 

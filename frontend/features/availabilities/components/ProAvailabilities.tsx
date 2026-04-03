@@ -2,11 +2,11 @@
 
 import useFetchProAvailabilities from '@/hooks/availabilities/useFetchProAvailabilities';
 import { formatDateFR, getLoggedUser } from '@/utils/utils';
-import ActionButton from './ActionButton';
+import ActionButton from '@/components/ActionButton';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import useCreateAvailability from '@/hooks/availabilities/useCreateAvailability';
 import useModal from '@/hooks/useModal';
-import Modal from './Modal';
+import Modal from '@/components/Modal';
 import AvailabilityForm from './AvailabilityForm';
 import { Availability } from '@/types/availability';
 import { useRef } from 'react';

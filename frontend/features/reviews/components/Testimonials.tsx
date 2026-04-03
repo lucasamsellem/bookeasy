@@ -1,4 +1,4 @@
-import Avatar from './Avatar';
+import Avatar from '../../users/components/Avatar';
 import styles from './Testimonials.module.scss';
 
 const testimonials = [
