@@ -45,17 +45,17 @@ export default function ProfessionalsFilterBar({ professionals, filters, onChang
           />
         </FilterItem>
 
-        <FilterItem label='Name'>
+        <FilterItem label='Nom'>
           <input
             type='text'
-            placeholder='Search name'
+            placeholder='Chercher par nom'
             value={filters.name}
             onChange={(e) => update('name', e.target.value)}
             className='filter-bar__input'
           />
         </FilterItem>
 
-        <FilterItem label='Location'>
+        <FilterItem label='Ville'>
           <Select
             value={filters.location}
             onChange={(v) => update('location', v)}
