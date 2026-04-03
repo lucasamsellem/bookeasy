@@ -55,9 +55,15 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 // POST /users
+const NAME_REGEX = /^[a-zA-ZÀ-ÿ\s'\-]{2,50}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CITY_REGEX = /^[a-zA-ZÀ-ÿ\s'\-]{2,100}$/;
+const STREET_REGEX = /^[a-zA-ZÀ-ÿ0-9\s'\-,\.]{2,150}$/;
+const STREET_NUMBER_REGEX = /^[0-9]{1,5}[a-zA-Z]?$/;
+const PROFESSION_REGEX = /^[a-zA-ZÀ-ÿ\s'\-]{2,100}$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
 
-export const createUser = async (req: Request, res: Response) => {
+const buildUserPayload = async (body: any, res: Response) => {
   const {
     firstName,
     lastName,
@@ -68,15 +74,23 @@ export const createUser = async (req: Request, res: Response) => {
     street: bodyStreet,
     streetNumber: bodyStreetNumber,
     city: bodyCity,
-  } = req.body;
+  } = body;
 
   try {
-    // champs obligatoires
     if (!firstName || !lastName || !email || !password) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    // vérification mot de passe
+    // Validations format
+    if (!NAME_REGEX.test(firstName)) {
+      return res.status(400).json({ message: 'Invalid firstName: letters only, 2–50 chars.' });
+    }
+    if (!NAME_REGEX.test(lastName)) {
+      return res.status(400).json({ message: 'Invalid lastName: letters only, 2–50 chars.' });
+    }
+    if (!EMAIL_REGEX.test(email)) {
+      return res.status(400).json({ message: 'Invalid email format.' });
+    }
     if (!PASSWORD_REGEX.test(password)) {
       return res.status(400).json({
         message:
@@ -84,9 +98,25 @@ export const createUser = async (req: Request, res: Response) => {
       });
     }
 
+    // Validations pro
+    if (role === 'professional') {
+      if (profession && !PROFESSION_REGEX.test(profession)) {
+        return res.status(400).json({ message: 'Invalid profession format.' });
+      }
+      if (bodyStreet && !STREET_REGEX.test(bodyStreet)) {
+        return res.status(400).json({ message: 'Invalid street format.' });
+      }
+      if (bodyStreetNumber && !STREET_NUMBER_REGEX.test(bodyStreetNumber)) {
+        return res.status(400).json({ message: 'Invalid street number format.' });
+      }
+      if (bodyCity && !CITY_REGEX.test(bodyCity)) {
+        return res.status(400).json({ message: 'Invalid city format.' });
+      }
+    }
+
     // Vérification email existant
     const [existingUsers] = await db.execute('SELECT id FROM users WHERE email = ? LIMIT 1', [
-      email,
+      email.toLowerCase().trim(),
     ]);
 
     if ((existingUsers as any[]).length > 0) {
@@ -100,21 +130,12 @@ export const createUser = async (req: Request, res: Response) => {
     const city = role === 'professional' ? bodyCity : null;
 
     const [result] = await db.execute(
-      `INSERT INTO users (
-        firstName,
-        lastName,
-        email,
-        password,
-        role,
-        profession,
-        street,
-        streetNumber,
-        city
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO users (firstName, lastName, email, password, role, profession, street, streetNumber, city)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         firstName,
         lastName,
-        email,
+        email.toLowerCase().trim(),
         hashedPassword,
         role,
         role === 'professional' ? (profession ?? null) : null,
@@ -126,7 +147,7 @@ export const createUser = async (req: Request, res: Response) => {
 
     const insertId = (result as any).insertId;
 
-    res.status(201).json({
+    return res.status(201).json({
       id: insertId,
       firstName,
       lastName,
@@ -137,104 +158,19 @@ export const createUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     console.error(error);
-
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ message: 'Email already exists' });
     }
-
-    res.status(500).json({ message: 'Server error' });
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
-// This fn is callable only by superAdmin
+export const createUser = async (req: Request, res: Response) => {
+  return buildUserPayload(req.body, res);
+};
+
 export const createUserFromAdmin = async (req: UserRequest, res: Response) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    role = 'customer',
-    profession,
-    street: bodyStreet,
-    streetNumber: bodyStreetNumber,
-    city: bodyCity,
-  } = req.body;
-
-  try {
-    // Champs obligatoires
-    if (!firstName || !lastName || !email || !password) {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-
-    // Vérification mot de passe
-    if (!PASSWORD_REGEX.test(password)) {
-      return res.status(400).json({
-        message:
-          'Password too weak. Must be at least 8 characters with uppercase, lowercase, number, and special character.',
-      });
-    }
-
-    // Vérification email existant
-    const [existingUsers] = await db.execute('SELECT id FROM users WHERE email = ? LIMIT 1', [
-      email,
-    ]);
-
-    if ((existingUsers as any[]).length > 0) {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const street = role === 'professional' ? bodyStreet : null;
-    const streetNumber = role === 'professional' ? bodyStreetNumber : null;
-    const city = role === 'professional' ? bodyCity : null;
-
-    const [result] = await db.execute(
-      `INSERT INTO users (
-        firstName,
-        lastName,
-        email,
-        password,
-        role,
-        profession,
-        street,
-        streetNumber,
-        city
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        firstName,
-        lastName,
-        email,
-        hashedPassword,
-        role,
-        role === 'professional' ? (profession ?? null) : null,
-        street,
-        streetNumber,
-        city,
-      ],
-    );
-
-    const insertId = (result as any).insertId;
-
-    res.status(201).json({
-      id: insertId,
-      firstName,
-      lastName,
-      email,
-      role,
-      profession: role === 'professional' ? (profession ?? null) : null,
-      address: role === 'professional' ? { street, streetNumber, city } : null,
-    });
-  } catch (error: any) {
-    console.error(error);
-
-    // Erreur duplication en base (double sécurité)
-    if (error.code === 'ER_DUP_ENTRY') {
-      return res.status(400).json({ message: 'Email already exists' });
-    }
-
-    res.status(500).json({ message: 'Server error' });
-  }
+  return buildUserPayload(req.body, res);
 };
 
 // PUT /users/:id
