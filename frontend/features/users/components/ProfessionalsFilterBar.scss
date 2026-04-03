@@ -2,12 +2,10 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  padding: 0 1rem;
 }
 
 .filter-bar {
   width: 100%;
-  max-width: 50%; // équivalent w-1/2
   background: white;
   border-radius: 1rem;
   padding: 1rem;
@@ -19,6 +17,8 @@
 
   // Desktop
   @media (min-width: 768px) {
+    padding: 0 1rem;
+    max-width: 50%;
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
