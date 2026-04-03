@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
     <footer className='text-center py-6 border-t border-gray-200'>
-      <p className='mb-2 text-sm text-gray-600'>&copy; 2023 BookEasy - All rights reserved</p>
+      <p className='mb-2 text-sm text-gray-600'>&copy; 2026 BookEasy - Tous droits réservés</p>
 
       <div className='flex justify-center gap-4 mb-2'>
         <a
@@ -38,7 +38,7 @@ export default function Footer() {
         </a>
       </div>
 
-      <p className='text-xs text-gray-400'>Designed with ❤️ by BookEasy Team</p>
+      <p className='text-xs text-gray-400'>Conçu avec ❤️ par l&apos;équipe BookEasy</p>
     </footer>
   );
 }

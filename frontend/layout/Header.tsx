@@ -28,11 +28,11 @@ export default function Header() {
 
         {/* Desktop navigation */}
         <div className='hidden md:flex items-center gap-x-1'>
-          <NavLink href='/'>Home</NavLink>
+          <NavLink href='/'>Accueil</NavLink>
           {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
-          <NavLink href='/availabilities'>{isPro ? 'My ' : ''}Availabilities</NavLink>
-          {loggedUser && <NavLink href='/bookings'>My Bookings</NavLink>}
-          <NavLink href='/about'>About</NavLink>
+          <NavLink href='/availabilities'>{isPro ? 'Mes disponibilités' : 'Prestataires'}</NavLink>
+          {loggedUser && <NavLink href='/bookings'>Mes réservations</NavLink>}
+          <NavLink href='/about'>À propos</NavLink>
         </div>
 
         {/* Right side desktop */}
@@ -43,13 +43,13 @@ export default function Header() {
                 href='/login'
                 className='text-sm font-medium text-gray-600 hover:text-gray-900 transition'
               >
-                Login
+                Connexion
               </Link>
               <Link
                 href='/register'
                 className='text-sm font-semibold bg-blue-500 text-white px-4 py-1.5 rounded-lg hover:bg-blue-400 transition'
               >
-                Register
+                S&apos;inscrire
               </Link>
             </>
           )}
@@ -89,18 +89,18 @@ export default function Header() {
       {/* Mobile menu */}
       {open && (
         <div className='flex flex-col gap-1 mt-3 pb-3 md:hidden border-t border-gray-100 pt-3'>
-          <NavLink href='/'>Home</NavLink>
+          <NavLink href='/'>Accueil</NavLink>
           {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
-          <NavLink href='/availabilities'>Availabilities</NavLink>
-          <NavLink href='/bookings'>My Bookings</NavLink>
-          <NavLink href='/about'>About</NavLink>
+          <NavLink href='/availabilities'>Prestataires</NavLink>
+          <NavLink href='/bookings'>Mes réservations</NavLink>
+          <NavLink href='/about'>A propos</NavLink>
 
           <Separator className='my-2' />
 
           {!loggedUser && (
             <>
-              <NavLink href='/login'>Login</NavLink>
-              <NavLink href='/register'>Register</NavLink>
+              <NavLink href='/login'>Connexion</NavLink>
+              <NavLink href='/register'>S&apos;inscrire</NavLink>
             </>
           )}
 

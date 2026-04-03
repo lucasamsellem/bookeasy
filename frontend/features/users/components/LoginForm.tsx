@@ -51,7 +51,7 @@ export default function LoginForm() {
 
   return (
     <form className='login' onSubmit={handleSubmit}>
-      <h1 className='login__title'>Login</h1>
+      <h1 className='login__title'>Connexion</h1>
 
       <div className='login__field'>
         <label htmlFor='email' className='login__label'>
@@ -69,7 +69,7 @@ export default function LoginForm() {
 
       <PasswordInput value={password} handleChange={(e) => setPassword(e.target.value)} />
 
-      <ActionButton text='Submit' type='submit' isLoading={isPending} />
+      <ActionButton text='Se connecter' type='submit' isLoading={isPending} />
 
       {isError && <p className='login__error'>Login failed ({error?.message})</p>}
     </form>

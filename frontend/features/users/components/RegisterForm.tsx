@@ -108,17 +108,17 @@ export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
     return (
       <form
         onSubmit={handleSubmit}
-        className='w-full max-w-sm space-y-4 rounded-lg bg-white p-6 shadow-md'
+        className='w-full max-w-sm space-y-8 rounded-2xl bg-white p-6 shadow-md'
       >
         {!hasSuperAdmin && (
-          <h1 className='text-center text-2xl font-semibold text-gray-800'>Register</h1>
+          <h1 className='text-center text-2xl font-semibold text-gray-800'>S&apos;inscrire</h1>
         )}
 
-        <FormSection title='Role'>
+        <FormSection title='Rôle'>
           <div className='flex gap-3 text-sm'>
             {allowedRoles.includes('customer') && (
               <RoleButton
-                label='Customer'
+                label='Client'
                 isActive={form.role === 'customer'}
                 onClick={() => handleRoleChange('customer')}
               />
@@ -126,7 +126,7 @@ export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
 
             {allowedRoles.includes('professional') && (
               <RoleButton
-                label='Professional'
+                label='Prestataire'
                 isActive={form.role === 'professional'}
                 onClick={() => handleRoleChange('professional')}
               />
@@ -134,7 +134,7 @@ export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
 
             {hasSuperAdmin && (
               <RoleButton
-                label='Super Admin'
+                label='Administrateur'
                 isActive={form.role === 'superAdmin'}
                 onClick={() => handleRoleChange('superAdmin')}
               />
@@ -142,23 +142,23 @@ export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
           </div>
         </FormSection>
 
-        <FormSection title='Identity'>
+        <FormSection title='Identité'>
           <Input
-            label='First name'
+            label='Prénom'
             id='firstName'
             value={form.firstName}
             onChange={handleChange('firstName')}
           />
 
           <Input
-            label='Last name'
+            label='Nom'
             id='lastName'
             value={form.lastName}
             onChange={handleChange('lastName')}
           />
         </FormSection>
 
-        <FormSection title='Login information'>
+        <FormSection title='Authentification'>
           <Input
             label='Email'
             id='email'
@@ -209,7 +209,7 @@ export const RegisterForm = forwardRef<RegisterFormRef, RegisterFormProps>(
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed!'
             }`}
           >
-            Confirm
+            Confirmer
           </button>
         )}
 

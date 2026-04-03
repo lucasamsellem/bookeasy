@@ -14,6 +14,21 @@ import styles from './UsersTable.module.scss';
 
 const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street', 'streetNumber'];
 
+const keyInFrench = (key: keyof User) => {
+  switch (key) {
+    case 'firstName':
+      return 'Prénom';
+    case 'lastName':
+      return 'Nom';
+    case 'city':
+      return 'Ville';
+    case 'street':
+      return 'Rue';
+    case 'streetNumber':
+      return 'N°';
+  }
+};
+
 export default function UsersTable() {
   const { users } = useFetchUsers();
   const { deleteUser, isUserDeleting } = useDeleteUser();
@@ -172,11 +187,11 @@ export default function UsersTable() {
         }}
         confirmLabel='Modifier'
       >
-        <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+        <form className={`${styles.form} space-y-5`} onSubmit={(e) => e.preventDefault()}>
           {editableKeys.map((key) => (
             <Input
               key={key}
-              label={key}
+              label={keyInFrench(key) ?? key}
               defaultValue={userToUpdate?.[key] ?? ''}
               onChange={(e) => setUserUpdatedValues((prev) => ({ ...prev, [key]: e.target.value }))}
             />

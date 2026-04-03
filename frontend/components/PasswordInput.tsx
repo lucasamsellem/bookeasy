@@ -13,7 +13,7 @@ export default function PasswordInput({ value, handleChange }: PasswordInputProp
   return (
     <div className='relative'>
       <Input
-        label='Password'
+        label='Mot de passe'
         id='password'
         type={showPassword ? 'text' : 'password'}
         value={value}
