@@ -11,7 +11,7 @@ export default function Avatar({ id, size = 125 }: AvatarProps) {
       width={size}
       height={size}
       src={`https://i.pravatar.cc/150?img=${id}`}
-      alt='Avatar'
+      alt='User avatar'
       className='rounded-full mb-3'
     />
   );
