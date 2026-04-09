@@ -1,15 +1,19 @@
-import { app } from './app';
+import express from 'express';
 import { connectDB } from './config/db';
-import dotenv from 'dotenv';
 
-dotenv.config({ debug: true }); // charge les variables du fichier .env
+async function startServer() {
+  try {
+    await connectDB();
 
-const PORT = process.env.PORT || 3306;
+    const app = express();
+    app.get('/', (req, res) => res.send('Server is running'));
 
-(async () => {
-  await connectDB();
+    const PORT = process.env.PORT || 3306;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (err) {
+    console.error('Server failed to start:', err);
+    process.exit(1);
+  }
+}
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-})();
+startServer();
