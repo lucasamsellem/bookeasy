@@ -20,8 +20,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-// IMPORTANT : preflight avec les mêmes options
-app.options('/:any*', cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser()); // avant les routes
