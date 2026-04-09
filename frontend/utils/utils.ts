@@ -1,9 +1,13 @@
 import { User } from '@/types/types';
 
-export const getLoggedUser = () => {
-  if (typeof window === 'undefined') {
+export const getLoggedUser = (): User | null => {
+  if (typeof window === 'undefined') return null;
+
+  try {
     const user = localStorage.getItem('user');
-    return user ? (JSON.parse(user) as User) : null;
+    return user ? JSON.parse(user) : null;
+  } catch {
+    return null;
   }
 };
 
