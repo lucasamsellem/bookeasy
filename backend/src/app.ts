@@ -14,18 +14,17 @@ import { db } from './config/db';
 // app.use() sert à installer des middlewares dans Express, pour traiter, filtrer ou enrichir les requêtes avant qu’elles n’atteignent tes controllers.
 export const app = express();
 
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://bookeasy-alpha.vercel.app'],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+// IMPORTANT : preflight avec les mêmes options
+app.options('*', cors(corsOptions));
+
 app.use(express.json());
-
 app.use(cookieParser()); // avant les routes
-
-const allowedOrigins = ['http://localhost:3000', 'https://bookeasy-alpha.vercel.app'];
-
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  }),
-);
 
 // Toutes les routes définies dans userRouter seront préfixées par /api/users.
 app.use('/api/users', userRouter);
