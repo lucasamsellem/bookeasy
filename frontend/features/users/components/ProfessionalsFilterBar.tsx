@@ -1,6 +1,6 @@
 'use client';
 
-import { User } from '@backend/controllers/user.controller';
+import { User } from '@shared/types/sharedTypes';
 import { useMemo } from 'react';
 import Select from '../../../components/Select';
 import './ProfessionalsFilterBar.scss';

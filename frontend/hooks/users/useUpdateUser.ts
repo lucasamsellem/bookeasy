@@ -1,5 +1,5 @@
 import { apiFetch } from '@/services/api';
-import { User } from '@backend/controllers/user.controller';
+import { User } from '@shared/types/sharedTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useUpdateUser() {

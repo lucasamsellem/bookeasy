@@ -5,23 +5,6 @@ import { USER_COLUMNS } from '../utils/columns';
 import { RowDataPacket } from 'mysql2';
 import { UserRequest } from '../middlewares/authMiddleware';
 
-export type Role = 'professional' | 'customer' | 'superAdmin';
-
-export interface User {
-  id: number;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  role: Role;
-  profession?: string;
-  createdAt: string;
-  updatedAt: string;
-  street?: string;
-  streetNumber?: string;
-  city?: string;
-}
-
 // GET /users
 export const getUsers = async (_req: Request, res: Response) => {
   try {

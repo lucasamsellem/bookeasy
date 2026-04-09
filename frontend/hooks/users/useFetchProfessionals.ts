@@ -1,5 +1,5 @@
 import { apiFetch } from '@/services/api';
-import { User } from '@backend/controllers/user.controller';
+import { User } from '@shared/types/sharedTypes';
 import { useQuery } from '@tanstack/react-query';
 
 export default function useFetchProfessionals() {

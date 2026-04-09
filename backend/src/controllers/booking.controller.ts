@@ -1,19 +1,9 @@
 import { db } from '../config/db';
 import { Request, Response } from 'express';
 import { BOOKING_COLUMNS } from '../utils/columns';
+import { BookingStatus } from '@shared/types/sharedTypes';
 
-export type BookingStatus = 'pending' | 'confirmed' | 'canceled';
 
-export interface Booking {
-  id: number;
-  customerId: number;
-  professionalId: number;
-  selectedDate: string;
-  selectedHour: string; // HH:MM:SS
-  status: BookingStatus;
-  description?: string;
-  createdAt: string; // ISO
-}
 
 // GET /bookings
 export const getBookings = async (req: Request, res: Response) => {

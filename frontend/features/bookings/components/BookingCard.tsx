@@ -3,11 +3,12 @@ import useDeleteBooking from '@/hooks/bookings/useDeleteBooking';
 import useFetchUserById from '@/hooks/users/useFetchUserById';
 import useUpdateBookingStatus from '@/hooks/bookings/useUpdateBookingStatus';
 import { getLoggedUser } from '@/utils/utils';
-import { Booking, BookingStatus } from '@backend/controllers/booking.controller';
+
 import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 import './BookingCard.scss';
+import { Booking, BookingStatus } from '@shared/types/sharedTypes';
 
 interface BookingCardProps {
   booking: Booking;

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import ActionButton from '../../../components/ActionButton';
-import { User } from '@backend/controllers/user.controller';
+import { User } from '@shared/types/sharedTypes';
 import useModal from '@/hooks/useModal';
 import Modal from '../../../components/Modal';
 import NewBookingForm from '@/features/bookings/components/NewBookingForm';

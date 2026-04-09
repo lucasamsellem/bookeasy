@@ -1,4 +1,4 @@
-import { User } from '@backend/controllers/user.controller';
+import { User } from '@shared/types/sharedTypes';
 
 export const getLoggedUser = () => {
   const user = localStorage.getItem('user');

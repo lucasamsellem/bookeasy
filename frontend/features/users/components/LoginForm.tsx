@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
-import { type User } from '@backend/controllers/user.controller';
+import { User } from '@shared/types/sharedTypes';
 import PasswordInput from '../../../components/PasswordInput';
 import './LoginForm.scss';
 import ActionButton from '../../../components/ActionButton';
