@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import { UserRequest } from './authMiddleware';
-import { Role } from '../controllers/user.controller';
+import { Role } from '../types/types';
 
 export const authorizeRoles = (...allowedRoles: Role[]) => {
   return (req: UserRequest, res: Response, next: NextFunction) => {

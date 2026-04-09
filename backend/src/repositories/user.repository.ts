@@ -1,7 +1,7 @@
 // 👉 Repository = requêtes SQL uniquement
 
 import { db } from '../config/db';
-import { User } from '../controllers/user.controller';
+import { User } from '../types/types';
 
 export const findUserByEmail = async (email: string): Promise<User | null> => {
   // ✔️ requêtes paramétrées (anti SQL injection)

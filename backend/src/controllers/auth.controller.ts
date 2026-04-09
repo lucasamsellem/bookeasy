@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import { db } from '../config/db'; // pool MySQL
 import { generateToken } from '../utils/jwt';
-import { User } from './user.controller';
+import { User } from '../types/types';
 
 function validateLoginInputs(email: string, password: string): string | null {
   if (!email || !password) return 'Champs manquants';

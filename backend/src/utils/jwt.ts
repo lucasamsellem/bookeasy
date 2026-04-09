@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { Role } from '../controllers/user.controller';
+import { Role } from '../types/types';
 
 export const generateToken = (userId: string, role: Role) => {
   if (!process.env.JWT_SECRET) {
