@@ -9,6 +9,7 @@ import { bookingRouter } from './routes/bookingRoutes';
 import { availabilitiesRouter } from './routes/availabilitiesRoutes';
 import { reviewsRouter } from './routes/reviewsRoutes';
 import cookieParser from 'cookie-parser';
+import { db } from './config/db';
 
 // app.use() sert à installer des middlewares dans Express, pour traiter, filtrer ou enrichir les requêtes avant qu’elles n’atteignent tes controllers.
 export const app = express();
@@ -32,6 +33,11 @@ app.use('/api/bookings', bookingRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/availabilities', availabilitiesRouter);
 
-app.get('/health', (_, res) => {
+app.get('/api/health', (_, res) => {
   res.status(200).json({ status: "let's get healthy!!" });
+});
+
+app.get('/test-db', async (req, res) => {
+  const [rows] = await db.query('SELECT 1');
+  res.json(rows);
 });
