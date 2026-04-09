@@ -4,6 +4,8 @@ if (!API_URL) {
   throw new Error('NEXT_PUBLIC_API_URL is not defined');
 }
 
+console.log('API_URL:', process.env.NEXT_PUBLIC_API_URL);
+
 type ApiFetchOptions = Omit<RequestInit, 'headers'> & {
   headers?: Record<string, string>;
 };
