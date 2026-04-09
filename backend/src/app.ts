@@ -18,9 +18,11 @@ app.use(express.json());
 
 app.use(cookieParser()); // avant les routes
 
+const allowedOrigins = ['http://localhost:3000', 'https://bookeasy-alpha.vercel.app'];
+
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
