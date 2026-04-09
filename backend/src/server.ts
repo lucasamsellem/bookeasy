@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config({ debug: true }); // charge les variables du fichier .env
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3306;
 
 (async () => {
   await connectDB();
