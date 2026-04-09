@@ -1,5 +1,5 @@
 import { forwardRef, useState } from 'react';
-import type { Availability } from '@/types/availability';
+import type { Availability } from '@/types/types';
 
 interface AvailabilityFormProps {
   professionalId: number;

@@ -1,9 +1,6 @@
 import { db } from '../config/db';
 import { Request, Response } from 'express';
 import { BOOKING_COLUMNS } from '../utils/columns';
-import { BookingStatus } from '@shared/types/sharedTypes';
-
-
 
 // GET /bookings
 export const getBookings = async (req: Request, res: Response) => {

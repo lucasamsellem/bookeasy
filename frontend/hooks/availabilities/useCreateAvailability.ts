@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
-import { Availability } from '@/types/availability';
+import { Availability } from '@/types/types';
 
 export default function useCreateAvailability() {
   const queryClient = useQueryClient();

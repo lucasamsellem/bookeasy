@@ -8,9 +8,9 @@ import useModal from '@/hooks/useModal';
 import { useRef, useState } from 'react';
 import useUpdateUser from '@/hooks/users/useUpdateUser';
 import { RegisterForm, Input, RegisterFormRef } from './RegisterForm';
-import { User } from '@shared/types/sharedTypes';
 import { capitalizeFirstLetter } from '@/utils/utils';
 import styles from './UsersTable.module.scss';
+import { User } from '@/types/types';
 
 const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street', 'streetNumber'];
 

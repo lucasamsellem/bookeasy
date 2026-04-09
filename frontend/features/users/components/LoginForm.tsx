@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { apiFetch } from '@/services/api';
 import { useMutation } from '@tanstack/react-query';
-import { User } from '@shared/types/sharedTypes';
 import PasswordInput from '../../../components/PasswordInput';
 import './LoginForm.scss';
 import ActionButton from '../../../components/ActionButton';
+import { User } from '@/types/types';
 
 interface LoginBody {
   email: string;

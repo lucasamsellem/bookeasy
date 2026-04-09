@@ -1,6 +1,6 @@
-import { Role } from '@shared/types/sharedTypes';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { Role } from '../types/types';
 
 export interface UserRequest extends Request {
   user?: { userId: string; role: Role };

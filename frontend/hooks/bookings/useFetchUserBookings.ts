@@ -1,5 +1,5 @@
 import { apiFetch } from '@/services/api';
-import { Booking } from '@shared/types/sharedTypes';
+import { Booking } from '@/types/types';
 import { useQuery } from '@tanstack/react-query';
 
 export default function useFetchUserBookings(userId: number) {

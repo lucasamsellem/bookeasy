@@ -1,5 +1,5 @@
 import { apiFetch } from '@/services/api';
-import { Availability } from '@/types/availability';
+import { Availability } from '@/types/types';
 import { useQuery } from '@tanstack/react-query';
 
 export function toDateKey(date: Date) {

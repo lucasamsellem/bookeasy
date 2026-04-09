@@ -8,7 +8,7 @@ import useCreateAvailability from '@/hooks/availabilities/useCreateAvailability'
 import useModal from '@/hooks/useModal';
 import Modal from '@/components/Modal';
 import AvailabilityForm from './AvailabilityForm';
-import { Availability } from '@/types/availability';
+import { Availability } from '@/types/types';
 import { useRef } from 'react';
 
 export default function ProAvailabilities() {

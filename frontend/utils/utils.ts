@@ -1,4 +1,4 @@
-import { User } from '@shared/types/sharedTypes';
+import { User } from '@/types/types';
 
 export const getLoggedUser = () => {
   const user = localStorage.getItem('user');

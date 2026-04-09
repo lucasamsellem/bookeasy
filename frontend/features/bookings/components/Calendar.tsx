@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
-import { Availability } from '@/types/availability';
+import { Availability } from '@/types/types';
 import { toDateKey } from '@/hooks/availabilities/useFetchProAvailabilities';
 import './Calendar.scss';
 

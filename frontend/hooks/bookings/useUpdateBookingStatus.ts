@@ -1,5 +1,5 @@
 import { apiFetch } from '@/services/api';
-import { BookingStatus } from '@shared/types/sharedTypes';
+import { BookingStatus } from '@/types/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export default function useUpdateBookingStatus() {
