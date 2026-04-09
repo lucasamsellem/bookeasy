@@ -21,7 +21,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 // IMPORTANT : preflight avec les mêmes options
-app.options('*', cors(corsOptions));
+app.options('(.*)', cors(corsOptions));
 
 app.use(express.json());
 app.use(cookieParser()); // avant les routes
