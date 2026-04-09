@@ -1,8 +1,10 @@
 import { User } from '@/types/types';
 
 export const getLoggedUser = () => {
-  const user = localStorage.getItem('user');
-  return user ? (JSON.parse(user) as User) : null;
+  if (typeof window === 'undefined') {
+    const user = localStorage.getItem('user');
+    return user ? (JSON.parse(user) as User) : null;
+  }
 };
 
 export function formatDateFR(iso: string) {
