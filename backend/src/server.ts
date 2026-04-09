@@ -2,7 +2,7 @@ import { app } from './app';
 import { connectDB } from './config/db';
 import dotenv from 'dotenv';
 
-dotenv.config(); // charge les variables du fichier .env
+dotenv.config({ debug: true }); // charge les variables du fichier .env
 
 const PORT = process.env.PORT || 4000;
 
