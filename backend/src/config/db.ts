@@ -9,6 +9,8 @@ export const db = mysql.createPool({
   },
 });
 
+console.log('DATABASE_URL:', process.env.DATABASE_URL);
+
 export async function connectDB() {
   try {
     const connection = await db.getConnection();
