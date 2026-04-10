@@ -14,6 +14,8 @@ function validateLoginInputs(email: string, password: string): string | null {
 }
 
 export const login = async (req: Request, res: Response) => {
+  console.log('req.body:', req.body);
+  console.log('req.headers:', req.headers);
   const { email, password } = req.body;
 
   const error = validateLoginInputs(email, password);
