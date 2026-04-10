@@ -1,14 +1,7 @@
-import { User } from '@/types/types';
+import { useUser } from '@/store/useUser';
 
-export const getLoggedUser = (): User | null => {
-  if (typeof window === 'undefined') return null;
-
-  try {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  } catch {
-    return null;
-  }
+export const getLoggedUser = () => {
+  return useUser.getState().user;
 };
 
 export function formatDateFR(iso: string) {
