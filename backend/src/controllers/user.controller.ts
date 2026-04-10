@@ -144,6 +144,7 @@ const buildUserPayload = async (body: any, res: Response) => {
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({ message: 'Email already exists' });
     }
+
     return res.status(500).json({ message: 'Server error' });
   }
 };

@@ -43,6 +43,7 @@ export const login = async (req: Request, res: Response) => {
     });
 
     return res.json({
+      token,
       user: {
         id: user.id,
         firstName: user.firstName,
