@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
 import { getLoggedUser } from '@/utils/utils';
 import Calendar from './Calendar';
-import useFetchProAvailabilities from '@/hooks/availabilities/useFetchProAvailabilities';
+import useFetchProAvailabilities from '@/features/availabilities/hooks/useFetchProAvailabilities';
 import ActionButton from '@/components/ActionButton';
 import { CalendarIcon } from '@heroicons/react/24/solid';
 

@@ -3,7 +3,7 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import PasswordStrengthBar from '../../../components/PasswordStrengthBar';
 import PasswordInput from '../../../components/PasswordInput';
-import useCreateUser from '@/hooks/users/useCreateUser';
+import useCreateUser from '@/features/users/hooks/useCreateUser';
 import { Role } from '@/types/types';
 
 export interface RegisterBody {

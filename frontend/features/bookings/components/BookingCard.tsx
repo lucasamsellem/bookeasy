@@ -1,7 +1,7 @@
-import useCreateReview from '@/hooks/reviews/useCreateReview';
-import useDeleteBooking from '@/hooks/bookings/useDeleteBooking';
-import useFetchUserById from '@/hooks/users/useFetchUserById';
-import useUpdateBookingStatus from '@/hooks/bookings/useUpdateBookingStatus';
+import useCreateReview from '@/features/reviews/hooks/useCreateReview';
+import useDeleteBooking from '@/features/bookings/hooks/useDeleteBooking';
+import useFetchUserById from '@/features/users/hooks/useFetchUserById';
+import useUpdateBookingStatus from '@/features/bookings/hooks/useUpdateBookingStatus';
 import { getLoggedUser } from '@/utils/utils';
 
 import { StarIcon } from '@heroicons/react/24/outline';

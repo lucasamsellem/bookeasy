@@ -1,5 +1,5 @@
-import useFetchUserById from '@/hooks/users/useFetchUserById';
-import { Review } from '@/hooks/reviews/useFetchUserReviews';
+import useFetchUserById from '@/features/users/hooks/useFetchUserById';
+import { Review } from '@/features/reviews/hooks/useFetchUserReviews';
 import StarRating from './StarRating';
 import styles from './ReviewCard.module.scss';
 

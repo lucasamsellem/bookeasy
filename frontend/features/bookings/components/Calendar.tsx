@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Availability } from '@/types/types';
-import { toDateKey } from '@/hooks/availabilities/useFetchProAvailabilities';
+import { toDateKey } from '@/features/availabilities/hooks/useFetchProAvailabilities';
 import './Calendar.scss';
 
 const DAYS = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];

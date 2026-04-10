@@ -1,6 +1,6 @@
 'use client';
 
-import useFetchBookings from '@/hooks/bookings/useFetchBookings';
+import useFetchBookings from '@/features/bookings/hooks/useFetchBookings';
 import BookingCard from './BookingCard';
 
 export default function AllBookings() {

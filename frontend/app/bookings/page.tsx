@@ -1,7 +1,7 @@
 'use client';
 
 import BookingCard from '@/features/bookings/components/BookingCard';
-import useFetchUserBookings from '@/hooks/bookings/useFetchUserBookings';
+import useFetchUserBookings from '@/features/bookings/hooks/useFetchUserBookings';
 import { getLoggedUser } from '@/utils/utils';
 
 export default function BookingsPage() {

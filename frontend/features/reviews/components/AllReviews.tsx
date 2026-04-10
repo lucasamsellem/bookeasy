@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { TrashIcon } from '@heroicons/react/24/outline';
 import { apiFetch } from '@/services/api';
-import useFetchUserById from '@/hooks/users/useFetchUserById';
-import useDeleteReview from '@/hooks/reviews/useDeleteReview';
+import useFetchUserById from '@/features/users/hooks/useFetchUserById';
+import useDeleteReview from '@/features/reviews/hooks/useDeleteReview';
 
 import './AllReviews.scss';
 
