@@ -1,4 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+import { useUser } from '@/store/useUser';
 
 if (!API_URL) {
   throw new Error('NEXT_PUBLIC_API_URL is not defined');
@@ -12,7 +13,11 @@ type ApiFetchOptions = Omit<RequestInit, 'headers'> & {
 
 export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
   const url = `${API_URL}/api${path}`;
-  const defaultHeaders = { 'Content-Type': 'application/json' };
+  const token = useUser.getState().token;
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 
   const res = await fetch(url, {
     credentials: 'include',
