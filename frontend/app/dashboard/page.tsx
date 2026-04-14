@@ -11,7 +11,6 @@ export default function DashboardPage() {
 
   if (!hasHydrated) return null;
 
-  // ✅ Ensuite seulement on peut décider
   if (!user) redirect('/login');
   if (user.role !== 'superAdmin') redirect('/');
 

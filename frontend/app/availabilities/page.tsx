@@ -1,11 +1,15 @@
 'use client';
 
+import Spinner from '@/components/Spinner';
 import ProAvailabilities from '@/features/availabilities/components/ProAvailabilities';
 import ProfessionalsList from '@/features/users/components/ProfessionalsList';
 import { useUser } from '@/store/useUser';
 
 export default function AvailabilitiesPage() {
-  const userRole = useUser((s) => s.user?.role);
+  const { user, hasHydrated } = useUser();
+  const userRole = user?.role;
+
+  if (!hasHydrated) return <Spinner centered={true} />;
 
   if (!userRole || userRole === 'customer' || userRole === 'superAdmin')
     return (

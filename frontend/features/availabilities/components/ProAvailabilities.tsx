@@ -11,19 +11,22 @@ import AvailabilityForm from './AvailabilityForm';
 import { Availability } from '@/types/types';
 import { useRef } from 'react';
 import { useUser } from '@/store/useUser';
+import Spinner from '@/components/Spinner';
 
 export default function ProAvailabilities() {
   const userId = useUser((s) => s.user?.id) ?? 0;
-  const formRef = useRef<HTMLFormElement>(null); // 👈
+  const formRef = useRef<HTMLFormElement>(null);
 
   const { isOpen, openModal, closeModal } = useModal();
-  const { availabilities, bookedHours } = useFetchProAvailabilities(userId);
+  const { availabilities, bookedHours, isLoading } = useFetchProAvailabilities(userId);
   const { createAvailability, isCreating } = useCreateAvailability();
 
   const handleSubmit = async (values: Availability) => {
     await createAvailability(values);
     closeModal();
   };
+
+  if (isLoading) return <Spinner centered={true} />;
 
   return (
     <>

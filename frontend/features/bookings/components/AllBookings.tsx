@@ -6,6 +6,8 @@ import BookingCard from './BookingCard';
 export default function AllBookings() {
   const { bookings } = useFetchBookings();
 
+  // if (isLoading) return <Spinner centered={true} />;
+
   return (
     <>
       <h2 className='text-2xl font-semibold mb-3'>Toutes les réservations</h2>

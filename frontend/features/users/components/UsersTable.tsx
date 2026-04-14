@@ -11,6 +11,7 @@ import { RegisterForm, Input, RegisterFormRef } from './RegisterForm';
 import { capitalizeFirstLetter } from '@/utils/utils';
 import styles from './UsersTable.module.scss';
 import { User } from '@/types/types';
+import Spinner from '@/components/Spinner';
 
 const editableKeys: (keyof User)[] = ['firstName', 'lastName', 'city', 'street', 'streetNumber'];
 
@@ -30,7 +31,7 @@ const keyInFrench = (key: keyof User) => {
 };
 
 export default function UsersTable() {
-  const { users } = useFetchUsers();
+  const { users, isLoading } = useFetchUsers();
   const { deleteUser, isUserDeleting } = useDeleteUser();
   const { updateUser, isUserUpdating } = useUpdateUser();
 
@@ -76,6 +77,8 @@ export default function UsersTable() {
         return 'default';
     }
   };
+
+  if (isLoading) return <Spinner centered={true} />;
 
   return (
     <div className={styles['users-table']}>

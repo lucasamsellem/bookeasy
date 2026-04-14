@@ -9,6 +9,7 @@ import { useState } from 'react';
 import './BookingCard.scss';
 import { Booking, BookingStatus } from '@/types/types';
 import { useUser } from '@/store/useUser';
+import Spinner from '@/components/Spinner';
 
 interface BookingCardProps {
   booking: Booking;
@@ -31,12 +32,19 @@ function buildBookingDate(date: Date | string, hour: string): Date {
 export default function BookingCard({ booking }: BookingCardProps) {
   const { customerId, professionalId, selectedDate, selectedHour, status, description } = booking;
 
-  const loggedUser = useUser((s) => s.user);
+  const { user: loggedUser, hasHydrated } = useUser();
   const isPro = loggedUser?.id === professionalId;
   const isAdmin = loggedUser?.role === 'superAdmin';
 
-  const { userFullName: customerFullName } = useFetchUserById(customerId);
-  const { userFullName: proFullName, user: pro } = useFetchUserById(professionalId);
+  const { userFullName: customerFullName, isUserLoading: isCustomerLoading } =
+    useFetchUserById(customerId);
+
+  const {
+    userFullName: proFullName,
+    user: pro,
+    isUserLoading: isProLoading,
+  } = useFetchUserById(professionalId);
+
   const { createReview, isReviewCreated } = useCreateReview();
 
   const BookingDate = buildBookingDate(selectedDate!, selectedHour);
@@ -63,6 +71,8 @@ export default function BookingCard({ booking }: BookingCardProps) {
   };
 
   const s = statusConfig[status];
+
+  if (!hasHydrated || isCustomerLoading || isProLoading) return <Spinner />;
 
   return (
     <div className='booking-card'>

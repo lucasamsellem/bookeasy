@@ -8,6 +8,7 @@ import useFetchUserById from '@/features/users/hooks/useFetchUserById';
 import useDeleteReview from '@/features/reviews/hooks/useDeleteReview';
 
 import './AllReviews.scss';
+import Spinner from '@/components/Spinner';
 
 type Review = {
   id: number;
@@ -112,7 +113,7 @@ function ReviewRow({ review, onDelete }: { review: Review; onDelete: (id: number
 }
 
 export default function AllReviews() {
-  const { data: reviews } = useQuery<Review[]>({
+  const { data: reviews, isLoading } = useQuery<Review[]>({
     queryKey: ['reviews'],
     queryFn: () => apiFetch('/reviews'),
   });
@@ -120,6 +121,8 @@ export default function AllReviews() {
   const { deleteReview } = useDeleteReview();
 
   const reviewList = reviews ?? [];
+
+  if (isLoading) return <Spinner centered={true} />;
 
   return (
     <div className='reviews'>
