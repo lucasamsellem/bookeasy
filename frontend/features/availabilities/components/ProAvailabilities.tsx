@@ -1,7 +1,7 @@
 'use client';
 
 import useFetchProAvailabilities from '@/features/availabilities/hooks/useFetchProAvailabilities';
-import { formatDateFR, getLoggedUser } from '@/utils/utils';
+import { formatDateFR } from '@/utils/utils';
 import ActionButton from '@/components/ActionButton';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import useCreateAvailability from '@/features/availabilities/hooks/useCreateAvailability';
@@ -10,9 +10,10 @@ import Modal from '@/components/Modal';
 import AvailabilityForm from './AvailabilityForm';
 import { Availability } from '@/types/types';
 import { useRef } from 'react';
+import { useUser } from '@/store/useUser';
 
 export default function ProAvailabilities() {
-  const userId = getLoggedUser()?.id ?? 0;
+  const userId = useUser((s) => s.user?.id) ?? 0;
   const formRef = useRef<HTMLFormElement>(null); // 👈
 
   const { isOpen, openModal, closeModal } = useModal();

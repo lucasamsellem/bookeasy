@@ -2,13 +2,13 @@ import useCreateReview from '@/features/reviews/hooks/useCreateReview';
 import useDeleteBooking from '@/features/bookings/hooks/useDeleteBooking';
 import useFetchUserById from '@/features/users/hooks/useFetchUserById';
 import useUpdateBookingStatus from '@/features/bookings/hooks/useUpdateBookingStatus';
-import { getLoggedUser } from '@/utils/utils';
 
 import { StarIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 import './BookingCard.scss';
 import { Booking, BookingStatus } from '@/types/types';
+import { useUser } from '@/store/useUser';
 
 interface BookingCardProps {
   booking: Booking;
@@ -31,7 +31,7 @@ function buildBookingDate(date: Date | string, hour: string): Date {
 export default function BookingCard({ booking }: BookingCardProps) {
   const { customerId, professionalId, selectedDate, selectedHour, status, description } = booking;
 
-  const loggedUser = getLoggedUser();
+  const loggedUser = useUser((s) => s.user);
   const isPro = loggedUser?.id === professionalId;
   const isAdmin = loggedUser?.role === 'superAdmin';
 

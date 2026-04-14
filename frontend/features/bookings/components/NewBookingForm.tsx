@@ -2,11 +2,11 @@
 import { useState, FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/services/api';
-import { getLoggedUser } from '@/utils/utils';
 import Calendar from './Calendar';
 import useFetchProAvailabilities from '@/features/availabilities/hooks/useFetchProAvailabilities';
 import ActionButton from '@/components/ActionButton';
 import { CalendarIcon } from '@heroicons/react/24/solid';
+import { useUser } from '@/store/useUser';
 
 interface BookingFormProps {
   professionalId: number;
@@ -21,7 +21,7 @@ interface BookingPayload {
 }
 
 export default function BookingForm({ professionalId }: BookingFormProps) {
-  const customerId = getLoggedUser()?.id;
+  const customerId = useUser((state) => state.user?.id);
   const queryClient = useQueryClient();
 
   const [selectedDate, setSelectedDate] = useState<string | null>(null);

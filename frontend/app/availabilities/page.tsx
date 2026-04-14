@@ -2,10 +2,10 @@
 
 import ProAvailabilities from '@/features/availabilities/components/ProAvailabilities';
 import ProfessionalsList from '@/features/users/components/ProfessionalsList';
-import { getLoggedUser } from '@/utils/utils';
+import { useUser } from '@/store/useUser';
 
 export default function AvailabilitiesPage() {
-  const userRole = getLoggedUser()?.role;
+  const userRole = useUser((s) => s.user?.role);
 
   if (!userRole || userRole === 'customer' || userRole === 'superAdmin')
     return (

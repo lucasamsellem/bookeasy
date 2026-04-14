@@ -7,8 +7,11 @@ import { useUser } from '@/store/useUser';
 import { redirect } from 'next/navigation';
 
 export default function DashboardPage() {
-  const { user } = useUser();
+  const { user, hasHydrated } = useUser();
 
+  if (!hasHydrated) return null;
+
+  // ✅ Ensuite seulement on peut décider
   if (!user) redirect('/login');
   if (user.role !== 'superAdmin') redirect('/');
 

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { getLoggedUser } from '@/utils/utils';
+import { useUser } from '@/store/useUser';
 import { usePathname } from 'next/navigation';
 import { apiFetch } from '@/services/api';
 import Logo from '@/components/Logo';
@@ -10,8 +10,8 @@ import Separator from '@/components/Separator';
 import { useState } from 'react';
 
 export default function Header() {
-  const loggedUser = getLoggedUser();
-  const isPro = loggedUser?.role === 'professional';
+  const { user, hasHydrated } = useUser();
+  const isPro = user?.role === 'professional';
   const [open, setOpen] = useState(false);
 
   const logout = async () => {
@@ -20,24 +20,47 @@ export default function Header() {
     window.location.href = '/login';
   };
 
+  // 🟡 Skeleton pendant hydration
+  if (!hasHydrated) {
+    return (
+      <header className='sticky top-0 z-50 border-b border-gray-100 px-6 py-3 bg-white/80 backdrop-blur-md'>
+        <nav className='flex items-center justify-between mx-auto'>
+          <Logo size={40} />
+
+          <div className='hidden md:flex items-center gap-x-3'>
+            <div className='h-6 w-20 bg-gray-200 rounded animate-pulse' />
+            <div className='h-6 w-24 bg-gray-200 rounded animate-pulse' />
+            <div className='h-6 w-28 bg-gray-200 rounded animate-pulse' />
+          </div>
+
+          <div className='hidden md:flex items-center gap-x-3'>
+            <div className='h-6 w-16 bg-gray-200 rounded animate-pulse' />
+            <div className='h-8 w-24 bg-gray-200 rounded-lg animate-pulse' />
+          </div>
+
+          <div className='md:hidden h-6 w-6 bg-gray-200 rounded animate-pulse' />
+        </nav>
+      </header>
+    );
+  }
+
   return (
     <header className='sticky top-0 z-50 border-b border-gray-100 px-6 py-3 bg-white/80 backdrop-blur-md'>
       <nav className='flex items-center justify-between  mx-auto'>
-        {/* Logo */}
         <Logo size={40} />
 
         {/* Desktop navigation */}
         <div className='hidden md:flex items-center gap-x-1'>
           <NavLink href='/'>Accueil</NavLink>
-          {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
+          {user?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
           <NavLink href='/availabilities'>{isPro ? 'Mes disponibilités' : 'Prestataires'}</NavLink>
-          {loggedUser && <NavLink href='/bookings'>Mes réservations</NavLink>}
+          {user && <NavLink href='/bookings'>Mes réservations</NavLink>}
           <NavLink href='/about'>À propos</NavLink>
         </div>
 
         {/* Right side desktop */}
         <div className='hidden md:flex items-center gap-x-5'>
-          {!loggedUser && (
+          {!user && (
             <>
               <Link
                 href='/login'
@@ -54,12 +77,12 @@ export default function Header() {
             </>
           )}
 
-          {loggedUser && (
+          {user && (
             <div className='flex items-center gap-x-3'>
               <div className='flex items-center gap-x-2 text-sm text-gray-700'>
                 <UserCircleIcon className='size-6 text-gray-400' />
                 <span className='font-medium'>
-                  {loggedUser.firstName} {loggedUser.lastName}
+                  {user.firstName} {user.lastName}
                 </span>
               </div>
               <Separator orientation='vertical' className='h-5' />
@@ -73,7 +96,7 @@ export default function Header() {
           )}
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile */}
         <button
           onClick={() => setOpen(!open)}
           className='md:hidden p-1 rounded-lg hover:bg-gray-100 transition'
@@ -86,29 +109,28 @@ export default function Header() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
       {open && (
         <div className='flex flex-col gap-1 mt-3 pb-3 md:hidden border-t border-gray-100 pt-3'>
           <NavLink href='/'>Accueil</NavLink>
-          {loggedUser?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
+          {user?.role === 'superAdmin' && <NavLink href='/dashboard'>Dashboard</NavLink>}
           <NavLink href='/availabilities'>Prestataires</NavLink>
           <NavLink href='/bookings'>Mes réservations</NavLink>
           <NavLink href='/about'>A propos</NavLink>
 
           <Separator className='my-2' />
 
-          {!loggedUser && (
+          {!user && (
             <>
               <NavLink href='/login'>Connexion</NavLink>
               <NavLink href='/register'>S&apos;inscrire</NavLink>
             </>
           )}
 
-          {loggedUser && (
+          {user && (
             <>
               <div className='flex items-center gap-2 text-sm text-gray-700 px-3 py-2'>
                 <UserCircleIcon className='size-5 text-gray-400' />
-                {loggedUser.firstName} {loggedUser.lastName}
+                {user.firstName} {user.lastName}
               </div>
               <button onClick={logout} className='text-left text-sm text-red-500 px-3 py-2'>
                 Déconnexion

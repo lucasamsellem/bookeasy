@@ -1,9 +1,3 @@
-import { useUser } from '@/store/useUser';
-
-export const getLoggedUser = () => {
-  return useUser.getState().user;
-};
-
 export function formatDateFR(iso: string) {
   const date = new Date(iso);
 

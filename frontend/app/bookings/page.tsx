@@ -1,14 +1,15 @@
 'use client';
 
+import Spinner from '@/components/Spinner';
 import BookingCard from '@/features/bookings/components/BookingCard';
 import useFetchUserBookings from '@/features/bookings/hooks/useFetchUserBookings';
-import { getLoggedUser } from '@/utils/utils';
+import { useUser } from '@/store/useUser';
 
 export default function BookingsPage() {
-  const loggedUser = getLoggedUser();
+  const { user: loggedUser, hasHydrated } = useUser();
   const { userBookings } = useFetchUserBookings(loggedUser?.id ?? 0);
 
-  if (!loggedUser) return <p>Please log in to view your Bookings.</p>;
+  if (!hasHydrated) return <Spinner centered={true} />;
 
   return (
     <div className='p-10'>
