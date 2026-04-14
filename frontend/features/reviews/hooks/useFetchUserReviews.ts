@@ -12,10 +12,10 @@ export type Review = {
 };
 
 export default function useFetchProReview(proId: number) {
-  const { data: reviews } = useQuery({
+  const { data: reviews, isLoading } = useQuery({
     queryKey: ['reviews'],
     queryFn: () => apiFetch<Review[]>(`/reviews/${proId}`),
   });
 
-  return { reviews };
+  return { reviews, isLoading };
 }

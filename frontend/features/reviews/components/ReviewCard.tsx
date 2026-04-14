@@ -2,9 +2,12 @@ import useFetchUserById from '@/features/users/hooks/useFetchUserById';
 import { Review } from '@/features/reviews/hooks/useFetchUserReviews';
 import StarRating from './StarRating';
 import styles from './ReviewCard.module.scss';
+import Spinner from '@/components/Spinner';
 
 export default function ReviewCard({ review }: { review: Review }) {
-  const { userFullName: customerFullName } = useFetchUserById(review.customerId);
+  const { userFullName: customerFullName, isUserLoading } = useFetchUserById(review.customerId);
+
+  if (isUserLoading) return <Spinner centered={true} />;
 
   return (
     <div className={styles['review-card']}>
