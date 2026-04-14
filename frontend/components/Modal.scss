@@ -65,10 +65,10 @@
     }
 
     &--secondary {
-      background: #e5e7eb; // gray-200
+      background: #e5e7eb;
 
       &:hover {
-        background: #d1d5db; // gray-300
+        background: #d1d5db;
       }
     }
 
@@ -77,18 +77,18 @@
     }
 
     &--default {
-      background: #2563eb; // blue-600
+      background: #2563eb;
 
       &:hover {
-        background: #1d4ed8; // blue-700
+        background: #1d4ed8;
       }
     }
 
     &--danger {
-      background: #dc2626; // red-600
+      background: #dc2626;
 
       &:hover {
-        background: #b91c1c; // red-700
+        background: #b91c1c;
       }
     }
   }

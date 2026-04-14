@@ -16,7 +16,7 @@ export default function Header() {
 
   const logout = async () => {
     await apiFetch('/auth/logout', { method: 'POST' });
-    localStorage.removeItem('user');
+    localStorage.removeItem('user-storage');
     window.location.href = '/login';
   };
 
@@ -67,7 +67,7 @@ export default function Header() {
                 onClick={logout}
                 className='text-sm text-gray-400 hover:text-red-500 transition'
               >
-                Logout
+                Déconnexion
               </button>
             </div>
           )}
@@ -111,7 +111,7 @@ export default function Header() {
                 {loggedUser.firstName} {loggedUser.lastName}
               </div>
               <button onClick={logout} className='text-left text-sm text-red-500 px-3 py-2'>
-                Logout
+                Déconnexion
               </button>
             </>
           )}

@@ -25,7 +25,7 @@ export default function ActionButton({
       type={type}
       disabled={isLoading || disabled}
     >
-      {isLoading ? <Spinner /> : icon} {text}
+      {isLoading ? <Spinner color='border-white' /> : icon} {text}
     </button>
   );
 }

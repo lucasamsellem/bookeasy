@@ -133,7 +133,11 @@ export default function ProfessionalsList() {
               </Link>
 
               <div className='mt-5 w-full flex justify-center'>
-                <ActionButton text='New Booking' icon='+' onClick={() => handleNewBooking(pro)} />
+                <ActionButton
+                  text='Nouvelle réservation'
+                  icon='+'
+                  onClick={() => handleNewBooking(pro)}
+                />
               </div>
             </li>
           );
@@ -144,7 +148,7 @@ export default function ProfessionalsList() {
         <Modal
           isOpen={isOpen}
           onClose={closeModal}
-          title={`New Booking - ${selectedPro.firstName} ${selectedPro.lastName}`}
+          title={`Nouvelle réservation - ${selectedPro.firstName} ${selectedPro.lastName}`}
         >
           <NewBookingForm professionalId={selectedPro.id} />
         </Modal>

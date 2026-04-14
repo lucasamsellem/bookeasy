@@ -1,4 +1,3 @@
-// Couleurs
 $color-bg-start: #f8fafc;
 $color-bg-end: #ffffff;
 $color-primary: #0f172a;
@@ -17,14 +16,12 @@ $md: 768px;
   align-items: center;
 }
 
-// Flex center colonne
 @mixin flex-center-column {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-// Responsive
 @mixin md {
   @media (min-width: #{$md}) {
     @content;
