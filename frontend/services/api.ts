@@ -1,11 +1,8 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-import { useUser } from '@/store/useUser';
 
 if (!API_URL) {
   throw new Error('NEXT_PUBLIC_API_URL is not defined');
 }
-
-console.log('API_URL:', process.env.NEXT_PUBLIC_API_URL);
 
 type ApiFetchOptions = Omit<RequestInit, 'headers'> & {
   headers?: Record<string, string>;
@@ -13,7 +10,10 @@ type ApiFetchOptions = Omit<RequestInit, 'headers'> & {
 
 export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
   const url = `${API_URL}/api${path}`;
-  const token = useUser.getState().token;
+
+  const raw = localStorage.getItem('user-storage');
+  const token = raw ? (JSON.parse(raw)?.state?.token ?? null) : null;
+
   const defaultHeaders = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),

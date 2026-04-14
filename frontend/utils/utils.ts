@@ -1,7 +1,19 @@
-import { useUser } from '@/store/useUser';
+import { User } from '@/types/types';
 
-export const getLoggedUser = () => {
-  return useUser.getState().user;
+export const getLoggedUser = (): User | null => {
+  try {
+    const raw = localStorage.getItem('user-storage');
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    const user = parsed?.state?.user ?? parsed;
+
+    if (!user || typeof user !== 'object') return null;
+
+    return user as User;
+  } catch {
+    return null;
+  }
 };
 
 export function formatDateFR(iso: string) {
