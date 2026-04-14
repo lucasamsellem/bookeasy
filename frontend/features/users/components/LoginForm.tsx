@@ -7,6 +7,7 @@ import PasswordInput from '../../../components/PasswordInput';
 import './LoginForm.scss';
 import ActionButton from '../../../components/ActionButton';
 import { User } from '@/types/types';
+import { useUser } from '@/store/useUser';
 
 interface LoginBody {
   email: string;
@@ -21,6 +22,8 @@ interface LoginResponse {
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { setUser } = useUser();
 
   const {
     mutate: loginMutation,
@@ -43,7 +46,7 @@ export default function LoginForm() {
       { email, password },
       {
         onSuccess: (data) => {
-          localStorage.setItem('user-storage', JSON.stringify(data.user));
+          setUser(data.user, data.token);
           window.location.href = '/';
         },
       },

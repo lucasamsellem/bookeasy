@@ -3,13 +3,13 @@
 import AllBookings from '@/features/bookings/components/AllBookings';
 import AllReviews from '@/features/reviews/components/AllReviews';
 import UsersTable from '@/features/users/components/UsersTable';
-import { getLoggedUser } from '@/utils/utils';
+import { useUser } from '@/store/useUser';
 import { redirect } from 'next/navigation';
 
 export default function DashboardPage() {
-  const user = getLoggedUser();
+  const { user } = useUser();
 
-  if (!user) redirect('/');
+  if (!user) redirect('/login');
   if (user.role !== 'superAdmin') redirect('/');
 
   return (
