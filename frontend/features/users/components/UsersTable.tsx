@@ -110,7 +110,11 @@ export default function UsersTable() {
                   <span>{capitalizeFirstLetter(user.role)}</span>
                 </td>
                 <td>{user.profession}</td>
-                <td>{user.city ? `${user.streetNumber} ${user.street}, ${user.city}` : null}</td>
+                <td>
+                  {user.city
+                    ? `${user.streetNumber ?? ''} ${user.street ? `${user.street}, ` : ''} ${user.city}`
+                    : null}
+                </td>
                 <td>
                   <button
                     onClick={() => {
